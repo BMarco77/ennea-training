@@ -273,7 +273,7 @@ export default function QuizModul() {
     padding: "0.4rem 0.8rem",
     borderRadius: "0.5rem",
     border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-    backgroundColor: level === lvl.key ? "#b07b37" : "#c8a979",
+    backgroundColor: level === lvl.key ? "#c2a178 : "#c8a979",
     color: level === lvl.key ? "#000" : "#222",
     cursor: "pointer",
     fontWeight: "bold",
