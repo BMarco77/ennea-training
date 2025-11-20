@@ -405,26 +405,34 @@ export default function QuizModul() {
               )}
 
               {/* Wing nur im Expert-Modus, wenn im Pfad vorhanden */}
-              {level === "expert" && bild.wing != null && (
-  <div style={{ marginBottom: "0.5rem" }}>
-    <select
-      value={userAntwort.wing || ""}
-      onChange={(e) =>
-        handleAntwort(index, "wing", e.target.value)
-      }
-      style={dropdownStyle}
-    >
-      <option value="" disabled hidden>
-        Wing auswählen
-      </option>
-      {getWingsForType(bild.typ).map((w) => (
-        <option key={w} value={w}>
-          {w}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
+              {(() => {
+  const userTyp = userAntwort.typ ? parseInt(userAntwort.typ, 10) : null;
+
+  return (
+    level === "expert" &&
+    bild.wing != null &&
+    userTyp && ( // Wing-Dropdown nur, wenn Typ gewählt wurde
+      <div style={{ marginBottom: "0.5rem" }}>
+        <select
+          value={userAntwort.wing || ""}
+          onChange={(e) =>
+            handleAntwort(index, "wing", e.target.value)
+          }
+          style={dropdownStyle}
+        >
+          <option value="" disabled hidden>
+            Wing auswählen
+          </option>
+          {getWingsForType(userTyp).map((w) => (
+            <option key={w} value={w}>
+              {w}
+            </option>
+          ))}
+        </select>
+      </div>
+    )
+  );
+})()}
               {/* Merkmale */}
               {(() => {
                 const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
