@@ -25,7 +25,12 @@ function resetGezeigteBilder() {
 
 const subtypen = ["Se", "So", "Sx"];
 const typen = Array.from({ length: 9 }, (_, i) => i + 1);
-const wings = Array.from({ length: 9 }, (_, i) => i + 1);
+function getWingsForType(typ) {
+  if (!typ) return [];
+  const left = typ === 1 ? 9 : typ - 1;
+  const right = typ === 9 ? 1 : typ + 1;
+  return [left, right];
+}
 
 const dropdownStyle = {
   width: "100%",
@@ -397,26 +402,25 @@ export default function QuizModul() {
 
               {/* Wing nur im Expert-Modus, wenn im Pfad vorhanden */}
               {level === "expert" && bild.wing != null && (
-                <div style={{ marginBottom: "0.5rem" }}>
-                  <select
-                    value={userAntwort.wing || ""}
-                    onChange={(e) =>
-                      handleAntwort(index, "wing", e.target.value)
-                    }
-                    style={dropdownStyle}
-                  >
-                    <option value="" disabled hidden>
-                      Wing auswählen
-                    </option>
-                    {wings.map((w) => (
-                      <option key={w} value={w}>
-                        {w}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
+  <div style={{ marginBottom: "0.5rem" }}>
+    <select
+      value={userAntwort.wing || ""}
+      onChange={(e) =>
+        handleAntwort(index, "wing", e.target.value)
+      }
+      style={dropdownStyle}
+    >
+      <option value="" disabled hidden>
+        Wing auswählen
+      </option>
+      {getWingsForType(bild.typ).map((w) => (
+        <option key={w} value={w}>
+          {w}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
               {/* Merkmale */}
               {(() => {
                 const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
