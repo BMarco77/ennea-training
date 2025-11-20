@@ -265,21 +265,25 @@ export default function QuizModul() {
           { key: "fortgeschritten", label: "Fortgeschritten" },
           { key: "expert", label: "Expert" },
         ].map((lvl) => (
-          <button
-            key={lvl.key}
-            onClick={() => setLevel(lvl.key)}
-            style={{
-              marginRight: "0.5rem",
-              padding: "0.4rem 0.8rem",
-              borderRadius: "0.5rem",
-              border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-              backgroundColor: level === lvl.key ? "#f5e6d2" : "#c8a979",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            {lvl.label}
-          </button>
+       <button
+  key={lvl.key}
+  onClick={() => setLevel(lvl.key)}
+  style={{
+    marginRight: "0.5rem",
+    padding: "0.4rem 0.8rem",
+    borderRadius: "0.5rem",
+    border: level === lvl.key ? "2px solid #000" : "1px solid #555",
+    backgroundColor: level === lvl.key ? "#b07b37" : "#c8a979",
+    color: level === lvl.key ? "#000" : "#222",
+    cursor: "pointer",
+    fontWeight: "bold",
+    boxShadow: level === lvl.key
+      ? "0 0 0 2px rgba(0,0,0,0.3)"
+      : "none",
+  }}
+>
+  {lvl.label}
+</button>
         ))}
       </div>
 
