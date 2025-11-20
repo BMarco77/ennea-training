@@ -535,6 +535,7 @@ export default function QuizModul() {
               padding: "0.75rem 1.5rem",
               fontWeight: "bold",
               cursor: "pointer",
+              color: "#000",
             }}
           >
             Antwort überprüfen
