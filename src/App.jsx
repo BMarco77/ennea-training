@@ -434,48 +434,53 @@ export default function QuizModul() {
   );
 })()}
               {/* Merkmale */}
-              {(() => {
-                const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
-                const merkm = merkmale[key];
+            
+                {(() => {
+  const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
+  const merkm = merkmale[key];
 
-                return (
-                  merkm && (
-                    <details
-                      style={{
-                        backgroundColor: "#f5e6d2",
-                        padding: "0.75rem",
-                        borderRadius: "0.6rem",
-                        fontSize: "0.9rem",
-                        border: "1px solid #a68b65",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      <summary
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                          marginBottom: "0.5rem",
-                        }}
-                      >
-                        Typ-Merkmale einblenden
-                      </summary>
-                      <div>
-                        <strong>Seite des Enneagramms:</strong> {merkm.seite}
-                      </div>
-                      <div>
-                        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-                      </div>
-                      <div>
-                        <strong>Körperliche Auffälligkeiten:</strong>{" "}
-                        {merkm.koerperlich}
-                      </div>
-                      <div>
-                        <strong>Wirkung:</strong> {merkm.wirkung}
-                      </div>
-                    </details>
-                  )
-                );
-              })()}
+  // Im Meister-/Expert-Modus KEINE Hilfe anzeigen
+  if (level === "expert") {
+    return null;
+  }
+
+  if (!merkm) return null;
+
+  return (
+    <details
+      style={{
+        backgroundColor: "#f5e6d2",
+        padding: "0.75rem",
+        borderRadius: "0.6rem",
+        fontSize: "0.9rem",
+        border: "1px solid #a68b65",
+        marginBottom: "0.5rem",
+      }}
+    >
+      <summary
+        style={{
+          cursor: "pointer",
+          fontWeight: "bold",
+          marginBottom: "0.5rem",
+        }}
+      >
+        Typ-Merkmale einblenden
+      </summary>
+      <div>
+        <strong>Seite des Enneagramms:</strong> {merkm.seite}
+      </div>
+      <div>
+        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+      </div>
+      <div>
+        <strong>Körperliche Auffälligkeiten:</strong> {merkm.koerperlich}
+      </div>
+      <div>
+        <strong>Wirkung:</strong> {merkm.wirkung}
+      </div>
+    </details>
+  );
+})()}
 
               {/* Feedback */}
               {geprueft && fb && (
