@@ -563,76 +563,78 @@ export default function QuizModul() {
         )}
       </div>
 
-      {/* Overlay für Vergrößerung */}
+           {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
-  <div
-    onClick={() => setVergroessertesBild(null)}
-    style={{
-      position: "fixed",
-      inset: 0,
-      backgroundColor: "rgba(0,0,0,0.85)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 100,
-      cursor: "zoom-out",
-      padding: "1rem",
-    }}
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        position: "relative",
-        width: "90vw",
-        maxWidth: "600px",
-        height: "80vh",
-        maxHeight: "800px",
-        backgroundColor: "#c8a979",
-        borderRadius: "1rem",
-        padding: "1rem",
-        boxShadow: "0 0 20px rgba(0,0,0,0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {/* Schließen-Button oben rechts */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setVergroessertesBild(null);
-        }}
-        style={{
-          position: "absolute",
-          top: "0.5rem",
-          right: "0.5rem",
-          background: "rgba(0,0,0,0.6)",
-          border: "none",
-          borderRadius: "999px",
-          width: "32px",
-          height: "32px",
-          color: "#f5e6d2",
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-          cursor: "pointer",
-          lineHeight: "1",
-        }}
-        aria-label="Schließen"
-      >
-        ×
-      </button>
+        <div
+          onClick={() => setVergroessertesBild(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+            cursor: "zoom-out",
+            padding: "1rem",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              width: "90vw",
+              maxWidth: "600px",
+              height: "80vh",
+              maxHeight: "800px",
+              backgroundColor: "#c8a979",
+              borderRadius: "1rem",
+              padding: "1rem",
+              boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setVergroessertesBild(null);
+              }}
+              style={{
+                position: "absolute",
+                top: "0.5rem",
+                right: "0.5rem",
+                background: "rgba(0, 0, 0, 0.6)",
+                border: "none",
+                borderRadius: "999px",
+                width: "32px",
+                height: "32px",
+                color: "#f5e6d2",
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                cursor: "pointer",
+                lineHeight: "1",
+              }}
+              aria-label="Schließen"
+            >
+              ×
+            </button>
 
-      <img
-        src={vergroessertesBild.pfad}
-        alt={vergroessertesBild.title}
-        style={{
-          maxWidth: "100%",
-          maxHeight: "100%",
-          objectFit: "contain",
-          objectPosition: "center",
-          display: "block",
-        }}
-      />
+            <img
+              src={vergroessertesBild.pfad}
+              alt={vergroessertesBild.title}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                objectPosition: "center",
+                display: "block",
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
+  );
+}
