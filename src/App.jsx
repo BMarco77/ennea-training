@@ -62,29 +62,21 @@ function parseBildInfo(pfad) {
 
 // --- Ausgewogene Ziehlogik (40 / 40 / 20) ---
 function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
-  const w = 0.4; // 40% weiblich (1–4)
-  const m = 0.4; // 40% männlich (5–8)
-  const n = 0.2; // 20% neutral (9)
+  const w = 0.4;
+  const m = 0.4;
+  const n = 0.2;
 
   const r = Math.random();
+  let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
 
-  let pool;
-  if (r < w) {
-    pool = weiblich;
-  } else if (r < w + m) {
-    pool = maennlich;
-  } else {
-    pool = neutral;
-  }
+  let unge = pool.filter(b => !gesehen.includes(b.datei));
 
-  // Filtere schon gesehene Bilder heraus
-  let unge = pool.filter((b) => !gesehen.includes(b.datei));
-
-  // Falls Pool leer → wieder alle aus diesem Pool zulassen
   if (unge.length === 0) {
     unge = [...pool];
   }
 
+  return unge[Math.floor(Math.random() * unge.length)];
+}
   // Zufallsbild zurückgeben
   return unge[Math.floor(Math.random() * unge.length)];
 }
