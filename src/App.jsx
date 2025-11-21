@@ -59,6 +59,9 @@ function parseBildInfo(pfad) {
 
 export default function QuizModul() {
   const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
+  const [weiblichPool, setWeiblichPool] = useState([]);
+const [maennlichPool, setMaennlichPool] = useState([]);
+const [neutralPool, setNeutralPool] = useState([]);
   const [rundeBilder, setRundeBilder] = useState([]);
   const [antworten, setAntworten] = useState({});
   const [feedback, setFeedback] = useState({});
@@ -92,7 +95,10 @@ export default function QuizModul() {
 const weiblich = enriched.filter(b => b.typ >= 1 && b.typ <= 4);
 const maennlich = enriched.filter(b => b.typ >= 5 && b.typ <= 8);
 const neutral = enriched.filter(b => b.typ === 9);
-        setAlleBilder(enriched);
+        // In State speichern:
+setWeiblichPool(weiblich);
+setMaennlichPool(maennlich);
+setNeutralPool(neutral);        setAlleBilder(enriched);
         // erste Runde setzen
         starteNeueRunde(enriched);
       } catch (e) {
@@ -129,36 +135,50 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
   if (unge.length === 0) {
     unge = [...pool];
   }
+const starteNeueRunde = (
+  pool = alleBilder,
+  weiblichArg = weiblichPool,
+  maennlichArg = maennlichPool,
+  neutralArg = neutralPool
+) => {
+  if (!pool || pool.length === 0) {
+    setRundeBilder([]);
+    return;
+  }
 
-  // Zufallsbild zurückgeben
-  return unge[Math.floor(Math.random() * unge.length)];
-}
-  const starteNeueRunde = (pool = alleBilder) => {
-    if (!pool || pool.length === 0) {
-      setRundeBilder([]);
-      return;
-    }
+  const gesehen = ladeGeseheneBilder();
+  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
 
-    const gesehen = ladeGeseheneBilder();
-    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+  // Wenn zu wenige übrig sind, reset und wieder von vorn
+  if (nochNichtGesehen.length < 2) {
+    resetGezeigteBilder();
+    nochNichtGesehen = [...pool];
+  }
 
-    // Wenn zu wenige übrig sind, reset und wieder von vorn
-    if (nochNichtGesehen.length < 2) {
-      resetGezeigteBilder();
-      nochNichtGesehen = [...pool];
-    }
+  // ► HIER: Die Argumente verwenden!
+  const bild1 = zieheAusgewogenesBild(
+    weiblichArg,
+    maennlichArg,
+    neutralArg,
+    gesehen
+  );
 
-    const bild1 = zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen);
-const bild2 = zieheAusgewogenesBild(weiblich, maennlich, neutral, [...gesehen, bild1.datei]);
+  const bild2 = zieheAusgewogenesBild(
+    weiblichArg,
+    maennlichArg,
+    neutralArg,
+    [...gesehen, bild1.datei]
+  );
 
-const neue = [bild1, bild2];
-    setRundeBilder(neue);
-    setAntworten({});
-    setFeedback({});
-    setGeprueft(false);
+  const neue = [bild1, bild2];
 
-    speichereGezeigteBilder(neue.map((b) => b.datei));
-  };
+  setRundeBilder(neue);
+  setAntworten({});
+  setFeedback({});
+  setGeprueft(false);
+
+  speichereGezeigteBilder(neue.map((b) => b.datei));
+};
 
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
