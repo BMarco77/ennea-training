@@ -75,11 +75,10 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
     unge = [...pool];
   }
 
-  return unge[Math.floor(Math.random() * unge.length)];
-}
   // Zufallsbild zurückgeben
   return unge[Math.floor(Math.random() * unge.length)];
 }
+  
 
 export default function QuizModul() {
   const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
