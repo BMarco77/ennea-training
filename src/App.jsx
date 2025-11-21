@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
@@ -25,6 +26,7 @@ function resetGezeigteBilder() {
 
 const subtypen = ["Se", "So", "Sx"];
 const typen = Array.from({ length: 9 }, (_, i) => i + 1);
+
 function getWingsForType(typ) {
   if (!typ) return [];
   const left = typ === 1 ? 9 : typ - 1;
@@ -57,65 +59,11 @@ function parseBildInfo(pfad) {
   };
 }
 
-export default function QuizModul() {
-  const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
-  const [weiblichPool, setWeiblichPool] = useState([]);
-const [maennlichPool, setMaennlichPool] = useState([]);
-const [neutralPool, setNeutralPool] = useState([]);
-  const [rundeBilder, setRundeBilder] = useState([]);
-  const [antworten, setAntworten] = useState({});
-  const [feedback, setFeedback] = useState({});
-  const [geprueft, setGeprueft] = useState(false);
-  const [vergroessertesBild, setVergroessertesBild] = useState(null);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Level: anfaenger | fortgeschritten | expert
-  const [level, setLevel] = useState("fortgeschritten");
-
-  // JSON vom Lexikon laden
-  useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
-        const res = await fetch(QUIZ_BILDER_URL);
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        const data = await res.json();
-        const bilder = data.bilder || [];
-        // mit geparsten Infos anreichern
-        const enriched = bilder.map((bild) => ({
-          ...bild,
-          ...parseBildInfo(bild.pfad),
-        }));
-        // Nach dem Laden der Bilder / enriched
-const weiblich = enriched.filter(b => b.typ >= 1 && b.typ <= 4);
-const maennlich = enriched.filter(b => b.typ >= 5 && b.typ <= 8);
-const neutral = enriched.filter(b => b.typ === 9);
-        // In State speichern:
-setWeiblichPool(weiblich);
-setMaennlichPool(maennlich);
-setNeutralPool(neutral);        setAlleBilder(enriched);
-        // erste Runde setzen
-        starteNeueRunde(enriched);
-      } catch (e) {
-        console.error("Fehler beim Laden der Quizdaten:", e);
-        setError("Daten konnten nicht geladen werden.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+// --- Ausgewogene Ziehlogik (40 / 40 / 20) ---
 function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
-  // Gewichte:
-  const w = 0.4; // 40% weiblich
-  const m = 0.4; // 40% männlich
-  const n = 0.2; // 20% neutral
+  const w = 0.4; // 40% weiblich (1–4)
+  const m = 0.4; // 40% männlich (5–8)
+  const n = 0.2; // 20% neutral (9)
 
   const r = Math.random();
 
@@ -129,56 +77,122 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
   }
 
   // Filtere schon gesehene Bilder heraus
-  let unge = pool.filter(b => !gesehen.includes(b.datei));
+  let unge = pool.filter((b) => !gesehen.includes(b.datei));
 
   // Falls Pool leer → wieder alle aus diesem Pool zulassen
   if (unge.length === 0) {
     unge = [...pool];
   }
-const starteNeueRunde = (
-  pool = alleBilder,
-  weiblichArg = weiblichPool,
-  maennlichArg = maennlichPool,
-  neutralArg = neutralPool
-) => {
-  if (!pool || pool.length === 0) {
-    setRundeBilder([]);
-    return;
-  }
 
-  const gesehen = ladeGeseheneBilder();
-  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+  // Zufallsbild zurückgeben
+  return unge[Math.floor(Math.random() * unge.length)];
+}
 
-  // Wenn zu wenige übrig sind, reset und wieder von vorn
-  if (nochNichtGesehen.length < 2) {
-    resetGezeigteBilder();
-    nochNichtGesehen = [...pool];
-  }
+export default function QuizModul() {
+  const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
+  const [weiblichPool, setWeiblichPool] = useState([]);
+  const [maennlichPool, setMaennlichPool] = useState([]);
+  const [neutralPool, setNeutralPool] = useState([]);
 
-  // ► HIER: Die Argumente verwenden!
-  const bild1 = zieheAusgewogenesBild(
-    weiblichArg,
-    maennlichArg,
-    neutralArg,
-    gesehen
-  );
+  const [rundeBilder, setRundeBilder] = useState([]);
+  const [antworten, setAntworten] = useState({});
+  const [feedback, setFeedback] = useState({});
+  const [geprueft, setGeprueft] = useState(false);
+  const [vergroessertesBild, setVergroessertesBild] = useState(null);
 
-  const bild2 = zieheAusgewogenesBild(
-    weiblichArg,
-    maennlichArg,
-    neutralArg,
-    [...gesehen, bild1.datei]
-  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const neue = [bild1, bild2];
+  // Level: anfaenger | fortgeschritten | expert
+  const [level, setLevel] = useState("fortgeschritten");
 
-  setRundeBilder(neue);
-  setAntworten({});
-  setFeedback({});
-  setGeprueft(false);
+  const starteNeueRunde = (
+    pool = alleBilder,
+    weiblichArg = weiblichPool,
+    maennlichArg = maennlichPool,
+    neutralArg = neutralPool
+  ) => {
+    if (!pool || pool.length === 0) {
+      setRundeBilder([]);
+      return;
+    }
 
-  speichereGezeigteBilder(neue.map((b) => b.datei));
-};
+    const gesehen = ladeGeseheneBilder();
+
+    // (Optionaler Reset-Mechanismus bleibt, auch wenn Ziehung nun über Pools läuft)
+    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+    if (nochNichtGesehen.length < 2) {
+      resetGezeigteBilder();
+      nochNichtGesehen = [...pool];
+    }
+
+    const bild1 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      gesehen
+    );
+
+    const bild2 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      [...gesehen, bild1.datei]
+    );
+
+    const neue = [bild1, bild2];
+
+    setRundeBilder(neue);
+    setAntworten({});
+    setFeedback({});
+    setGeprueft(false);
+
+    speichereGezeigteBilder(neue.map((b) => b.datei));
+  };
+
+  // JSON vom Lexikon laden
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(QUIZ_BILDER_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        const bilder = data.bilder || [];
+
+        const enriched = bilder.map((bild) => ({
+          ...bild,
+          ...parseBildInfo(bild.pfad),
+        }));
+
+        // Pools berechnen
+        const weiblich = enriched.filter((b) => b.typ >= 1 && b.typ <= 4);
+        const maennlich = enriched.filter((b) => b.typ >= 5 && b.typ <= 8);
+        const neutral = enriched.filter((b) => b.typ === 9);
+
+        // In State speichern
+        setWeiblichPool(weiblich);
+        setMaennlichPool(maennlich);
+        setNeutralPool(neutral);
+
+        setAlleBilder(enriched);
+
+        // erste Runde mit frischen Pools starten
+        starteNeueRunde(enriched, weiblich, maennlich, neutral);
+      } catch (e) {
+        console.error("Fehler beim Laden der Quizdaten:", e);
+        setError("Daten konnten nicht geladen werden.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
@@ -302,36 +316,30 @@ const starteNeueRunde = (
       </h1>
 
       {/* Level-Schalter */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
         {[
           { key: "anfaenger", label: "Anfänger" },
           { key: "fortgeschritten", label: "Fortgeschritten" },
           { key: "expert", label: "Expert" },
         ].map((lvl) => (
-       <button
-  key={lvl.key}
-  onClick={() => setLevel(lvl.key)}
-  style={{
-    marginRight: "0.5rem",
-    padding: "0.4rem 0.8rem",
-    borderRadius: "0.5rem",
-    border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-    backgroundColor: level === lvl.key ? "#c2a178" : "#c8a979",
-    color: level === lvl.key ? "#000" : "#222",
-    cursor: "pointer",
-    fontWeight: "bold",
-    boxShadow: level === lvl.key
-      ? "0 0 0 2px rgba(0,0,0,0.3)"
-      : "none",
-  }}
->
-  {lvl.label}
-</button>
+          <button
+            key={lvl.key}
+            onClick={() => setLevel(lvl.key)}
+            style={{
+              marginRight: "0.5rem",
+              padding: "0.4rem 0.8rem",
+              borderRadius: "0.5rem",
+              border: level === lvl.key ? "2px solid #000" : "1px solid #555",
+              backgroundColor: level === lvl.key ? "#c2a178" : "#c8a979",
+              color: level === lvl.key ? "#000" : "#222",
+              cursor: "pointer",
+              fontWeight: "bold",
+              boxShadow:
+                level === lvl.key ? "0 0 0 2px rgba(0,0,0,0.3)" : "none",
+            }}
+          >
+            {lvl.label}
+          </button>
         ))}
       </div>
 
@@ -347,7 +355,6 @@ const starteNeueRunde = (
           const userAntwort = antworten[index] || {};
           const fb = feedback[index];
 
-          // Bild-URL vom Lexikon
           const pfad = `${LEXIKON_BASE_URL}/bilder/${
             bild.pfad
           }/${encodeURIComponent(bild.datei)}`;
@@ -454,81 +461,80 @@ const starteNeueRunde = (
 
               {/* Wing nur im Expert-Modus, wenn im Pfad vorhanden */}
               {(() => {
-  const userTyp = userAntwort.typ ? parseInt(userAntwort.typ, 10) : null;
+                const userTyp = userAntwort.typ
+                  ? parseInt(userAntwort.typ, 10)
+                  : null;
 
-  return (
-    level === "expert" &&
-    bild.wing != null &&
-    userTyp && ( // Wing-Dropdown nur, wenn Typ gewählt wurde
-      <div style={{ marginBottom: "0.5rem" }}>
-        <select
-          value={userAntwort.wing || ""}
-          onChange={(e) =>
-            handleAntwort(index, "wing", e.target.value)
-          }
-          style={dropdownStyle}
-        >
-          <option value="" disabled hidden>
-            Wing auswählen
-          </option>
-          {getWingsForType(userTyp).map((w) => (
-            <option key={w} value={w}>
-              {w}
-            </option>
-          ))}
-        </select>
-      </div>
-    )
-  );
-})()}
-              {/* Merkmale */}
-            
-                {(() => {
-  const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
-  const merkm = merkmale[key];
+                return (
+                  level === "expert" &&
+                  bild.wing != null &&
+                  userTyp && (
+                    <div style={{ marginBottom: "0.5rem" }}>
+                      <select
+                        value={userAntwort.wing || ""}
+                        onChange={(e) =>
+                          handleAntwort(index, "wing", e.target.value)
+                        }
+                        style={dropdownStyle}
+                      >
+                        <option value="" disabled hidden>
+                          Wing auswählen
+                        </option>
+                        {getWingsForType(userTyp).map((w) => (
+                          <option key={w} value={w}>
+                            {w}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )
+                );
+              })()}
 
-  // Im Meister-/Expert-Modus KEINE Hilfe anzeigen
-  if (level === "expert") {
-    return null;
-  }
+              {/* Merkmale (nicht im Expert-Modus) */}
+              {(() => {
+                const key = `${bild.subtyp}${bild.typ}`;
+                const merkm = merkmale[key];
 
-  if (!merkm) return null;
+                if (level === "expert") return null;
+                if (!merkm) return null;
 
-  return (
-    <details
-      style={{
-        backgroundColor: "#f5e6d2",
-        padding: "0.75rem",
-        borderRadius: "0.6rem",
-        fontSize: "0.9rem",
-        border: "1px solid #a68b65",
-        marginBottom: "0.5rem",
-      }}
-    >
-      <summary
-        style={{
-          cursor: "pointer",
-          fontWeight: "bold",
-          marginBottom: "0.5rem",
-        }}
-      >
-        Typ-Merkmale einblenden
-      </summary>
-      <div>
-        <strong>Seite des Enneagramms:</strong> {merkm.seite}
-      </div>
-      <div>
-        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-      </div>
-      <div>
-        <strong>Körperliche Auffälligkeiten:</strong> {merkm.koerperlich}
-      </div>
-      <div>
-        <strong>Wirkung:</strong> {merkm.wirkung}
-      </div>
-    </details>
-  );
-})()}
+                return (
+                  <details
+                    style={{
+                      backgroundColor: "#f5e6d2",
+                      padding: "0.75rem",
+                      borderRadius: "0.6rem",
+                      fontSize: "0.9rem",
+                      border: "1px solid #a68b65",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    <summary
+                      style={{
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                        marginBottom: "0.5rem",
+                      }}
+                    >
+                      Typ-Merkmale einblenden
+                    </summary>
+                    <div>
+                      <strong>Seite des Enneagramms:</strong> {merkm.seite}
+                    </div>
+                    <div>
+                      <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+                    </div>
+                    <div>
+                      <strong>Körperliche Auffälligkeiten:</strong>{" "}
+                      {merkm.koerperlich}
+                    </div>
+                    <div>
+                      <strong>Wirkung:</strong> {merkm.wirkung}
+                    </div>
+                  </details>
+                );
+              })()}
 
               {/* Feedback */}
               {geprueft && fb && (
@@ -538,13 +544,13 @@ const starteNeueRunde = (
                     fontWeight: "bold",
                     color: (() => {
                       if (fb.istRichtig) return "green";
-
-                      // Teilrichtig einfärben in Fortgeschritten/Expert
                       if (
-                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
+                        (fb.typRichtig ||
+                          fb.subtypRichtig ||
+                          fb.wingRichtig) &&
                         level !== "anfaenger"
                       ) {
-                        return "#a65e00"; // orange
+                        return "#a65e00";
                       }
                       return "crimson";
                     })(),
@@ -555,8 +561,6 @@ const starteNeueRunde = (
                     if (level === "anfaenger") {
                       return fb.typRichtig ? "✔️ Typ richtig" : "❌ Typ falsch";
                     }
-
-                    // Fortgeschritten / Expert differenziert
                     if (fb.istRichtig) return "✔️ Alles korrekt";
 
                     const teile = [];
@@ -611,7 +615,7 @@ const starteNeueRunde = (
         )}
       </div>
 
-           {/* Overlay für Vergrößerung */}
+      {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
         <div
           onClick={() => setVergroessertesBild(null)}
