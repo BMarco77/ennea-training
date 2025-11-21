@@ -97,6 +97,7 @@ export default function QuizModul() {
 
   // Level: anfaenger | fortgeschritten | expert
   const [level, setLevel] = useState("fortgeschritten");
+  
   // --- Trefferquote / Stats ---
 const [showStats, setShowStats] = useState(false);
 const [stats, setStats] = useState({
@@ -108,7 +109,11 @@ const [stats, setStats] = useState({
   wingTotal: 0,          // Wing-Versuche (nur Expert & wenn Wing vorhanden)
   wingCorrect: 0,        // Wing richtig
 });
-
+// --- Stats aus LocalStorage laden ---
+useEffect(() => {
+  const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+  if (saved) setStats(saved);
+}, []);
   const starteNeueRunde = (
     pool = alleBilder,
     weiblichArg = weiblichPool,
@@ -170,11 +175,6 @@ const [stats, setStats] = useState({
           ...bild,
           ...parseBildInfo(bild.pfad),
         }));
-        // Stats aus LocalStorage laden (pro Gerät)
-useEffect(() => {
-  const saved = JSON.parse(localStorage.getItem(STATS_KEY));
-  if (saved) setStats(saved);
-}, []);
 
         // Pools berechnen
         const weiblich = enriched.filter((b) => b.typ >= 1 && b.typ <= 4);
