@@ -88,6 +88,10 @@ export default function QuizModul() {
           ...bild,
           ...parseBildInfo(bild.pfad),
         }));
+        // Nach dem Laden der Bilder / enriched
+const weiblich = enriched.filter(b => b.typ >= 1 && b.typ <= 4);
+const maennlich = enriched.filter(b => b.typ >= 5 && b.typ <= 8);
+const neutral = enriched.filter(b => b.typ === 9);
         setAlleBilder(enriched);
         // erste Runde setzen
         starteNeueRunde(enriched);
@@ -101,7 +105,34 @@ export default function QuizModul() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
+  // Gewichte:
+  const w = 0.4; // 40% weiblich
+  const m = 0.4; // 40% männlich
+  const n = 0.2; // 20% neutral
 
+  const r = Math.random();
+
+  let pool;
+  if (r < w) {
+    pool = weiblich;
+  } else if (r < w + m) {
+    pool = maennlich;
+  } else {
+    pool = neutral;
+  }
+
+  // Filtere schon gesehene Bilder heraus
+  let unge = pool.filter(b => !gesehen.includes(b.datei));
+
+  // Falls Pool leer → wieder alle aus diesem Pool zulassen
+  if (unge.length === 0) {
+    unge = [...pool];
+  }
+
+  // Zufallsbild zurückgeben
+  return unge[Math.floor(Math.random() * unge.length)];
+}
   const starteNeueRunde = (pool = alleBilder) => {
     if (!pool || pool.length === 0) {
       setRundeBilder([]);
@@ -117,13 +148,10 @@ export default function QuizModul() {
       nochNichtGesehen = [...pool];
     }
 
-    const neue = [...nochNichtGesehen]
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 2) // <<< NUR 2 BILDER
-      .map((bild) => ({
-        ...bild,
-      }));
+    const bild1 = zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen);
+const bild2 = zieheAusgewogenesBild(weiblich, maennlich, neutral, [...gesehen, bild1.datei]);
 
+const neue = [bild1, bild2];
     setRundeBilder(neue);
     setAntworten({});
     setFeedback({});
