@@ -4,6 +4,7 @@ import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
 
 const LOCALSTORAGE_KEY = "geseheneBilder";
+const STATS_KEY = "ennea_quiz_stats";
 
 // >>> HIER anpassen, falls Pfad/Name anders ist:
 const LEXIKON_BASE_URL = "https://ennea-lexikon.netlify.app";
@@ -105,6 +106,17 @@ export default function QuizModul() {
 
   // Level: anfaenger | fortgeschritten | expert
   const [level, setLevel] = useState("fortgeschritten");
+  // --- Trefferquote / Stats ---
+const [showStats, setShowStats] = useState(false);
+const [stats, setStats] = useState({
+  imagesTotal: 0,        // Anzahl geübter Bilder
+  overallCorrect: 0,     // alles korrekt (je Bild, je Level)
+  typCorrect: 0,         // Typ richtig
+  subtypTotal: 0,        // Subtyp-Versuche (nur ab Fortgeschritten)
+  subtypCorrect: 0,      // Subtyp richtig
+  wingTotal: 0,          // Wing-Versuche (nur Expert & wenn Wing vorhanden)
+  wingCorrect: 0,        // Wing richtig
+});
 
   const starteNeueRunde = (
     pool = alleBilder,
@@ -167,6 +179,11 @@ export default function QuizModul() {
           ...bild,
           ...parseBildInfo(bild.pfad),
         }));
+        // Stats aus LocalStorage laden (pro Gerät)
+useEffect(() => {
+  const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+  if (saved) setStats(saved);
+}, []);
 
         // Pools berechnen
         const weiblich = enriched.filter((b) => b.typ >= 1 && b.typ <= 4);
@@ -230,6 +247,44 @@ export default function QuizModul() {
         istRichtig,
       };
     });
+    // --- Stats aktualisieren ---
+let overallInc = 0;
+let typInc = 0;
+let subtypInc = 0;
+let wingInc = 0;
+
+let subtypTotalInc = 0;
+let wingTotalInc = 0;
+
+rundeBilder.forEach((bild, index) => {
+  const r = result[index];
+
+  if (r.istRichtig) overallInc++;
+  if (r.typRichtig) typInc++;
+
+  if (level !== "anfaenger") {
+    subtypTotalInc++;
+    if (r.subtypRichtig) subtypInc++;
+  }
+
+  if (level === "expert" && bild.wing != null) {
+    wingTotalInc++;
+    if (r.wingRichtig) wingInc++;
+  }
+});
+
+const newStats = {
+  imagesTotal: stats.imagesTotal + rundeBilder.length,
+  overallCorrect: stats.overallCorrect + overallInc,
+  typCorrect: stats.typCorrect + typInc,
+  subtypTotal: stats.subtypTotal + subtypTotalInc,
+  subtypCorrect: stats.subtypCorrect + subtypInc,
+  wingTotal: stats.wingTotal + wingTotalInc,
+  wingCorrect: stats.wingCorrect + wingInc,
+};
+
+setStats(newStats);
+localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
     setFeedback(result);
     setGeprueft(true);
   };
@@ -342,7 +397,68 @@ export default function QuizModul() {
           </button>
         ))}
       </div>
+{/* Stats Toggle + Premium Stats Box */}
+<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+  <button
+    onClick={() => setShowStats((v) => !v)}
+    style={{
+      backgroundColor: "#c2a178",
+      border: "1px solid #000",
+      borderRadius: "0.5rem",
+      padding: "0.35rem 0.8rem",
+      fontWeight: "bold",
+      cursor: "pointer",
+      color: "#000",
+      marginBottom: "0.75rem",
+    }}
+  >
+    {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
+  </button>
 
+  {showStats && (
+    <div
+      style={{
+        maxWidth: "520px",
+        margin: "0 auto",
+        backgroundColor: "#c8a979",
+        borderRadius: "0.9rem",
+        padding: "0.9rem",
+        borderTop: "2px solid #8b6b3c",
+        borderBottom: "2px solid #8b6b3c",
+        boxShadow: "0 3px 8px rgba(0,0,0,0.35)",
+        fontSize: "1rem",
+      }}
+    >
+      <div style={{ fontWeight: "800", marginBottom: "0.4rem" }}>
+        📈 Trefferquote
+      </div>
+
+      <div style={{ backgroundColor: "#f5e6d2", padding: "0.6rem", borderRadius: "0.6rem" }}>
+        <div><strong>Bilder gesamt:</strong> {stats.imagesTotal}</div>
+
+        <div style={{ marginTop: "0.35rem" }}>
+          <strong>Typ richtig:</strong>{" "}
+          {stats.imagesTotal === 0 ? "—" : ((stats.typCorrect / stats.imagesTotal) * 100).toFixed(1) + "%"}
+        </div>
+
+        <div style={{ marginTop: "0.2rem" }}>
+          <strong>Subtyp richtig:</strong>{" "}
+          {stats.subtypTotal === 0 ? "—" : ((stats.subtypCorrect / stats.subtypTotal) * 100).toFixed(1) + "%"}
+        </div>
+
+        <div style={{ marginTop: "0.2rem" }}>
+          <strong>Wing richtig:</strong>{" "}
+          {stats.wingTotal === 0 ? "—" : ((stats.wingCorrect / stats.wingTotal) * 100).toFixed(1) + "%"}
+        </div>
+
+        <div style={{ marginTop: "0.35rem" }}>
+          <strong>Gesamt korrekt:</strong>{" "}
+          {stats.imagesTotal === 0 ? "—" : ((stats.overallCorrect / stats.imagesTotal) * 100).toFixed(1) + "%"}
+        </div>
+      </div>
+    </div>
+  )}
+</div>
       <div
         style={{
           display: "flex",
