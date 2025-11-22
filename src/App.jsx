@@ -1,7 +1,7 @@
-
 import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
+import LexButton from "./components/LexButton.jsx";
 
 const LOCALSTORAGE_KEY = "geseheneBilder";
 const STATS_KEY = "ennea_quiz_stats";
@@ -69,7 +69,7 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
   const r = Math.random();
   let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
 
-  let unge = pool.filter(b => !gesehen.includes(b.datei));
+  let unge = pool.filter((b) => !gesehen.includes(b.datei));
 
   if (unge.length === 0) {
     unge = [...pool];
@@ -78,7 +78,6 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
   // Zufallsbild zurückgeben
   return unge[Math.floor(Math.random() * unge.length)];
 }
-  
 
 export default function QuizModul() {
   const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
@@ -97,23 +96,23 @@ export default function QuizModul() {
 
   // Level: anfaenger | fortgeschritten | expert
   const [level, setLevel] = useState("fortgeschritten");
-  
+
   // --- Trefferquote / Stats ---
-const [showStats, setShowStats] = useState(false);
-const [stats, setStats] = useState({
-  imagesTotal: 0,        // Anzahl geübter Bilder
-  overallCorrect: 0,     // alles korrekt (je Bild, je Level)
-  typCorrect: 0,         // Typ richtig
-  subtypTotal: 0,        // Subtyp-Versuche (nur ab Fortgeschritten)
-  subtypCorrect: 0,      // Subtyp richtig
-  wingTotal: 0,          // Wing-Versuche (nur Expert & wenn Wing vorhanden)
-  wingCorrect: 0,        // Wing richtig
-});
-// --- Stats aus LocalStorage laden ---
-useEffect(() => {
-  const saved = JSON.parse(localStorage.getItem(STATS_KEY));
-  if (saved) setStats(saved);
-}, []);
+  const [showStats, setShowStats] = useState(false);
+  const [stats, setStats] = useState({
+    imagesTotal: 0, // Anzahl geübter Bilder
+    overallCorrect: 0, // alles korrekt (je Bild, je Level)
+    typCorrect: 0, // Typ richtig
+    subtypTotal: 0, // Subtyp-Versuche (nur ab Fortgeschritten)
+    subtypCorrect: 0, // Subtyp richtig
+    wingTotal: 0, // Wing-Versuche (nur Expert & wenn Wing vorhanden)
+    wingCorrect: 0, // Wing richtig
+  });
+  // --- Stats aus LocalStorage laden ---
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+    if (saved) setStats(saved);
+  }, []);
   const starteNeueRunde = (
     pool = alleBilder,
     weiblichArg = weiblichPool,
@@ -141,12 +140,10 @@ useEffect(() => {
       gesehen
     );
 
-    const bild2 = zieheAusgewogenesBild(
-      weiblichArg,
-      maennlichArg,
-      neutralArg,
-      [...gesehen, bild1.datei]
-    );
+    const bild2 = zieheAusgewogenesBild(weiblichArg, maennlichArg, neutralArg, [
+      ...gesehen,
+      bild1.datei,
+    ]);
 
     const neue = [bild1, bild2];
 
@@ -239,43 +236,43 @@ useEffect(() => {
       };
     });
     // --- Stats aktualisieren ---
-let overallInc = 0;
-let typInc = 0;
-let subtypInc = 0;
-let wingInc = 0;
+    let overallInc = 0;
+    let typInc = 0;
+    let subtypInc = 0;
+    let wingInc = 0;
 
-let subtypTotalInc = 0;
-let wingTotalInc = 0;
+    let subtypTotalInc = 0;
+    let wingTotalInc = 0;
 
-rundeBilder.forEach((bild, index) => {
-  const r = result[index];
+    rundeBilder.forEach((bild, index) => {
+      const r = result[index];
 
-  if (r.istRichtig) overallInc++;
-  if (r.typRichtig) typInc++;
+      if (r.istRichtig) overallInc++;
+      if (r.typRichtig) typInc++;
 
-  if (level !== "anfaenger") {
-    subtypTotalInc++;
-    if (r.subtypRichtig) subtypInc++;
-  }
+      if (level !== "anfaenger") {
+        subtypTotalInc++;
+        if (r.subtypRichtig) subtypInc++;
+      }
 
-  if (level === "expert" && bild.wing != null) {
-    wingTotalInc++;
-    if (r.wingRichtig) wingInc++;
-  }
-});
+      if (level === "expert" && bild.wing != null) {
+        wingTotalInc++;
+        if (r.wingRichtig) wingInc++;
+      }
+    });
 
-const newStats = {
-  imagesTotal: stats.imagesTotal + rundeBilder.length,
-  overallCorrect: stats.overallCorrect + overallInc,
-  typCorrect: stats.typCorrect + typInc,
-  subtypTotal: stats.subtypTotal + subtypTotalInc,
-  subtypCorrect: stats.subtypCorrect + subtypInc,
-  wingTotal: stats.wingTotal + wingTotalInc,
-  wingCorrect: stats.wingCorrect + wingInc,
-};
+    const newStats = {
+      imagesTotal: stats.imagesTotal + rundeBilder.length,
+      overallCorrect: stats.overallCorrect + overallInc,
+      typCorrect: stats.typCorrect + typInc,
+      subtypTotal: stats.subtypTotal + subtypTotalInc,
+      subtypCorrect: stats.subtypCorrect + subtypInc,
+      wingTotal: stats.wingTotal + wingTotalInc,
+      wingCorrect: stats.wingCorrect + wingInc,
+    };
 
-setStats(newStats);
-localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
+    setStats(newStats);
+    localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
     setFeedback(result);
     setGeprueft(true);
   };
@@ -362,94 +359,122 @@ localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
       </h1>
 
       {/* Level-Schalter */}
-      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+      <div className="text-center mb-6 flex justify-center gap-2 flex-wrap">
         {[
           { key: "anfaenger", label: "Anfänger" },
           { key: "fortgeschritten", label: "Fortgeschritten" },
           { key: "expert", label: "Expert" },
-        ].map((lvl) => (
-          <button
-            key={lvl.key}
-            onClick={() => setLevel(lvl.key)}
+        ].map((lvl) => {
+          const isActive = level === lvl.key;
+
+          return (
+            <LexButton
+              key={lvl.key}
+              active={isActive}
+              onClick={() => setLevel(lvl.key)}
+              className={[
+                // kompakter als Standard-LexButton
+                "px-3 py-1.5 text-sm min-w-0",
+                // Active soll einen stärkeren Rahmen haben wie vorher
+                isActive
+                  ? "border-2 border-black shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
+                  : "border border-black/60",
+                // leicht andere Inactive-Farbe als LexButton-Default (wie bei dir #c8a979)
+                !isActive
+                  ? "bg-[#c8a979] text-black/90 hover:bg-[#d2b089]"
+                  : "",
+              ].join(" ")}
+            >
+              {lvl.label}
+            </LexButton>
+          );
+        })}
+      </div>
+
+      {/* Stats Toggle + Premium Stats Box */}
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        <button
+          onClick={() => setShowStats((v) => !v)}
+          style={{
+            backgroundColor: "#c2a178",
+            border: "1px solid #000",
+            borderRadius: "0.5rem",
+            padding: "0.35rem 0.8rem",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "#000",
+            marginBottom: "0.75rem",
+          }}
+        >
+          {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
+        </button>
+
+        {showStats && (
+          <div
             style={{
-              marginRight: "0.5rem",
-              padding: "0.4rem 0.8rem",
-              borderRadius: "0.5rem",
-              border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-              backgroundColor: level === lvl.key ? "#c2a178" : "#c8a979",
-              color: level === lvl.key ? "#000" : "#222",
-              cursor: "pointer",
-              fontWeight: "bold",
-              boxShadow:
-                level === lvl.key ? "0 0 0 2px rgba(0,0,0,0.3)" : "none",
+              maxWidth: "520px",
+              margin: "0 auto",
+              backgroundColor: "#c8a979",
+              borderRadius: "0.9rem",
+              padding: "0.9rem",
+              borderTop: "2px solid #8b6b3c",
+              borderBottom: "2px solid #8b6b3c",
+              boxShadow: "0 3px 8px rgba(0,0,0,0.35)",
+              fontSize: "1rem",
             }}
           >
-            {lvl.label}
-          </button>
-        ))}
+            <div style={{ fontWeight: "800", marginBottom: "0.4rem" }}>
+              📈 Trefferquote
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#f5e6d2",
+                padding: "0.6rem",
+                borderRadius: "0.6rem",
+              }}
+            >
+              <div>
+                <strong>Bilder gesamt:</strong> {stats.imagesTotal}
+              </div>
+
+              <div style={{ marginTop: "0.35rem" }}>
+                <strong>Typ richtig:</strong>{" "}
+                {stats.imagesTotal === 0
+                  ? "—"
+                  : ((stats.typCorrect / stats.imagesTotal) * 100).toFixed(1) +
+                    "%"}
+              </div>
+
+              <div style={{ marginTop: "0.2rem" }}>
+                <strong>Subtyp richtig:</strong>{" "}
+                {stats.subtypTotal === 0
+                  ? "—"
+                  : ((stats.subtypCorrect / stats.subtypTotal) * 100).toFixed(
+                      1
+                    ) + "%"}
+              </div>
+
+              <div style={{ marginTop: "0.2rem" }}>
+                <strong>Wing richtig:</strong>{" "}
+                {stats.wingTotal === 0
+                  ? "—"
+                  : ((stats.wingCorrect / stats.wingTotal) * 100).toFixed(1) +
+                    "%"}
+              </div>
+
+              <div style={{ marginTop: "0.35rem" }}>
+                <strong>Gesamt korrekt:</strong>{" "}
+                {stats.imagesTotal === 0
+                  ? "—"
+                  : ((stats.overallCorrect / stats.imagesTotal) * 100).toFixed(
+                      1
+                    ) + "%"}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-{/* Stats Toggle + Premium Stats Box */}
-<div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-  <button
-    onClick={() => setShowStats((v) => !v)}
-    style={{
-      backgroundColor: "#c2a178",
-      border: "1px solid #000",
-      borderRadius: "0.5rem",
-      padding: "0.35rem 0.8rem",
-      fontWeight: "bold",
-      cursor: "pointer",
-      color: "#000",
-      marginBottom: "0.75rem",
-    }}
-  >
-    {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
-  </button>
-
-  {showStats && (
-    <div
-      style={{
-        maxWidth: "520px",
-        margin: "0 auto",
-        backgroundColor: "#c8a979",
-        borderRadius: "0.9rem",
-        padding: "0.9rem",
-        borderTop: "2px solid #8b6b3c",
-        borderBottom: "2px solid #8b6b3c",
-        boxShadow: "0 3px 8px rgba(0,0,0,0.35)",
-        fontSize: "1rem",
-      }}
-    >
-      <div style={{ fontWeight: "800", marginBottom: "0.4rem" }}>
-        📈 Trefferquote
-      </div>
-
-      <div style={{ backgroundColor: "#f5e6d2", padding: "0.6rem", borderRadius: "0.6rem" }}>
-        <div><strong>Bilder gesamt:</strong> {stats.imagesTotal}</div>
-
-        <div style={{ marginTop: "0.35rem" }}>
-          <strong>Typ richtig:</strong>{" "}
-          {stats.imagesTotal === 0 ? "—" : ((stats.typCorrect / stats.imagesTotal) * 100).toFixed(1) + "%"}
-        </div>
-
-        <div style={{ marginTop: "0.2rem" }}>
-          <strong>Subtyp richtig:</strong>{" "}
-          {stats.subtypTotal === 0 ? "—" : ((stats.subtypCorrect / stats.subtypTotal) * 100).toFixed(1) + "%"}
-        </div>
-
-        <div style={{ marginTop: "0.2rem" }}>
-          <strong>Wing richtig:</strong>{" "}
-          {stats.wingTotal === 0 ? "—" : ((stats.wingCorrect / stats.wingTotal) * 100).toFixed(1) + "%"}
-        </div>
-
-        <div style={{ marginTop: "0.35rem" }}>
-          <strong>Gesamt korrekt:</strong>{" "}
-          {stats.imagesTotal === 0 ? "—" : ((stats.overallCorrect / stats.imagesTotal) * 100).toFixed(1) + "%"}
-        </div>
-      </div>
-    </div>
-  )}
-</div>
       <div
         style={{
           display: "flex",
@@ -652,9 +677,7 @@ localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
                     color: (() => {
                       if (fb.istRichtig) return "green";
                       if (
-                        (fb.typRichtig ||
-                          fb.subtypRichtig ||
-                          fb.wingRichtig) &&
+                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
                         level !== "anfaenger"
                       ) {
                         return "#a65e00";
