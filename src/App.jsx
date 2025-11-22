@@ -3,6 +3,7 @@ import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
 
 const LOCALSTORAGE_KEY = "geseheneBilder";
+const STATS_KEY = "ennea_quiz_stats";
 
 // >>> HIER anpassen, falls Pfad/Name anders ist:
 const LEXIKON_BASE_URL = "https://ennea-lexikon.netlify.app";
@@ -25,7 +26,13 @@ function resetGezeigteBilder() {
 
 const subtypen = ["Se", "So", "Sx"];
 const typen = Array.from({ length: 9 }, (_, i) => i + 1);
-const wings = Array.from({ length: 9 }, (_, i) => i + 1);
+
+function getWingsForType(typ) {
+  if (!typ) return [];
+  const left = typ === 1 ? 9 : typ - 1;
+  const right = typ === 9 ? 1 : typ + 1;
+  return [left, right];
+}
 
 const dropdownStyle = {
   width: "100%",
@@ -52,8 +59,31 @@ function parseBildInfo(pfad) {
   };
 }
 
+// --- Ausgewogene Ziehlogik (40 / 40 / 20) ---
+function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
+  const w = 0.4;
+  const m = 0.4;
+  const n = 0.2;
+
+  const r = Math.random();
+  let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
+
+  let unge = pool.filter((b) => !gesehen.includes(b.datei));
+
+  if (unge.length === 0) {
+    unge = [...pool];
+  }
+
+  // Zufallsbild zurückgeben
+  return unge[Math.floor(Math.random() * unge.length)];
+}
+
 export default function QuizModul() {
   const [alleBilder, setAlleBilder] = useState([]); // kompletter Pool aus JSON
+  const [weiblichPool, setWeiblichPool] = useState([]);
+  const [maennlichPool, setMaennlichPool] = useState([]);
+  const [neutralPool, setNeutralPool] = useState([]);
+
   const [rundeBilder, setRundeBilder] = useState([]);
   const [antworten, setAntworten] = useState({});
   const [feedback, setFeedback] = useState({});
@@ -66,58 +96,55 @@ export default function QuizModul() {
   // Level: anfaenger | fortgeschritten | expert
   const [level, setLevel] = useState("fortgeschritten");
 
-  // JSON vom Lexikon laden
+  // --- Trefferquote / Stats ---
+  const [showStats, setShowStats] = useState(false);
+  const [stats, setStats] = useState({
+    imagesTotal: 0, // Anzahl geübter Bilder
+    overallCorrect: 0, // alles korrekt (je Bild, je Level)
+    typCorrect: 0, // Typ richtig
+    subtypTotal: 0, // Subtyp-Versuche (nur ab Fortgeschritten)
+    subtypCorrect: 0, // Subtyp richtig
+    wingTotal: 0, // Wing-Versuche (nur Expert & wenn Wing vorhanden)
+    wingCorrect: 0, // Wing richtig
+  });
+  // --- Stats aus LocalStorage laden ---
   useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
-        const res = await fetch(QUIZ_BILDER_URL);
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        const data = await res.json();
-        const bilder = data.bilder || [];
-        // mit geparsten Infos anreichern
-        const enriched = bilder.map((bild) => ({
-          ...bild,
-          ...parseBildInfo(bild.pfad),
-        }));
-        setAlleBilder(enriched);
-        // erste Runde setzen
-        starteNeueRunde(enriched);
-      } catch (e) {
-        console.error("Fehler beim Laden der Quizdaten:", e);
-        setError("Daten konnten nicht geladen werden.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+    if (saved) setStats(saved);
   }, []);
-
-  const starteNeueRunde = (pool = alleBilder) => {
+  const starteNeueRunde = (
+    pool = alleBilder,
+    weiblichArg = weiblichPool,
+    maennlichArg = maennlichPool,
+    neutralArg = neutralPool
+  ) => {
     if (!pool || pool.length === 0) {
       setRundeBilder([]);
       return;
     }
 
     const gesehen = ladeGeseheneBilder();
-    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
 
-    // Wenn zu wenige übrig sind, reset und wieder von vorn
+    // (Optionaler Reset-Mechanismus bleibt, auch wenn Ziehung nun über Pools läuft)
+    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
     if (nochNichtGesehen.length < 2) {
       resetGezeigteBilder();
       nochNichtGesehen = [...pool];
     }
 
-    const neue = [...nochNichtGesehen]
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 2) // <<< NUR 2 BILDER
-      .map((bild) => ({
-        ...bild,
-      }));
+    const bild1 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      gesehen
+    );
+
+    const bild2 = zieheAusgewogenesBild(weiblichArg, maennlichArg, neutralArg, [
+      ...gesehen,
+      bild1.datei,
+    ]);
+
+    const neue = [bild1, bild2];
 
     setRundeBilder(neue);
     setAntworten({});
@@ -126,6 +153,50 @@ export default function QuizModul() {
 
     speichereGezeigteBilder(neue.map((b) => b.datei));
   };
+
+  // JSON vom Lexikon laden
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(QUIZ_BILDER_URL);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        const bilder = data.bilder || [];
+
+        const enriched = bilder.map((bild) => ({
+          ...bild,
+          ...parseBildInfo(bild.pfad),
+        }));
+
+        // Pools berechnen
+        const weiblich = enriched.filter((b) => b.typ >= 1 && b.typ <= 4);
+        const maennlich = enriched.filter((b) => b.typ >= 5 && b.typ <= 8);
+        const neutral = enriched.filter((b) => b.typ === 9);
+
+        // In State speichern
+        setWeiblichPool(weiblich);
+        setMaennlichPool(maennlich);
+        setNeutralPool(neutral);
+
+        setAlleBilder(enriched);
+
+        // erste Runde mit frischen Pools starten
+        starteNeueRunde(enriched, weiblich, maennlich, neutral);
+      } catch (e) {
+        console.error("Fehler beim Laden der Quizdaten:", e);
+        setError("Daten konnten nicht geladen werden.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
@@ -163,6 +234,44 @@ export default function QuizModul() {
         istRichtig,
       };
     });
+    // --- Stats aktualisieren ---
+    let overallInc = 0;
+    let typInc = 0;
+    let subtypInc = 0;
+    let wingInc = 0;
+
+    let subtypTotalInc = 0;
+    let wingTotalInc = 0;
+
+    rundeBilder.forEach((bild, index) => {
+      const r = result[index];
+
+      if (r.istRichtig) overallInc++;
+      if (r.typRichtig) typInc++;
+
+      if (level !== "anfaenger") {
+        subtypTotalInc++;
+        if (r.subtypRichtig) subtypInc++;
+      }
+
+      if (level === "expert" && bild.wing != null) {
+        wingTotalInc++;
+        if (r.wingRichtig) wingInc++;
+      }
+    });
+
+    const newStats = {
+      imagesTotal: stats.imagesTotal + rundeBilder.length,
+      overallCorrect: stats.overallCorrect + overallInc,
+      typCorrect: stats.typCorrect + typInc,
+      subtypTotal: stats.subtypTotal + subtypTotalInc,
+      subtypCorrect: stats.subtypCorrect + subtypInc,
+      wingTotal: stats.wingTotal + wingTotalInc,
+      wingCorrect: stats.wingCorrect + wingInc,
+    };
+
+    setStats(newStats);
+    localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
     setFeedback(result);
     setGeprueft(true);
   };
@@ -249,12 +358,7 @@ export default function QuizModul() {
       </h1>
 
       {/* Level-Schalter */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
         {[
           { key: "anfaenger", label: "Anfänger" },
           { key: "fortgeschritten", label: "Fortgeschritten" },
@@ -268,16 +372,102 @@ export default function QuizModul() {
               padding: "0.4rem 0.8rem",
               borderRadius: "0.5rem",
               border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-              backgroundColor: level === lvl.key ? "#f5e6d2" : "#c8a979",
+              backgroundColor: level === lvl.key ? "#c2a178" : "#c8a979",
+              color: level === lvl.key ? "#000" : "#222",
               cursor: "pointer",
               fontWeight: "bold",
+              boxShadow:
+                level === lvl.key ? "0 0 0 2px rgba(0,0,0,0.3)" : "none",
             }}
           >
             {lvl.label}
           </button>
         ))}
       </div>
+      {/* Stats Toggle + Premium Stats Box */}
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        <button
+          onClick={() => setShowStats((v) => !v)}
+          style={{
+            backgroundColor: "#c2a178",
+            border: "1px solid #000",
+            borderRadius: "0.5rem",
+            padding: "0.35rem 0.8rem",
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "#000",
+            marginBottom: "0.75rem",
+          }}
+        >
+          {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
+        </button>
 
+        {showStats && (
+          <div
+            style={{
+              maxWidth: "520px",
+              margin: "0 auto",
+              backgroundColor: "#c8a979",
+              borderRadius: "0.9rem",
+              padding: "0.9rem",
+              borderTop: "2px solid #8b6b3c",
+              borderBottom: "2px solid #8b6b3c",
+              boxShadow: "0 3px 8px rgba(0,0,0,0.35)",
+              fontSize: "1rem",
+            }}
+          >
+            <div style={{ fontWeight: "800", marginBottom: "0.4rem" }}>
+              📈 Trefferquote
+            </div>
+
+            <div
+              style={{
+                backgroundColor: "#f5e6d2",
+                padding: "0.6rem",
+                borderRadius: "0.6rem",
+              }}
+            >
+              <div>
+                <strong>Bilder gesamt:</strong> {stats.imagesTotal}
+              </div>
+
+              <div style={{ marginTop: "0.35rem" }}>
+                <strong>Typ richtig:</strong>{" "}
+                {stats.imagesTotal === 0
+                  ? "—"
+                  : ((stats.typCorrect / stats.imagesTotal) * 100).toFixed(1) +
+                    "%"}
+              </div>
+
+              <div style={{ marginTop: "0.2rem" }}>
+                <strong>Subtyp richtig:</strong>{" "}
+                {stats.subtypTotal === 0
+                  ? "—"
+                  : ((stats.subtypCorrect / stats.subtypTotal) * 100).toFixed(
+                      1
+                    ) + "%"}
+              </div>
+
+              <div style={{ marginTop: "0.2rem" }}>
+                <strong>Wing richtig:</strong>{" "}
+                {stats.wingTotal === 0
+                  ? "—"
+                  : ((stats.wingCorrect / stats.wingTotal) * 100).toFixed(1) +
+                    "%"}
+              </div>
+
+              <div style={{ marginTop: "0.35rem" }}>
+                <strong>Gesamt korrekt:</strong>{" "}
+                {stats.imagesTotal === 0
+                  ? "—"
+                  : ((stats.overallCorrect / stats.imagesTotal) * 100).toFixed(
+                      1
+                    ) + "%"}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
       <div
         style={{
           display: "flex",
@@ -290,7 +480,6 @@ export default function QuizModul() {
           const userAntwort = antworten[index] || {};
           const fb = feedback[index];
 
-          // Bild-URL vom Lexikon
           const pfad = `${LEXIKON_BASE_URL}/bilder/${
             bild.pfad
           }/${encodeURIComponent(bild.datei)}`;
@@ -396,68 +585,79 @@ export default function QuizModul() {
               )}
 
               {/* Wing nur im Expert-Modus, wenn im Pfad vorhanden */}
-              {level === "expert" && bild.wing != null && (
-                <div style={{ marginBottom: "0.5rem" }}>
-                  <select
-                    value={userAntwort.wing || ""}
-                    onChange={(e) =>
-                      handleAntwort(index, "wing", e.target.value)
-                    }
-                    style={dropdownStyle}
-                  >
-                    <option value="" disabled hidden>
-                      Wing auswählen
-                    </option>
-                    {wings.map((w) => (
-                      <option key={w} value={w}>
-                        {w}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Merkmale */}
               {(() => {
-                const key = `${bild.subtyp}${bild.typ}`; // z.B. "Se4"
-                const merkm = merkmale[key];
+                const userTyp = userAntwort.typ
+                  ? parseInt(userAntwort.typ, 10)
+                  : null;
 
                 return (
-                  merkm && (
-                    <details
+                  level === "expert" &&
+                  bild.wing != null &&
+                  userTyp && (
+                    <div style={{ marginBottom: "0.5rem" }}>
+                      <select
+                        value={userAntwort.wing || ""}
+                        onChange={(e) =>
+                          handleAntwort(index, "wing", e.target.value)
+                        }
+                        style={dropdownStyle}
+                      >
+                        <option value="" disabled hidden>
+                          Wing auswählen
+                        </option>
+                        {getWingsForType(userTyp).map((w) => (
+                          <option key={w} value={w}>
+                            {w}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )
+                );
+              })()}
+
+              {/* Merkmale (nicht im Expert-Modus) */}
+              {(() => {
+                const key = `${bild.subtyp}${bild.typ}`;
+                const merkm = merkmale[key];
+
+                if (level === "expert") return null;
+                if (!merkm) return null;
+
+                return (
+                  <details
+                    style={{
+                      backgroundColor: "#f5e6d2",
+                      padding: "0.75rem",
+                      borderRadius: "0.6rem",
+                      fontSize: "0.9rem",
+                      border: "1px solid #a68b65",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    <summary
                       style={{
-                        backgroundColor: "#f5e6d2",
-                        padding: "0.75rem",
-                        borderRadius: "0.6rem",
-                        fontSize: "0.9rem",
-                        border: "1px solid #a68b65",
+                        cursor: "pointer",
+                        fontWeight: "bold",
                         marginBottom: "0.5rem",
                       }}
                     >
-                      <summary
-                        style={{
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                          marginBottom: "0.5rem",
-                        }}
-                      >
-                        Typ-Merkmale einblenden
-                      </summary>
-                      <div>
-                        <strong>Seite des Enneagramms:</strong> {merkm.seite}
-                      </div>
-                      <div>
-                        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-                      </div>
-                      <div>
-                        <strong>Körperliche Auffälligkeiten:</strong>{" "}
-                        {merkm.koerperlich}
-                      </div>
-                      <div>
-                        <strong>Wirkung:</strong> {merkm.wirkung}
-                      </div>
-                    </details>
-                  )
+                      Typ-Merkmale einblenden
+                    </summary>
+                    <div>
+                      <strong>Seite des Enneagramms:</strong> {merkm.seite}
+                    </div>
+                    <div>
+                      <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+                    </div>
+                    <div>
+                      <strong>Körperliche Auffälligkeiten:</strong>{" "}
+                      {merkm.koerperlich}
+                    </div>
+                    <div>
+                      <strong>Wirkung:</strong> {merkm.wirkung}
+                    </div>
+                  </details>
                 );
               })()}
 
@@ -469,13 +669,11 @@ export default function QuizModul() {
                     fontWeight: "bold",
                     color: (() => {
                       if (fb.istRichtig) return "green";
-
-                      // Teilrichtig einfärben in Fortgeschritten/Expert
                       if (
                         (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
                         level !== "anfaenger"
                       ) {
-                        return "#a65e00"; // orange
+                        return "#a65e00";
                       }
                       return "crimson";
                     })(),
@@ -486,8 +684,6 @@ export default function QuizModul() {
                     if (level === "anfaenger") {
                       return fb.typRichtig ? "✔️ Typ richtig" : "❌ Typ falsch";
                     }
-
-                    // Fortgeschritten / Expert differenziert
                     if (fb.istRichtig) return "✔️ Alles korrekt";
 
                     const teile = [];
@@ -519,6 +715,7 @@ export default function QuizModul() {
               padding: "0.75rem 1.5rem",
               fontWeight: "bold",
               cursor: "pointer",
+              color: "#000",
             }}
           >
             Antwort überprüfen
@@ -533,6 +730,7 @@ export default function QuizModul() {
               padding: "0.75rem 1.5rem",
               fontWeight: "bold",
               cursor: "pointer",
+              color: "#000",
             }}
           >
             Nächste Runde
@@ -559,17 +757,45 @@ export default function QuizModul() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              width: "600px",
-              height: "800px",
+              position: "relative",
+              width: "90vw",
+              maxWidth: "600px",
+              height: "80vh",
+              maxHeight: "800px",
               backgroundColor: "#c8a979",
               borderRadius: "1rem",
               padding: "1rem",
-              boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+              boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setVergroessertesBild(null);
+              }}
+              style={{
+                position: "absolute",
+                top: "0.5rem",
+                right: "0.5rem",
+                background: "rgba(0, 0, 0, 0.6)",
+                border: "none",
+                borderRadius: "999px",
+                width: "32px",
+                height: "32px",
+                color: "#f5e6d2",
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                cursor: "pointer",
+                lineHeight: "1",
+              }}
+              aria-label="Schließen"
+            >
+              ×
+            </button>
+
             <img
               src={vergroessertesBild.pfad}
               alt={vergroessertesBild.title}
