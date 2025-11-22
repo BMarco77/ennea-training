@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
+import LexButton from "./components/LexButton.jsx";
 
 const LOCALSTORAGE_KEY = "geseheneBilder";
 const STATS_KEY = "ennea_quiz_stats";
@@ -419,32 +420,38 @@ useEffect(() => {
       </h1>
 
       {/* Level-Schalter */}
-      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+      <div className="text-center mb-6 flex justify-center gap-2 flex-wrap">
         {[
           { key: "anfaenger", label: "Anfänger" },
           { key: "fortgeschritten", label: "Fortgeschritten" },
           { key: "expert", label: "Expert" },
-        ].map((lvl) => (
-          <button
-            key={lvl.key}
-            onClick={() => setLevel(lvl.key)}
-            style={{
-              marginRight: "0.5rem",
-              padding: "0.4rem 0.8rem",
-              borderRadius: "0.5rem",
-              border: level === lvl.key ? "2px solid #000" : "1px solid #555",
-              backgroundColor: level === lvl.key ? "#c2a178" : "#c8a979",
-              color: level === lvl.key ? "#000" : "#222",
-              cursor: "pointer",
-              fontWeight: "bold",
-              boxShadow:
-                level === lvl.key ? "0 0 0 2px rgba(0,0,0,0.3)" : "none",
-            }}
-          >
-            {lvl.label}
-          </button>
-        ))}
+        ].map((lvl) => {
+          const isActive = level === lvl.key;
+
+          return (
+            <LexButton
+              key={lvl.key}
+              active={isActive}
+              onClick={() => setLevel(lvl.key)}
+              className={[
+                // kompakter als Standard-LexButton
+                "px-3 py-1.5 text-sm min-w-0",
+                // Active soll einen stärkeren Rahmen haben wie vorher
+                isActive
+                  ? "border-2 border-black shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
+                  : "border border-black/60",
+                // leicht andere Inactive-Farbe als LexButton-Default (wie bei dir #c8a979)
+                !isActive
+                  ? "bg-[#c8a979] text-black/90 hover:bg-[#d2b089]"
+                  : "",
+              ].join(" ")}
+            >
+              {lvl.label}
+            </LexButton>
+          );
+        })}
       </div>
+
       {/* Stats Toggle + Premium Stats Box */}
       <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
         <button
