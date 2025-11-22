@@ -338,7 +338,7 @@ export default function QuizModul() {
         <img
           src={wappen}
           alt="Wappen"
-          className="mx-auto block mb-4 max-w-[220px] h-auto"
+          className="mx-auto block mb-4 max-w-[120px] h-auto"
         />
       </div>
 
@@ -369,16 +369,10 @@ export default function QuizModul() {
               active={isActive}
               onClick={() => setLevel(lvl.key)}
               className={[
-                // kompakter als Standard-LexButton
-                "px-3 py-1.5 text-sm min-w-0",
-                // Active soll einen stärkeren Rahmen haben wie vorher
+                "px-4 py-2 text-sm w-[140px]", // <- gleich breit
                 isActive
                   ? "border-2 border-black shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
-                  : "border border-black/60",
-                // leicht andere Inactive-Farbe als LexButton-Default (wie bei dir #c8a979)
-                !isActive
-                  ? "bg-[#c8a979] text-black/90 hover:bg-[#d2b089]"
-                  : "",
+                  : "border border-black/60 bg-[#c8a979] text-black/90 hover:bg-[#d2b089]",
               ].join(" ")}
             >
               {lvl.label}
