@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
@@ -95,6 +96,66 @@ export default function QuizModul() {
 
   // Level: anfaenger | fortgeschritten | expert
   const [level, setLevel] = useState("fortgeschritten");
+  
+  // --- Trefferquote / Stats ---
+const [showStats, setShowStats] = useState(false);
+const [stats, setStats] = useState({
+  imagesTotal: 0,        // Anzahl geübter Bilder
+  overallCorrect: 0,     // alles korrekt (je Bild, je Level)
+  typCorrect: 0,         // Typ richtig
+  subtypTotal: 0,        // Subtyp-Versuche (nur ab Fortgeschritten)
+  subtypCorrect: 0,      // Subtyp richtig
+  wingTotal: 0,          // Wing-Versuche (nur Expert & wenn Wing vorhanden)
+  wingCorrect: 0,        // Wing richtig
+});
+// --- Stats aus LocalStorage laden ---
+useEffect(() => {
+  const saved = JSON.parse(localStorage.getItem(STATS_KEY));
+  if (saved) setStats(saved);
+}, []);
+  const starteNeueRunde = (
+    pool = alleBilder,
+    weiblichArg = weiblichPool,
+    maennlichArg = maennlichPool,
+    neutralArg = neutralPool
+  ) => {
+    if (!pool || pool.length === 0) {
+      setRundeBilder([]);
+      return;
+    }
+
+    const gesehen = ladeGeseheneBilder();
+
+    // (Optionaler Reset-Mechanismus bleibt, auch wenn Ziehung nun über Pools läuft)
+    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+    if (nochNichtGesehen.length < 2) {
+      resetGezeigteBilder();
+      nochNichtGesehen = [...pool];
+    }
+
+    const bild1 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      gesehen
+    );
+
+    const bild2 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      [...gesehen, bild1.datei]
+    );
+
+    const neue = [bild1, bild2];
+
+    setRundeBilder(neue);
+    setAntworten({});
+    setFeedback({});
+    setGeprueft(false);
+
+    speichereGezeigteBilder(neue.map((b) => b.datei));
+  };
 
   // --- Trefferquote / Stats ---
   const [showStats, setShowStats] = useState(false);
@@ -670,7 +731,9 @@ export default function QuizModul() {
                     color: (() => {
                       if (fb.istRichtig) return "green";
                       if (
-                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
+                        (fb.typRichtig ||
+                          fb.subtypRichtig ||
+                          fb.wingRichtig) &&
                         level !== "anfaenger"
                       ) {
                         return "#a65e00";
