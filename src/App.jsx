@@ -338,11 +338,7 @@ export default function QuizModul() {
         <img
           src={wappen}
           alt="Wappen"
-          style={{
-            width: "120px",
-            height: "auto",
-            marginBottom: "0rem",
-          }}
+          className="mx-auto block mb-4 max-w-[220px] h-auto"
         />
       </div>
 
