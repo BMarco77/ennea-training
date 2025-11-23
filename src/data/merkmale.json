@@ -1,0 +1,219 @@
+{
+  "Sx6": {
+    "seite": "männlich",
+    "augenausdruck": "skeptisch, hinterfragend, rational, distanziert, ängstlich-misstrauisch, selbstdarstellerisch",
+    "koerperlich": "gepflegtes Äußeres, markanter Kiefer, grobe Nase, tiefe Augenhöhlen, lange Wimpern, volle Lippen, hohe Stirn, dünnes Haar, Geheimratsecken",
+    "wirkung": "jugendlich, hitzig, skeptisch, selbstdarstellerisch, ängstlich",
+    "sonstiges": "/",
+    "tier": "Wolf, Bulldogge, Hai"
+  },
+  "So1": {
+    "seite": "weiblich",
+    "augenausdruck": "starr, fokussiert, kühl, berechnend, arrogant, zornig, abgehoben",
+    "koerperlich": "glatte Haut, gepflegtes Äußeres, schmales Gesicht, dünner Körperbau, markante Augenbrauen, Geheimratsecken, Zornesfalte, angespannte Mundwinkel, Lachfalten, feine Nase, normaler Haaransatz",
+    "wirkung": "erwachsen, kalt, starr, fokussiert, arrogant, zornig",
+    "sonstiges": "oft zurückhaltend im Auftreten",
+    "tier": "Gans, Storch, Flamingo, Agame, Terrier"
+  },
+  "Se1": {
+    "seite": "weiblich",
+    "augenausdruck": "sicher, unemotional, starr, warm, freundlich, Reptilienaugen, düster",
+    "koerperlich": "reine Haut, perfekts Äußeres, schmales Gesicht, angespannte Gesichtszüge, Zornesfalte, lange Wimpern, dünner Unterkiefer",
+    "wirkung": "freundlich, warm, diszipliniert, moralisch, fest, sicher",
+    "sonstiges": "",
+    "tier": "Adler, Biene"
+  },
+  "Sx1": {
+    "seite": "weiblich",
+    "augenausdruck": "kühl, fokussiert, starr, zornig, instinktiv, arrogant, missionarisch",
+    "koerperlich": "gepflegtes Äußeres, angespannte Gesichtszüge, schmales Gesicht, starker Unterkiefer, Zornesfalte, Stirnfalten, normaler Haaransatz, lange Wimpern",
+    "wirkung": "jugendlich, hitzig, provokant, starr, arrogant, aggressiv",
+    "sonstiges": "",
+    "tier": "Schwarze Schlange, Hornisse, Eisbär, Muräne, Mader"
+  },
+
+  "Se2": {
+    "seite": "weiblich",
+    "augenausdruck": "dominant, emotional-glänzend, gesammelt, herzlich, voll, präsent, kümmernd, kiebig",
+    "koerperlich": "weiche Züge, gepflegtes Äußeres, lange Wimpern, runder Kopf, reine Haut, volle Lippen, kindliches Äüßeres, volles Haar",
+    "wirkung": "gesammelt, gefestigt, selbstdarstellerisch, dominant, stolz, gereizt, gekränkt, skeptisch, lieb",
+    "sonstiges": "Männer wirken oft sehr weiblich",
+    "tier": "Nilpferd, Walross, Schwein, Henne, Känguru, Pelikan, Lama"
+  },
+  "So2": {
+    "seite": "weiblich",
+    "augenausdruck": "stolz, erwachsen, kühl, distanziert, lieb, kümmernd, emotional, glänzend, voll, angepasst",
+    "koerperlich": "glatte & reine Haut, gepflegtes Äußeres, weibliche Züge, lange Wimpern, feine Nase, volle Lippen, tiefe Stirn",
+    "wirkung": "feminin, ausdrucksstark, stolz, erwachsen-kühl, distanziert, verantwortungsvoll, hochmütig",
+    "sonstiges": "",
+    "tier": "Golden Retriever, Esel, Hirsch, Hahn"
+  },
+  "Sx2": {
+    "seite": "weiblich",
+    "augenausdruck": "lieb, kümmernd, emotional, \"Bambi-Augen\", stolz,",
+    "koerperlich": "weiche Züge, weibliche Züge, glatte & reine Haut, feine Nasenflügel, dünner Köperbau, lange Wimpern, tiefe Stirn, volle Lippen",
+    "wirkung": "jugendlich, ausdrucksstark, selbstdarstellerisch, lieb, freundlich, kümmernd, charmant",
+    "sonstiges": "",
+    "tier": "Kamel, Wildpferd"
+  },
+  "Se3": {
+    "seite": "weiblich",
+    "augenausdruck": "fokussiert, kühl, berechnend, unemotional-glänzend, dominant, gesammelt, wärme-imitierend, strahlend",
+    "koerperlich": "reine Haut, weiche Züge, gepflegtes Äußeres, volle Lippen, rundes Gesicht, Augenringe, lange Wimpern",
+    "wirkung": "image-orientiert, kühl, fokussiert, zukunftsgerichtet, gesammelt, egoistisch",
+    "sonstiges": "",
+    "tier": "Waschbär, Katze, Panther, Fuchs, Chamäleon, Maderhund"
+  },
+  "So3": {
+    "seite": "weiblich",
+    "augenausdruck": "kühl, glänzend, ausdrucksstark, leer, fokussiert, berechnend, ",
+    "koerperlich": "lange Wimpern, reine Haut, gepflegtes Äußeres, weibliche Züge, normaler Haaransatz, sicheres Lächeln, volles Haar, schmales Gesicht, tiefe Stirn",
+    "wirkung": "kühl, selbstdarstellerisch, glänzend",
+    "sonstiges": "",
+    "tier": "Gepard, Aal, Spinne, Schlange, Falke"
+  },
+  "Sx3": {
+    "seite": "weiblich",
+    "augenausdruck": "fokussiert, angeberisch, ausdrucksstark, hinterhältig, gewieft, kalt,",
+    "koerperlich": "reine Haut, weiche Zügen, normaler Haaransatz, volles Haar, Schönheitsideale, wenige Falten, feine Nase, volle Lippen, tiefe Stirn, lange Wimpern",
+    "wirkung": "charmant, hinterhältig, oppurtunistisch, selbstdarstellerisch, narzisstisch",
+    "sonstiges": "tragen gern auffälligen Schmuck oder Make-up",
+    "tier": "Pfau, Pudel, Elster"
+  },
+  "Se4": {
+    "seite": "weiblich",
+    "augenausdruck": "traurig, melancholisch, tief, emotional, \"Hellseher-Augen\",",
+    "koerperlich": "gepflegtes Äußeres, weibliche Züge, helle & reine Haut, volles Haar, volle/filigrane Lippen, feine/runde Nase",
+    "wirkung": "gesammelt, warm, traurig, tief, authentisch",
+    "sonstiges": "",
+    "tier": "Taube, Schwarzes Pferd, Raabe"
+  },
+  "So4": {
+    "seite": "weiblich",
+    "augenausdruck": "traurig, ausdrucksstark, tief, verträumt, ernst, kalt",
+    "koerperlich": "gepflegtes Äußeres, weibliche Züge, schmales Gesicht, feine Nase, reine & helle Haut, volles Haar, Sommersprossen",
+    "wirkung": "traurig, tief, ausdrucksstark, melancholisch, ernst, kalt, erwachsen",
+    "sonstiges": "",
+    "tier": "Murmeltier, Hausziege, Giraffe, Gazelle, Trauerschwan, Reh, Lamm, Frosch, Zebra, Seehund"
+  },
+  "Sx4": {
+    "seite": "weiblich",
+    "augenausdruck": "tief-träumerisch, provokant-glänzend, nach innen gerichtet, emotional, verführerisch",
+    "koerperlich": "gepflegtes Äußeres, weibliche Züge, glatte & helle Haut, normaler Haaransatz, extravagantes Auftreten",
+    "wirkung": "selbstdarstellerisch, image-orientiert, jugendlich, verträumt, traurig, provokant, tief, kreativ",
+    "sonstiges": "",
+    "tier": "Chihuahua, Bienenkönigin, Hyäne"
+  },
+  "Se5": {
+    "seite": "männlich",
+    "augenausdruck": "interessiert, beobachtend-glänzend, distanziert, emotionskarg, wissbegierig, neugierig, unemotional",
+    "koerperlich": "männliche Züge, runder Kopf, grobe Nase, Stirnfalten, Sehschwäche, buschige Augenbrauen, Haarausfall, hoher Haaransatz",
+    "wirkung": "rational, distanziert, nachdenklich, analytisch, warm, freundlich",
+    "sonstiges": "",
+    "tier": "Eule, Weinbergschnecke, Koala, Mistkäfer, Elch, Einsiedlerkrebs, Maulwurf, Dachs, Eichhörnchen, Hamster"
+  },
+  "So5": {
+    "seite": "männlich",
+    "augenausdruck": "distanziert, abgehoben, \"Schlafzimmerblick\", interessiert, beobachtend, verkopft, glänzend",
+    "koerperlich": "gepflegtes Äußeres, dünner Körperbau, grobe Nase, schmales Gesicht, Sehschwäche, hoher Haaransatz, dünnes Haar, Lachfalten, Geheimratsecken",
+    "wirkung": "belesen, schlau, überlegt, verkopft, interessiert, wissbegierig",
+    "sonstiges": "",
+    "tier": "Krake, Strauß"
+  },
+  "Sx5": {
+    "seite": "männlich",
+    "augenausdruck": "zurückhaltend, schüchtern, analytisch, interessiert, beobachtend, vorsichtig, scheu",
+    "koerperlich": "gepflegtes Äußeres, Sehschwäche, grobe Nase, Stirnfalten, Glatze, hoher Haaransatz, dünnes Haar, markanter Kiefer",
+    "wirkung": "zurückhaltend, schüchtern, beobachtend, jugendlich, gepflegt,",
+    "sonstiges": "",
+    "tier": "Igel, Muschel, Tintenfisch"
+  },
+  "Se6": {
+    "seite": "männlich",
+    "augenausdruck": "freundlich-warm, kindlich, angepasst, nett",
+    "koerperlich": "dünnes Haar, dünner Körperbau, männliche, aber weiche Züge (kindliche Se6), große Stirn, Sehschwäche, hoher Haaransatz, Geheimratsecken ",
+    "wirkung": "kindlich, warm, skeptisch, angpasst, freundlich, ängstlich, unsicher",
+    "sonstiges": "",
+    "tier": "Hase, Schaf, Opposum, Hund, Maus"
+  },
+  "So6": {
+    "seite": "männlich",
+    "augenausdruck": "kühl, distanziert, skeptisch, berechnend, unsicher, ängstlich",
+    "koerperlich": "grobe Züge, starker Unterkiefer, breites Gesicht, Sehschwäche, grobe Nase, dünnes Haar, große Stirn, dünne Lippen",
+    "wirkung": "kalt-erwachsen, distanziert, kritisch-beäugend, skeptisch, rational, verkopft",
+    "sonstiges": "",
+    "tier": "Erdmännchen, Pinguin, Ratte, Schäferhund"
+  },
+  "Se7": {
+    "seite": "männlich",
+    "augenausdruck": "gesammelt, egoistisch, glänzend, auffressend, Knopfaugen, düster",
+    "koerperlich": "gepflegtes Äußeres, große Stirn, weiche Züge, reine Haut, grobe/runde Nase, hoher Haaransatz, dünnes Haar, Haarausfall, volle Lippen, Lachfalten, Sehschwäche, weiche Züge",
+    "wirkung": "gesammelt, egoistisch, locker, düster, ernst, kindlich",
+    "sonstiges": "",
+    "tier": "Gorilla, Labrador, Panda, Made"
+  },
+  "So7": {
+    "seite": "männlich",
+    "augenausdruck": "glänzend-begeistert, erwachsen-kühl, unemotional, dominant, verspielt",
+    "koerperlich": "gepflegtes Äußerers, weiche Zügen, reine Haut, hohe Stirn, markantes Lächeln, Stirnfalten, Sehschwäche, grobe Nase, dünnes Haar, Lachfalten, breites Gesicht",
+    "wirkung": "erwachsen-kühl, locker, spaßig, nüchtern-begeistert, optimistisch",
+    "sonstiges": "",
+    "tier": "Biber, Ente, Meerschweinchen"
+  },
+  "Sx7": {
+    "seite": "männlich",
+    "augenausdruck": "auffressend, begeistert, voll, glänzend, unsicher, berechnend, Knopfaugen",
+    "koerperlich": "großes Lächeln, starker Unterkiefer, gepflegtes Äußeres, weiche Züge trotz männlicher Seite (7er Indiz), reine Haut, große Stirn, lange Wimpern, ",
+    "wirkung": "jugendlich, hitzig, spaßig-humorvoll, begeistert, unemotional, berechnend",
+    "sonstiges": "",
+    "tier": "Schimpanse, Schmetterling, Delfin"
+  },
+  "Se8": {
+    "seite": "männlich",
+    "augenausdruck": "kalt, gierig, einnehmend, ernst, gesammelt",
+    "koerperlich": "Zornesfalte, grobe Züge, buschige Augenbrauen, runder Kopf, Zornesbacken, hoher Haaransatz, große Stirn, dünnes Haar, große Ohren",
+    "wirkung": "dominant, maskulin, einnehmend, instinktiv, aggressiv, kontrollierend, gierig-glänzend, gesammelt, berechnend, \"ein Fels in der Brandung\"",
+    "sonstiges": "",
+    "tier": "Orang-Utan, Nashorn, Wildschwein, Seeteufel"
+  },
+  "So8": {
+    "seite": "männlich",
+    "augenausdruck": "kühl-glänzend, gierig, gesammelt, erwachsen, distanziert, aggressiv",
+    "koerperlich": "maskuline Züge, große Nase, starker Unterkiefer, grobe Haut, markante Augenbrauen, große Ohren",
+    "wirkung": "gesammelt, angepasst-freundlich, dominant, durchsetzungsstark, männlich",
+    "sonstiges": "",
+    "tier": "Löwe, Stier"
+  },
+  "Sx8": {
+    "seite": "männlich",
+    "augenausdruck": "Reptilienaugen, kalt, gierig, dominant, stark, einnehmend",
+    "koerperlich": "männliche Züge, grobe Nase, Lachfalten, Zornesfalte, Stirnfalten, grobe Züge, Haarausfall, dünnes Haar, große Ohren",
+    "wirkung": "maskulin, grob, durchsetzungsstark, dominant, kalt, skrupellos, verspielt (7er-Flügel), in sich ruhend (9er-Flügel)",
+    "sonstiges": "",
+    "tier": "Krokodil, Königstiger, Orca, Skorpion"
+  },
+  "Se9": {
+    "seite": "neutral",
+    "augenausdruck": "Reptilienaugen, peripher, ausdruckslos, matt",
+    "koerperlich": "weich und wabbelig, korpulenter Körperbau, volles Haar, runde Nase, verschwommene Züge, sowohl mönnlich als auch weiblich im Erscheinungsbild, Lachfalten",
+    "wirkung": "kindlich, egoistisch, verschwommen, matt, positiv, warm, angpasst, tierisch",
+    "sonstiges": "",
+    "tier": "Elefant, Riesenschildkröte, Braunbär, Blauwal, Alligator, Kugelfisch"
+  },
+  "So9": {
+    "seite": "neutral",
+    "augenausdruck": "matt, müde, ausdruckslos, sanft, friedlich, peripher",
+    "koerperlich": "Lachfalten, weiche Züge, angepasstes Lächeln, Zornesfalte, zugekniffene Augen (unterdrückte Aggression = Indiz für Typ 9), starke Augenbrauen",
+    "wirkung": "verschwommen, friedlich, sanft, kalt-erwachsen",
+    "sonstiges": "",
+    "tier": "Büffel, Ameise, Fisch, Rentier, Echse, Kuh, Husky"
+  },
+  "Sx9": {
+    "seite": "neutral",
+    "augenausdruck": "peripher, müde, matt, freundlich-interessiert, verschmelzend, ausdruckslos, besonnen, dominant (8er-Flügel)",
+    "koerperlich": "glatte Haut, verschwommene Züge, spitze Nase, lange Wimpern, sowohl männliche als auch weibliche Züge, Lachfalten, Zornesfalte, markanter Kiefer",
+    "wirkung": "jugendlich, angpasst, friedlich, konturenlos, konfliktscheu",
+    "sonstiges": "",
+    "tier": "Faultier, Frettchen, Goldfisch, Kaulquappe, Murmeltier"
+  }
+}
