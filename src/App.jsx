@@ -38,15 +38,24 @@ function getWingsForType(typ) {
 const dropdownStyle = {
   width: "100%",
   padding: "0.4rem 0.6rem",
-  borderRadius: "0.5rem",
-  border: "1px solid #444",
+  borderRadius: "0.7rem",
+  border: "1.5px solid black",
   backgroundColor: "#f5e6d2",
   fontFamily: "inherit",
-  fontSize: "0.95rem",
-  color: "#333",
+  fontSize: "1rem",
+  color: "#111",
   boxSizing: "border-box",
-  boxShadow: "inset 0 1px 1px rgba(0,0,0,0.1)",
   cursor: "pointer",
+
+  appearance: "none",
+  WebkitAppearance: "none",
+  MozAppearance: "none",
+
+  backgroundImage:
+    "url(\"data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 0.8rem center",
+  backgroundSize: "16px",
 };
 
 function parseBildInfo(pfad) {
@@ -90,6 +99,8 @@ export default function QuizModul() {
   const [error, setError] = useState(null);
 
   const [level, setLevel] = useState("fortgeschritten");
+  const [isFading, setIsFading] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState({});
 
   // --- Trefferquote / Stats ---
   const [showStats, setShowStats] = useState(false);
@@ -107,6 +118,36 @@ export default function QuizModul() {
     const saved = JSON.parse(localStorage.getItem(STATS_KEY));
     if (saved) setStats(saved);
   }, []);
+  function pickNaechsteBilder(
+    pool = alleBilder,
+    weiblichArg = weiblichPool,
+    maennlichArg = maennlichPool,
+    neutralArg = neutralPool
+  ) {
+    if (!pool || pool.length === 0) return [];
+
+    const gesehen = ladeGeseheneBilder();
+
+    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+    if (nochNichtGesehen.length < 2) {
+      resetGezeigteBilder();
+      nochNichtGesehen = [...pool];
+    }
+
+    const bild1 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      gesehen
+    );
+
+    const bild2 = zieheAusgewogenesBild(weiblichArg, maennlichArg, neutralArg, [
+      ...gesehen,
+      bild1.datei,
+    ]);
+
+    return [bild1, bild2];
+  }
 
   const starteNeueRunde = (
     pool = alleBilder,
@@ -139,8 +180,14 @@ export default function QuizModul() {
       bild1.datei,
     ]);
 
-    const neue = [bild1, bild2];
+    const neue = pickNaechsteBilder(
+      pool,
+      weiblichArg,
+      maennlichArg,
+      neutralArg
+    );
 
+    setImgLoaded({}); // reset, neue Bilder müssen erst laden
     setRundeBilder(neue);
     setAntworten({});
     setFeedback({});
@@ -256,8 +303,57 @@ export default function QuizModul() {
     setFeedback(result);
     setGeprueft(true);
   };
+  function preloadImage(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve; // auch bei Fehler nicht hängen bleiben
+      img.src = src;
+    });
+  }
 
-  const neueRunde = () => starteNeueRunde();
+  const neueRunde = async () => {
+    const neue = pickNaechsteBilder();
+
+    const srcs = neue.map((bild) => {
+      return `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
+        bild.datei
+      )}`;
+    });
+
+    const preloadPromise = Promise.all(srcs.map(preloadImage));
+
+    // wie lange wir maximal "sauber" preloaden wollen (ms)
+    const MAX_WAIT = 300;
+
+    const fullyPreloaded = await Promise.race([
+      preloadPromise.then(() => true).catch(() => true),
+      new Promise((resolve) => setTimeout(() => resolve(false), MAX_WAIT)),
+    ]);
+
+    // Jetzt erst den Fade + Swap machen
+    setIsFading(true);
+
+    setTimeout(() => {
+      if (fullyPreloaded) {
+        // Bilder sind schon im Cache -> wir können sie direkt als "geladen" markieren
+        setImgLoaded({ 0: true, 1: true });
+      } else {
+        // nicht fertig preload -> normaler Weg mit Placeholder
+        setImgLoaded({});
+        // Preload läuft im Hintergrund weiter
+        preloadPromise.catch(() => {});
+      }
+
+      setRundeBilder(neue);
+      setAntworten({});
+      setFeedback({});
+      setGeprueft(false);
+      speichereGezeigteBilder(neue.map((b) => b.datei));
+
+      setIsFading(false);
+    }, 150); // passt zu deiner duration-150
+  };
 
   // ⬇️ GENAU HIER REIN
   function StatBar({ label, value }) {
@@ -382,7 +478,12 @@ export default function QuizModul() {
       </div>
 
       {/* Karten */}
-      <div className="flex gap-8 flex-wrap justify-center mt-6">
+      <div
+        className={[
+          "flex gap-8 flex-wrap justify-center mt-6 transition-opacity duration-150 ease-in-out",
+          isFading ? "opacity-0 pointer-events-none" : "opacity-100",
+        ].join(" ")}
+      >
         {rundeBilder.map((bild, index) => {
           const userAntwort = antworten[index] || {};
           const fb = feedback[index];
@@ -396,10 +497,20 @@ export default function QuizModul() {
               key={bild.pfad + "-" + bild.datei}
               className="bg-[#c8a979] border border-black rounded-2xl p-4 w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
-              <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[300px] flex items-center justify-center">
+              <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[300px] flex items-center justify-center relative">
+                {/* Platzhalter solange Bild nicht geladen ist */}
+                {!imgLoaded[index] && (
+                  <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
+                    Bild lädt…
+                  </div>
+                )}
+
                 <img
                   src={pfad}
                   alt={bild.title}
+                  onLoad={() =>
+                    setImgLoaded((prev) => ({ ...prev, [index]: true }))
+                  }
                   onClick={() =>
                     setVergroessertesBild({ pfad, title: bild.title })
                   }
@@ -412,7 +523,10 @@ export default function QuizModul() {
                       e.target.src = altPfad;
                     }
                   }}
-                  className="max-w-full max-h-full object-contain block cursor-zoom-in"
+                  className={[
+                    "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
+                    imgLoaded[index] ? "opacity-100" : "opacity-0",
+                  ].join(" ")}
                 />
               </div>
 
@@ -499,22 +613,35 @@ export default function QuizModul() {
                 if (!merkm) return null;
 
                 return (
-                  <details className="bg-[#f5e6d2] p-3 rounded-lg text-sm border border-[#a68b65] mb-2">
-                    <summary className="cursor-pointer font-bold mb-2">
-                      Typ-Merkmale einblenden
+                  <details className="mb-2">
+                    <summary
+                      className="
+      cursor-pointer font-semibold
+      flex items-center h-[44px] px-4
+      rounded-[0.7rem] border-[1.5px] border-black
+      bg-[#f5e6d2] text-[#111]
+      shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]
+      select-none list-none
+      [&::-webkit-details-marker]:hidden
+    "
+                    >
+                      ▶ Typ-Merkmale einblenden
                     </summary>
-                    <div>
-                      <strong>Seite des Enneagramms:</strong> {merkm.seite}
-                    </div>
-                    <div>
-                      <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-                    </div>
-                    <div>
-                      <strong>Körperliche Auffälligkeiten:</strong>{" "}
-                      {merkm.koerperlich}
-                    </div>
-                    <div>
-                      <strong>Wirkung:</strong> {merkm.wirkung}
+
+                    <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+                      <div>
+                        <strong>Seite des Enneagramms:</strong> {merkm.seite}
+                      </div>
+                      <div>
+                        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+                      </div>
+                      <div>
+                        <strong>Körperliche Auffälligkeiten:</strong>{" "}
+                        {merkm.koerperlich}
+                      </div>
+                      <div>
+                        <strong>Wirkung:</strong> {merkm.wirkung}
+                      </div>
                     </div>
                   </details>
                 );
