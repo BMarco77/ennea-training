@@ -393,14 +393,14 @@ export default function QuizModul() {
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
       {/* Header / Wappen */}
-      <div className="text-center -mt-2 mb-2">
+      <div className="text-center -mt-1 mb-1 md:mb-2">
         <img
           src={wappen}
           alt="Wappen"
           className="mx-auto block mb-4 max-w-[120px] h-auto"
         />
 
-        <h1 className="font-lexSerif text-4xl md:text-5xl font-bold text-black text-center">
+        <h1 className="font-lexSerif text-3xl md:text-5xl font-bold text-black text-center">
           Typisierungsübungen
         </h1>
 
@@ -414,9 +414,9 @@ export default function QuizModul() {
         {/* Level-Schalter */}
         <div className="flex justify-center gap-2 flex-wrap mb-6">
           {[
-            { key: "anfaenger", label: "Anfänger" },
-            { key: "fortgeschritten", label: "Fortgeschritten" },
-            { key: "expert", label: "Expert" },
+            { key: "anfaenger", label: "Novize" },
+            { key: "fortgeschritten", label: "Profi" },
+            { key: "expert", label: "Experte" },
           ].map((lvl) => {
             const isActive = level === lvl.key;
             return (
@@ -425,7 +425,7 @@ export default function QuizModul() {
                 active={isActive}
                 onClick={() => setLevel(lvl.key)}
                 className={[
-                  "px-4 py-2 text-sm w-[140px]",
+                  "px-3 py-1.5 text-sm w-[120px] md:w-[140px]",
                   isActive
                     ? "border-2 border-black shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
                     : "border border-black/60 bg-[#c8a979] text-black/90 hover:bg-[#d2b089]",
@@ -495,9 +495,9 @@ export default function QuizModul() {
           return (
             <div
               key={bild.pfad + "-" + bild.datei}
-              className="bg-[#c8a979] border border-black rounded-2xl p-4 w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+              className="bg-[#c8a979] border border-black rounded-2xl p-3 md:p-4 w-full max-w-[330px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
-              <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[300px] flex items-center justify-center relative">
+              <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
                 {/* Platzhalter solange Bild nicht geladen ist */}
                 {!imgLoaded[index] && (
                   <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
@@ -530,7 +530,9 @@ export default function QuizModul() {
                 />
               </div>
 
-              <div className="text-center font-semibold mb-2">{bild.title}</div>
+              <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
+                {bild.title}
+              </div>
 
               {/* Typ-Auswahl */}
               <div className="mb-2">
