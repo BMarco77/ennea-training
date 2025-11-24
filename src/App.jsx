@@ -259,6 +259,25 @@ export default function QuizModul() {
 
   const neueRunde = () => starteNeueRunde();
 
+  // ⬇️ GENAU HIER REIN
+  function StatBar({ label, value }) {
+    const percent = Math.round(value);
+
+    return (
+      <div className="flex items-center gap-4 w-full">
+        <div className="w-44 text-right font-semibold">{label}</div>
+        <div className="flex-1 h-[13px] bg-[#e6d3b8] rounded-full relative overflow-hidden">
+          <div
+            className="h-full bg-[#8b6b3c] transition-all duration-500"
+            style={{ width: `${percent}%` }}
+          ></div>
+        </div>
+        <div className="w-12 text-right font-bold text-sm">{percent}%</div>
+      </div>
+    );
+  }
+  // ⬆️ BIS HIER
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#ead0aa] font-lexSerif">
@@ -332,47 +351,31 @@ export default function QuizModul() {
 
         {/* Stats Box */}
         {showStats && (
-          <div className="mt-6 mx-auto max-w-[520px] bg-[#c8a979] rounded-[0.9rem] p-4 border-t-2 border-b-2 border-[#8b6b3c] shadow-[0_3px_8px_rgba(0,0,0,0.35)] text-base text-black">
-            <div className="font-extrabold mb-2">📈 Trefferquote</div>
+          <div className="mt-4 mx-auto max-w-[480px] bg-[#c8a979] rounded-2xl p-2 border-2 border-black shadow-[0_3px_8px_rgba(0,0,0,0.35)] text-base text-black">
+            <div className="font-extrabold text-lg mb-2 tracking-wide">
+              📈 Trefferquote
+            </div>
 
-            <div className="bg-[#f5e6d2] p-3 rounded-[0.6rem]">
-              <div>
-                <strong>Bilder gesamt:</strong> {stats.imagesTotal}
-              </div>
+            <div className="bg-[#f5e6d2] p-3 rounded-xl flex flex-col gap-2 border border-black/30">
+              <StatBar
+                label="Typ richtig"
+                value={(stats.typCorrect / stats.imagesTotal) * 100 || 0}
+              />
 
-              <div className="mt-2">
-                <strong>Typ richtig:</strong>{" "}
-                {stats.imagesTotal === 0
-                  ? "—"
-                  : ((stats.typCorrect / stats.imagesTotal) * 100).toFixed(1) +
-                    "%"}
-              </div>
+              <StatBar
+                label="Subtyp richtig"
+                value={(stats.subtypCorrect / stats.subtypTotal) * 100 || 0}
+              />
 
-              <div className="mt-1">
-                <strong>Subtyp richtig:</strong>{" "}
-                {stats.subtypTotal === 0
-                  ? "—"
-                  : ((stats.subtypCorrect / stats.subtypTotal) * 100).toFixed(
-                      1
-                    ) + "%"}
-              </div>
+              <StatBar
+                label="Wing richtig"
+                value={(stats.wingCorrect / stats.wingTotal) * 100 || 0}
+              />
 
-              <div className="mt-1">
-                <strong>Wing richtig:</strong>{" "}
-                {stats.wingTotal === 0
-                  ? "—"
-                  : ((stats.wingCorrect / stats.wingTotal) * 100).toFixed(1) +
-                    "%"}
-              </div>
-
-              <div className="mt-2">
-                <strong>Gesamt korrekt:</strong>{" "}
-                {stats.imagesTotal === 0
-                  ? "—"
-                  : ((stats.overallCorrect / stats.imagesTotal) * 100).toFixed(
-                      1
-                    ) + "%"}
-              </div>
+              <StatBar
+                label="Gesamt korrekt"
+                value={(stats.overallCorrect / stats.imagesTotal) * 100 || 0}
+              />
             </div>
           </div>
         )}

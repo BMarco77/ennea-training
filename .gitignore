@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
+=======
+
+# Local Netlify folder
+.netlify
+>>>>>>> df72b8e7b3bcc7253ed1af714ced0d4cf2207c33
