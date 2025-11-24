@@ -104,7 +104,7 @@ export default function QuizModul() {
 
   // --- Trefferquote / Stats ---
   const [showStats, setShowStats] = useState(false);
-  const [stats, setStats] = useState({
+  const emptyStats = {
     imagesTotal: 0,
     overallCorrect: 0,
     typCorrect: 0,
@@ -112,12 +112,39 @@ export default function QuizModul() {
     subtypCorrect: 0,
     wingTotal: 0,
     wingCorrect: 0,
+  };
+
+  const [stats, setStats] = useState({
+    overall: { ...emptyStats },
+    anfaenger: { ...emptyStats },
+    fortgeschritten: { ...emptyStats },
+    expert: { ...emptyStats },
   });
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem(STATS_KEY));
-    if (saved) setStats(saved);
+
+    if (saved) {
+      // Falls alte Struktur gefunden wird (ohne overall/anfaenger/...)
+      const isOld =
+        saved.imagesTotal !== undefined && saved.overall === undefined;
+
+      if (isOld) {
+        const migrated = {
+          overall: { ...emptyStats, ...saved },
+          anfaenger: { ...emptyStats },
+          fortgeschritten: { ...emptyStats },
+          expert: { ...emptyStats },
+        };
+        setStats(migrated);
+        localStorage.setItem(STATS_KEY, JSON.stringify(migrated));
+      } else {
+        setStats(saved);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   function pickNaechsteBilder(
     pool = alleBilder,
     weiblichArg = weiblichPool,
@@ -288,18 +315,39 @@ export default function QuizModul() {
       }
     });
 
+    const levelKey = level; // "anfaenger" | "fortgeschritten" | "expert"
+
+    const nextOverall = {
+      imagesTotal: stats.overall.imagesTotal + rundeBilder.length,
+      overallCorrect: stats.overall.overallCorrect + overallInc,
+      typCorrect: stats.overall.typCorrect + typInc,
+      subtypTotal: stats.overall.subtypTotal + subtypTotalInc,
+      subtypCorrect: stats.overall.subtypCorrect + subtypInc,
+      wingTotal: stats.overall.wingTotal + wingTotalInc,
+      wingCorrect: stats.overall.wingCorrect + wingInc,
+    };
+
+    const prevLevelStats = stats[levelKey] || { ...emptyStats };
+
+    const nextLevel = {
+      imagesTotal: prevLevelStats.imagesTotal + rundeBilder.length,
+      overallCorrect: prevLevelStats.overallCorrect + overallInc,
+      typCorrect: prevLevelStats.typCorrect + typInc,
+      subtypTotal: prevLevelStats.subtypTotal + subtypTotalInc,
+      subtypCorrect: prevLevelStats.subtypCorrect + subtypInc,
+      wingTotal: prevLevelStats.wingTotal + wingTotalInc,
+      wingCorrect: prevLevelStats.wingCorrect + wingInc,
+    };
+
     const newStats = {
-      imagesTotal: stats.imagesTotal + rundeBilder.length,
-      overallCorrect: stats.overallCorrect + overallInc,
-      typCorrect: stats.typCorrect + typInc,
-      subtypTotal: stats.subtypTotal + subtypTotalInc,
-      subtypCorrect: stats.subtypCorrect + subtypInc,
-      wingTotal: stats.wingTotal + wingTotalInc,
-      wingCorrect: stats.wingCorrect + wingInc,
+      ...stats,
+      overall: nextOverall,
+      [levelKey]: nextLevel,
     };
 
     setStats(newStats);
     localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
+
     setFeedback(result);
     setGeprueft(true);
   };
@@ -372,6 +420,10 @@ export default function QuizModul() {
       </div>
     );
   }
+  const levelStats = stats[level] || emptyStats;
+  const isNovize = level === "anfaenger";
+  const isProfi = level === "fortgeschritten";
+
   // ⬆️ BIS HIER
 
   if (loading) {
@@ -453,25 +505,111 @@ export default function QuizModul() {
             </div>
 
             <div className="bg-[#f5e6d2] p-3 rounded-xl flex flex-col gap-2 border border-black/30">
-              <StatBar
-                label="Typ richtig"
-                value={(stats.typCorrect / stats.imagesTotal) * 100 || 0}
-              />
+              {/* Bilder gesamt auf aktuellem Level */}
+              <div className="text-sm font-semibold">
+                Bilder gesamt (Level): {levelStats.imagesTotal}
+              </div>
 
-              <StatBar
-                label="Subtyp richtig"
-                value={(stats.subtypCorrect / stats.subtypTotal) * 100 || 0}
-              />
+              {/* NOVIZE: nur Typ + Gesamt */}
+              {isNovize && (
+                <>
+                  <StatBar
+                    label="Typ richtig"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.typCorrect / levelStats.imagesTotal) * 100
+                        : 0
+                    }
+                  />
 
-              <StatBar
-                label="Wing richtig"
-                value={(stats.wingCorrect / stats.wingTotal) * 100 || 0}
-              />
+                  <StatBar
+                    label="Gesamt korrekt"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.overallCorrect / levelStats.imagesTotal) *
+                          100
+                        : 0
+                    }
+                  />
+                </>
+              )}
 
-              <StatBar
-                label="Gesamt korrekt"
-                value={(stats.overallCorrect / stats.imagesTotal) * 100 || 0}
-              />
+              {/* PROFI: Typ + Subtyp + Gesamt */}
+              {isProfi && (
+                <>
+                  <StatBar
+                    label="Typ richtig"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.typCorrect / levelStats.imagesTotal) * 100
+                        : 0
+                    }
+                  />
+
+                  <StatBar
+                    label="Subtyp richtig"
+                    value={
+                      levelStats.subtypTotal
+                        ? (levelStats.subtypCorrect / levelStats.subtypTotal) *
+                          100
+                        : 0
+                    }
+                  />
+
+                  <StatBar
+                    label="Gesamt korrekt"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.overallCorrect / levelStats.imagesTotal) *
+                          100
+                        : 0
+                    }
+                  />
+                </>
+              )}
+
+              {/* EXPERTE: Typ + Subtyp + Wing + Gesamt */}
+              {!isNovize && !isProfi && (
+                <>
+                  <StatBar
+                    label="Typ richtig"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.typCorrect / levelStats.imagesTotal) * 100
+                        : 0
+                    }
+                  />
+
+                  <StatBar
+                    label="Subtyp richtig"
+                    value={
+                      levelStats.subtypTotal
+                        ? (levelStats.subtypCorrect / levelStats.subtypTotal) *
+                          100
+                        : 0
+                    }
+                  />
+
+                  <StatBar
+                    label="Wing richtig"
+                    value={
+                      levelStats.wingTotal
+                        ? (levelStats.wingCorrect / levelStats.wingTotal) * 100
+                        : 0
+                    }
+                  />
+
+                  <StatBar
+                    label="Gesamt korrekt"
+                    value={
+                      levelStats.imagesTotal
+                        ? (levelStats.overallCorrect / levelStats.imagesTotal) *
+                          100
+                        : 0
+                    }
+                  />
+                </>
+              )}
             </div>
           </div>
         )}
