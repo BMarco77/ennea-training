@@ -37,13 +37,15 @@ function getWingsForType(typ) {
 
 const dropdownStyle = {
   width: "100%",
-  padding: "0.4rem 0.6rem",
+  padding: "0.5rem 0.75rem",
+  paddingRight: "2.3rem",
   borderRadius: "0.7rem",
   border: "1.5px solid black",
   backgroundColor: "#f5e6d2",
   fontFamily: "inherit",
   fontSize: "1rem",
   color: "#111",
+  lineHeight: "1.35",
   boxSizing: "border-box",
   cursor: "pointer",
 
@@ -464,7 +466,7 @@ export default function QuizModul() {
         </div>
 
         {/* Level-Schalter */}
-        <div className="flex justify-center gap-2 flex-wrap mb-6">
+        <div className="flex justify-center gap-3 md:gap-4 flex-wrap mt-2 mb-5">
           {[
             { key: "anfaenger", label: "Novize" },
             { key: "fortgeschritten", label: "Profi" },
@@ -477,9 +479,9 @@ export default function QuizModul() {
                 active={isActive}
                 onClick={() => setLevel(lvl.key)}
                 className={[
-                  "px-3 py-1.5 text-sm w-[120px] md:w-[140px]",
+                  "px-4 py-2 text-sm w-[132px] md:w-[150px] transition-all duration-150",
                   isActive
-                    ? "border-2 border-black shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
+                    ? "border-2 border-black bg-[#f5e6d2] shadow-[0_0_0_2px_rgba(0,0,0,0.3)]"
                     : "border border-black/60 bg-[#c8a979] text-black/90 hover:bg-[#d2b089]",
                 ].join(" ")}
               >
@@ -492,7 +494,7 @@ export default function QuizModul() {
         {/* Stats Toggle */}
         <LexButton
           onClick={() => setShowStats((v) => !v)}
-          className="mt-2 px-4 py-2 text-sm min-w-0"
+          className="mt-3 px-4 py-2 text-sm min-w-0"
         >
           {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
         </LexButton>
@@ -504,7 +506,7 @@ export default function QuizModul() {
               📈 Trefferquote
             </div>
 
-            <div className="bg-[#f5e6d2] p-3 rounded-xl flex flex-col gap-2 border border-black/30">
+            <div className="bg-[#f5e6d2] p-2.5 rounded-xl flex flex-col gap-2 border border-black/30">
               {/* Bilder gesamt auf aktuellem Level */}
               <div className="text-sm font-semibold">
                 Bilder gesamt (Level): {levelStats.imagesTotal}
@@ -633,7 +635,7 @@ export default function QuizModul() {
           return (
             <div
               key={bild.pfad + "-" + bild.datei}
-              className="bg-[#c8a979] border border-black rounded-2xl p-3 md:p-4 w-full max-w-[330px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+              className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
               <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
                 {/* Platzhalter solange Bild nicht geladen ist */}
@@ -673,7 +675,7 @@ export default function QuizModul() {
               </div>
 
               {/* Typ-Auswahl */}
-              <div className="mb-2">
+              <div className="mb-1 md:mb-1.5">
                 <select
                   value={userAntwort.typ || ""}
                   onChange={(e) => handleAntwort(index, "typ", e.target.value)}
@@ -692,7 +694,7 @@ export default function QuizModul() {
 
               {/* Subtyp nur ab Fortgeschritten */}
               {level !== "anfaenger" && (
-                <div className="mb-2">
+                <div className="mb-1 md:mb-1.5">
                   <select
                     value={userAntwort.subtyp || ""}
                     onChange={(e) =>
@@ -722,7 +724,7 @@ export default function QuizModul() {
                   level === "expert" &&
                   bild.wing != null &&
                   userTyp && (
-                    <div className="mb-2">
+                    <div className="mb-1 md:mb-1.5">
                       <select
                         value={userAntwort.wing || ""}
                         onChange={(e) =>
@@ -753,11 +755,11 @@ export default function QuizModul() {
                 if (!merkm) return null;
 
                 return (
-                  <details className="mb-2">
+                  <details className="mb-1">
                     <summary
                       className="
       cursor-pointer font-semibold
-      flex items-center h-[44px] px-4
+      flex items-center h-[40px] px-3.5
       rounded-[0.7rem] border-[1.5px] border-black
       bg-[#f5e6d2] text-[#111]
       shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]
