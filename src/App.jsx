@@ -866,7 +866,7 @@ export default function QuizModul() {
             <img
               src={vergroessertesBild.pfad}
               alt={vergroessertesBild.title}
-              className="max-w-full max-h-full object-contain object-center block"
+              className="w-full h-full object-contain object-center block"
             />
           </div>
         </div>
