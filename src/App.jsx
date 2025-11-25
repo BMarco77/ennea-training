@@ -37,27 +37,30 @@ function getWingsForType(typ) {
 
 const dropdownStyle = {
   width: "100%",
-  padding: "0.5rem 0.75rem",
-  paddingRight: "2.3rem",
+  // schlankere Höhe, aber immer noch gut klickbar
+  padding: "0.3rem 0.75rem",
+  minHeight: "2.3rem", // ~36–37px
   borderRadius: "0.7rem",
   border: "1.5px solid black",
   backgroundColor: "#f5e6d2",
   fontFamily: "inherit",
-  fontSize: "1rem",
+  fontSize: "0.95rem",
   color: "#111",
-  lineHeight: "1.35",
   boxSizing: "border-box",
   cursor: "pointer",
+  lineHeight: "1.2",
 
+  // native Pfeile ausblenden
   appearance: "none",
   WebkitAppearance: "none",
   MozAppearance: "none",
 
+  // eigener Pfeil etwas kleiner & näher am Rand
   backgroundImage:
     "url(\"data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")",
   backgroundRepeat: "no-repeat",
-  backgroundPosition: "right 0.8rem center",
-  backgroundSize: "16px",
+  backgroundPosition: "right 0.7rem center",
+  backgroundSize: "14px",
 };
 
 function parseBildInfo(pfad) {
@@ -412,7 +415,7 @@ export default function QuizModul() {
     return (
       <div className="flex items-center gap-4 w-full">
         <div className="w-44 text-right font-semibold">{label}</div>
-        <div className="flex-1 h-[13px] bg-[#e6d3b8] rounded-full relative overflow-hidden">
+        <div className="flex-1 h-[11px] bg-[#e8dcc8] rounded-full relative overflow-hidden">
           <div
             className="h-full bg-[#8b6b3c] transition-all duration-500"
             style={{ width: `${percent}%` }}
@@ -494,14 +497,19 @@ export default function QuizModul() {
         {/* Stats Toggle */}
         <LexButton
           onClick={() => setShowStats((v) => !v)}
-          className="mt-3 px-4 py-2 text-sm min-w-0"
+          className={[
+            "mt-2 px-4 py-2 text-sm min-w-0",
+            showStats
+              ? "bg-[#f5e6d2] border-2 border-black shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]"
+              : "border border-black/60 bg-[#c8a979] text-black/90 hover:bg-[#d2b089]",
+          ].join(" ")}
         >
           {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
         </LexButton>
 
         {/* Stats Box */}
         {showStats && (
-          <div className="mt-4 mx-auto max-w-[480px] bg-[#c8a979] rounded-2xl p-2 border-2 border-black shadow-[0_3px_8px_rgba(0,0,0,0.35)] text-base text-black">
+          <div className="mt-4 mx-auto max-w-[480px] bg-[#c8a979] rounded-2xl p-2 border-[1.5px] border-black shadow-[0_3px_8px_rgba(0,0,0,0.35)] text-base text-black">
             <div className="font-extrabold text-lg mb-2 tracking-wide">
               📈 Trefferquote
             </div>
@@ -758,14 +766,14 @@ export default function QuizModul() {
                   <details className="mb-1">
                     <summary
                       className="
-      cursor-pointer font-semibold
-      flex items-center h-[40px] px-3.5
-      rounded-[0.7rem] border-[1.5px] border-black
-      bg-[#f5e6d2] text-[#111]
-      shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]
-      select-none list-none
-      [&::-webkit-details-marker]:hidden
-    "
+    cursor-pointer font-semibold text-[0.95rem]
+    flex items-center h-[42px] md:h-[36px] px-3
+    rounded-[0.7rem] border-[1.5px] border-black
+    bg-[#f5e6d2] text-[#111]
+    shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]
+    select-none list-none
+    [&::-webkit-details-marker]:hidden
+  "
                     >
                       ▶ Typ-Merkmale einblenden
                     </summary>
