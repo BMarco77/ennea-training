@@ -74,7 +74,13 @@ function parseBildInfo(pfad) {
 }
 
 // --- Ausgewogene Ziehlogik (40 / 40 / 20) ---
-function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
+function zieheAusgewogenesBild(
+  weiblich,
+  maennlich,
+  neutral,
+  gesehen,
+  verboteneTypen = []
+) {
   const w = 0.4;
   const m = 0.4;
   const n = 0.2;
@@ -82,8 +88,18 @@ function zieheAusgewogenesBild(weiblich, maennlich, neutral, gesehen) {
   const r = Math.random();
   let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
 
+  // nur Bilder, die noch nicht gesehen wurden
   let unge = pool.filter((b) => !gesehen.includes(b.datei));
   if (unge.length === 0) unge = [...pool];
+
+  // versuche, Typen zu vermeiden, die schon in der Runde sind
+  const gefiltert = unge.filter(
+    (b) => b.typ != null && !verboteneTypen.includes(b.typ)
+  );
+
+  if (gefiltert.length > 0) {
+    unge = gefiltert;
+  }
 
   return unge[Math.floor(Math.random() * unge.length)];
 }
@@ -207,10 +223,13 @@ export default function QuizModul() {
       gesehen
     );
 
-    const bild2 = zieheAusgewogenesBild(weiblichArg, maennlichArg, neutralArg, [
-      ...gesehen,
-      bild1.datei,
-    ]);
+    const bild2 = zieheAusgewogenesBild(
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      [...gesehen, bild1.datei],
+      [bild1.typ] // diesen Typ wenn möglich vermeiden
+    );
 
     const neue = pickNaechsteBilder(
       pool,
