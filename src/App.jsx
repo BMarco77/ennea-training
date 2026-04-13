@@ -115,7 +115,8 @@ export default function QuizModul() {
   const [feedback, setFeedback] = useState({});
   const [geprueft, setGeprueft] = useState(false);
   const [vergroessertesBild, setVergroessertesBild] = useState(null);
-
+  const [mode, setMode] = useState("compare");
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -183,18 +184,25 @@ export default function QuizModul() {
     }
 
     const bild1 = zieheAusgewogenesBild(
-      weiblichArg,
-      maennlichArg,
-      neutralArg,
-      gesehen
-    );
+  weiblichArg,
+  maennlichArg,
+  neutralArg,
+  gesehen
+);
 
-    const bild2 = zieheAusgewogenesBild(weiblichArg, maennlichArg, neutralArg, [
-      ...gesehen,
-      bild1.datei,
-    ]);
+const bild2 = zieheAusgewogenesBild(
+  weiblichArg,
+  maennlichArg,
+  neutralArg,
+  [...gesehen, bild1.datei],
+  [bild1.typ]
+);
 
-    return [bild1, bild2];
+if (mode === "single") {
+  return [bild1];
+}
+
+return [bild1, bild2];
   }
 
   const starteNeueRunde = (
@@ -285,7 +293,12 @@ export default function QuizModul() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  useEffect(() => {
+    if (alleBilder.length > 0) {
+      starteNeueRunde();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
       ...prev,
@@ -512,7 +525,34 @@ export default function QuizModul() {
             );
           })}
         </div>
+{/* Modus-Schalter */}
+<div className="flex justify-center gap-3 mb-5">
+  <LexButton
+    active={mode === "compare"}
+    onClick={() => setMode("compare")}
+    className={[
+      "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+      mode === "compare"
+        ? "border-2 border-black bg-[#f5e6d2]"
+        : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+    ].join(" ")}
+  >
+    Vergleich
+  </LexButton>
 
+  <LexButton
+    active={mode === "single"}
+    onClick={() => setMode("single")}
+    className={[
+      "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+      mode === "single"
+        ? "border-2 border-black bg-[#f5e6d2]"
+        : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+    ].join(" ")}
+  >
+    Einzelbild
+  </LexButton>
+</div>        
         {/* Stats Toggle */}
         <LexButton
           onClick={() => setShowStats((v) => !v)}
