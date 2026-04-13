@@ -873,55 +873,58 @@ return [bild1, bild2];
                     })(),
                   }}
                 >
-                  {(() => {
-  {(() => {
-  if (level === "anfaenger") {
-    if (fb.typRichtig) {
-      return "✔️ Typ richtig";
-    }
-
-    return (
+                  
+      {level === "anfaenger" ? (
+      fb.typRichtig ? (
+        "✔️ Typ richtig"
+      ) : (
+        <>
+          ❌ Typ falsch
+          <div className="text-black font-normal text-sm mt-1">
+            Richtige Antwort: Typ {bild.typ}
+          </div>
+        </>
+      )
+    ) : fb.istRichtig ? (
+      "✔️ Alles korrekt"
+    ) : (
       <>
-        ❌ Typ falsch
+        <div>
+          {[
+            fb.typRichtig ? "Typ ✅" : "Typ ❌",
+            fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
+            ...(level === "expert" && bild.wing != null
+       {level === "anfaenger" ? (
+      fb.typRichtig ? (
+        "✔️ Typ richtig"
+      ) : (
+        <>
+          ❌ Typ falsch
+          <div className="text-black font-normal text-sm mt-1">
+            Richtige Antwort: Typ {bild.typ}
+          </div>
+        </>
+      )
+    ) : fb.istRichtig ? (
+      "✔️ Alles korrekt"
+    ) : (
+      <>
+        <div>
+          {[
+            fb.typRichtig ? "Typ ✅" : "Typ ❌",
+            fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
+            ...(level === "expert" && bild.wing != null
+              ? [fb.wingRichtig ? "Wing ✅" : "Wing ❌"]
+              : []),
+          ].join(" · ")}
+        </div>
+
         <div className="text-black font-normal text-sm mt-1">
-          Richtige Antwort: Typ {bild.typ}
+          Richtige Antwort: Typ {bild.typ} · {bild.subtyp}
+          {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
         </div>
       </>
-    );
-  }
-
-  if (fb.istRichtig) return "✔️ Alles korrekt";
-
-  const teile = [];
-  teile.push(fb.typRichtig ? "Typ ✅" : "Typ ❌");
-
-  if (level !== "anfaenger") {
-    teile.push(fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌");
-  }
-
-  if (level === "expert" && bild.wing != null) {
-    teile.push(fb.wingRichtig ? "Wing ✅" : "Wing ❌");
-  }
-
-  return (
-    <>
-      {teile.join(" · ")}
-      <div className="text-black font-normal text-sm mt-1">
-        Richtige Antwort: Typ {bild.typ}
-        {level !== "anfaenger" && ` · ${bild.subtyp}`}
-        {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
-      </div>
-    </>
-  );
-})()}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Buttons unten */}
+    )}
       <div className="text-center mt-8">
         {!geprueft ? (
           <LexButton onClick={pruefeAntworten} className="px-6 py-3 text-base">
