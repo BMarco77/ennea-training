@@ -874,6 +874,7 @@ return [bild1, bild2];
                   }}
                 >
                   {(() => {
+  {(() => {
   if (level === "anfaenger") {
     if (fb.typRichtig) {
       return "✔️ Typ richtig";
@@ -893,13 +894,25 @@ return [bild1, bild2];
 
   const teile = [];
   teile.push(fb.typRichtig ? "Typ ✅" : "Typ ❌");
+
   if (level !== "anfaenger") {
     teile.push(fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌");
   }
+
   if (level === "expert" && bild.wing != null) {
     teile.push(fb.wingRichtig ? "Wing ✅" : "Wing ❌");
   }
-  return teile.join(" · ");
+
+  return (
+    <>
+      {teile.join(" · ")}
+      <div className="text-black font-normal text-sm mt-1">
+        Richtige Antwort: Typ {bild.typ}
+        {level !== "anfaenger" && ` · ${bild.subtyp}`}
+        {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
+      </div>
+    </>
+  );
 })()}
                 </div>
               )}
