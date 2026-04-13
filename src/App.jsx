@@ -903,9 +903,9 @@ return [bild1, bild2];
           {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
         </div>
       </>
-    )}
-  </div>
-)}
+    </div>   // <- HIER gehört das hin (Karte zu)
+  );
+})}
       <div className="text-center mt-8">
         {!geprueft ? (
           <LexButton onClick={pruefeAntworten} className="px-6 py-3 text-base">
