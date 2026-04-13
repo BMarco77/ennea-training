@@ -874,21 +874,33 @@ return [bild1, bild2];
                   }}
                 >
                   {(() => {
-                    if (level === "anfaenger") {
-                      return fb.typRichtig ? "✔️ Typ richtig" : "❌ Typ falsch";
-                    }
-                    if (fb.istRichtig) return "✔️ Alles korrekt";
+  if (level === "anfaenger") {
+    if (fb.typRichtig) {
+      return "✔️ Typ richtig";
+    }
 
-                    const teile = [];
-                    teile.push(fb.typRichtig ? "Typ ✅" : "Typ ❌");
-                    if (level !== "anfaenger") {
-                      teile.push(fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌");
-                    }
-                    if (level === "expert" && bild.wing != null) {
-                      teile.push(fb.wingRichtig ? "Wing ✅" : "Wing ❌");
-                    }
-                    return teile.join(" · ");
-                  })()}
+    return (
+      <>
+        ❌ Typ falsch
+        <div className="text-black font-normal text-sm mt-1">
+          Richtige Antwort: Typ {bild.typ}
+        </div>
+      </>
+    );
+  }
+
+  if (fb.istRichtig) return "✔️ Alles korrekt";
+
+  const teile = [];
+  teile.push(fb.typRichtig ? "Typ ✅" : "Typ ❌");
+  if (level !== "anfaenger") {
+    teile.push(fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌");
+  }
+  if (level === "expert" && bild.wing != null) {
+    teile.push(fb.wingRichtig ? "Wing ✅" : "Wing ❌");
+  }
+  return teile.join(" · ");
+})()}
                 </div>
               )}
             </div>
