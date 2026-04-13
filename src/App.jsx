@@ -857,44 +857,23 @@ return [bild1, bild2];
               })()}
 
               {/* Feedback */}
-              {geprueft && fb && (
-                <div
-                  className="mt-2 font-bold text-center"
-                  style={{
-                    color: (() => {
-                      if (fb.istRichtig) return "green";
-                      if (
-                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
-                        level !== "anfaenger"
-                      ) {
-                        return "#a65e00";
-                      }
-                      return "crimson";
-                    })(),
-                  }}
-                >
-                  
-      {level === "anfaenger" ? (
-      fb.typRichtig ? (
-        "✔️ Typ richtig"
-      ) : (
-        <>
-          ❌ Typ falsch
-          <div className="text-black font-normal text-sm mt-1">
-            Richtige Antwort: Typ {bild.typ}
-          </div>
-        </>
-      )
-    ) : fb.istRichtig ? (
-      "✔️ Alles korrekt"
-    ) : (
-      <>
-        <div>
-          {[
-            fb.typRichtig ? "Typ ✅" : "Typ ❌",
-            fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
-            ...(level === "expert" && bild.wing != null
-       {level === "anfaenger" ? (
+{geprueft && fb && (
+  <div
+    className="mt-2 font-bold text-center"
+    style={{
+      color: (() => {
+        if (fb.istRichtig) return "green";
+        if (
+          (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
+          level !== "anfaenger"
+        ) {
+          return "#a65e00";
+        }
+        return "crimson";
+      })(),
+    }}
+  >
+    {level === "anfaenger" ? (
       fb.typRichtig ? (
         "✔️ Typ richtig"
       ) : (
@@ -925,6 +904,8 @@ return [bild1, bild2];
         </div>
       </>
     )}
+  </div>
+)}
       <div className="text-center mt-8">
         {!geprueft ? (
           <LexButton onClick={pruefeAntworten} className="px-6 py-3 text-base">
