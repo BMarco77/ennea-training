@@ -311,13 +311,15 @@ return [bild1, bild2];
     rundeBilder.forEach((bild, index) => {
       const a = antworten[index] || {};
 
-      const typRichtig = a.typ != null && parseInt(a.typ, 10) === bild.typ;
-      const subtypRichtig = a.subtyp === bild.subtyp;
-      const wingRichtig =
-        bild.wing == null
-          ? true
-          : a.wing != null && parseInt(a.wing, 10) === bild.wing;
-
+     const typRichtig = a.typ != null && parseInt(a.typ, 10) === bild.typ;
+const subtypRichtig = a.subtyp === bild.subtyp;
+const wingRichtig =
+  bild.wing == null
+    ? true
+    : typRichtig &&
+      a.wing != null &&
+      parseInt(a.wing, 10) === bild.wing;
+      
       let istRichtig = false;
       if (level === "anfaenger") istRichtig = typRichtig;
       else if (level === "fortgeschritten")
