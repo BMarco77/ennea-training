@@ -115,7 +115,7 @@ export default function QuizModul() {
   const [feedback, setFeedback] = useState({});
   const [geprueft, setGeprueft] = useState(false);
   const [vergroessertesBild, setVergroessertesBild] = useState(null);
-  const [mode, setMode] = useState("compare");
+  const [mode, setMode] = useState("single");
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
