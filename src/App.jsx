@@ -61,16 +61,6 @@ const dropdownStyle = {
   backgroundSize: "14px",
 };
 
-function parseBildInfo(pfad) {
-  const typMatch = pfad.match(/\d+/);
-  const wingMatch = pfad.match(/w(\d)/i);
-  return {
-    typ: typMatch ? parseInt(typMatch[0], 10) : null,
-    subtyp: pfad.slice(0, 2),
-    wing: wingMatch ? parseInt(wingMatch[1], 10) : null,
-  };
-}
-
 // --- Ausgewogene Ziehlogik (40 / 40 / 20) ---
 function zieheAusgewogenesBild(
   weiblich,
