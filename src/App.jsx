@@ -2,7 +2,9 @@ import {
   parseBildInfo,
   getWingsForType,
   zieheAusgewogenesBild,
+  pruefeBildAntwort,
 } from "./utils/quizLogic";
+
 import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
