@@ -45,3 +45,27 @@ export function zieheAusgewogenesBild(
 
   return unge[Math.floor(Math.random() * unge.length)];
 }
+
+export function pruefeBildAntwort(bild, antwort, level) {
+  const typRichtig =
+    antwort.typ != null && parseInt(antwort.typ, 10) === bild.typ;
+
+  const subtypRichtig = antwort.subtyp === bild.subtyp;
+
+  const wingRichtig =
+    bild.wing == null
+      ? true
+      : typRichtig &&
+        antwort.wing != null &&
+        parseInt(antwort.wing, 10) === bild.wing;
+
+  let istRichtig = false;
+
+  if (level === "anfaenger") istRichtig = typRichtig;
+  else if (level === "fortgeschritten")
+    istRichtig = typRichtig && subtypRichtig;
+  else if (level === "expert")
+    istRichtig = typRichtig && subtypRichtig && wingRichtig;
+
+  return { typRichtig, subtypRichtig, wingRichtig, istRichtig };
+}
