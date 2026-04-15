@@ -265,29 +265,16 @@ return [bild1, bild2];
     }));
   };
 
-  const pruefeAntworten = () => {
-    const result = {};
-    rundeBilder.forEach((bild, index) => {
-      const a = antworten[index] || {};
+const pruefeAntworten = () => {
+  const result = {};
+  rundeBilder.forEach((bild, index) => {
+    const a = antworten[index] || {};
 
-     const typRichtig = a.typ != null && parseInt(a.typ, 10) === bild.typ;
-const subtypRichtig = a.subtyp === bild.subtyp;
-const wingRichtig =
-  bild.wing == null
-    ? true
-    : typRichtig &&
-      a.wing != null &&
-      parseInt(a.wing, 10) === bild.wing;
-      
-      let istRichtig = false;
-      if (level === "anfaenger") istRichtig = typRichtig;
-      else if (level === "fortgeschritten")
-        istRichtig = typRichtig && subtypRichtig;
-      else if (level === "expert")
-        istRichtig = typRichtig && subtypRichtig && wingRichtig;
+    const { typRichtig, subtypRichtig, wingRichtig, istRichtig } =
+      pruefeBildAntwort(bild, a, level);
 
-      result[index] = { typRichtig, subtypRichtig, wingRichtig, istRichtig };
-    });
+    result[index] = { typRichtig, subtypRichtig, wingRichtig, istRichtig };
+  });
 
     let overallInc = 0;
     let typInc = 0;
