@@ -33,13 +33,6 @@ function resetGezeigteBilder() {
 const subtypen = ["Se", "So", "Sx"];
 const typen = Array.from({ length: 9 }, (_, i) => i + 1);
 
-function getWingsForType(typ) {
-  if (!typ) return [];
-  const left = typ === 1 ? 9 : typ - 1;
-  const right = typ === 9 ? 1 : typ + 1;
-  return [left, right];
-}
-
 const dropdownStyle = {
   width: "100%",
   // schlankere Höhe, aber immer noch gut klickbar
