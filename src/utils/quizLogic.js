@@ -53,10 +53,10 @@ export function pruefeBildAntwort(bild, antwort, level) {
   const subtypRichtig = antwort.subtyp === bild.subtyp;
 
   const wingRichtig =
-  bild.wing == null
-    ? true
-    : a.wing != null &&
-      parseInt(a.wing, 10) === bild.wing;
+    bild.wing == null
+      ? true
+      : antwort.wing != null &&
+        parseInt(antwort.wing, 10) === bild.wing;
 
   let istRichtig = false;
 
