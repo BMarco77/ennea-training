@@ -735,69 +735,69 @@ const neueRunde = async () => {
                 );
               })()}
 
-              {/* Feedback */}
-{geprueft && fb && (
-  <div
-    className="mt-2 font-bold text-center"
-    style={{
-      color: (() => {
-        if (fb.istRichtig) return "green";
-        if (
-          (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
-          level !== "anfaenger"
-        ) {
-          return "#a65e00";
-        }
-        return "crimson";
-      })(),
-    }}
-  >
-    {level === "anfaenger" ? (
-      fb.typRichtig ? (
-        "✔️ Typ richtig"
-      ) : (
-        <>
-          ❌ Typ falsch
-          <div className="text-black font-normal text-sm mt-1">
-            Richtige Antwort: Typ {bild.typ}
-          </div>
-        </>
-      )
-    ) : fb.istRichtig ? (
-      "✔️ Alles korrekt"
-    ) : (
-      <>
-        <div>
-          {[
-            fb.typRichtig ? "Typ ✅" : "Typ ❌",
-            fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
-            ...(level === "expert" && bild.wing != null
-              ? [fb.wingRichtig ? "Wing ✅" : "Wing ❌"]
-              : []),
-          ].join(" · ")}
-        </div>
+                            {/* Feedback */}
+              {geprueft && fb && (
+                <div
+                  className="mt-2 font-bold text-center"
+                  style={{
+                    color: (() => {
+                      if (fb.istRichtig) return "green";
+                      if (
+                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
+                        level !== "anfaenger"
+                      ) {
+                        return "#a65e00";
+                      }
+                      return "crimson";
+                    })(),
+                  }}
+                >
+                  {level === "anfaenger" ? (
+                    fb.typRichtig ? (
+                      "✔️ Typ richtig"
+                    ) : (
+                      <>
+                        ❌ Typ falsch
+                        <div className="text-black font-normal text-sm mt-1">
+                          Richtige Antwort: Typ {bild.typ}
+                        </div>
+                      </>
+                    )
+                  ) : fb.istRichtig ? (
+                    "✔️ Alles korrekt"
+                  ) : (
+                    <>
+                      <div>
+                        {[
+                          fb.typRichtig ? "Typ ✅" : "Typ ❌",
+                          fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
+                          ...(level === "expert" && bild.wing != null
+                            ? [fb.wingRichtig ? "Wing ✅" : "Wing ❌"]
+                            : []),
+                        ].join(" · ")}
+                      </div>
 
-        <div className="text-black font-normal text-sm mt-1">
-          Richtige Antwort: Typ {bild.typ} · {bild.subtyp}
-          {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
-        </div>
-      </>
-    )}
-  </div>
-)}
+                      <div className="text-black font-normal text-sm mt-1">
+                        Richtige Antwort: Typ {bild.typ} · {bild.subtyp}
+                        {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
-{/* 👇 HIER REIN */}
-    <div className="mt-3 text-center">
-      <LexButton
-        onClick={geprueft ? neueRunde : pruefeAntworten}
-        className="px-4 py-2 text-sm"
-      >
-        {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
-      </LexButton>
-    </div>
-
-  </div>
-);
+              <div className="mt-3 text-center">
+                <LexButton
+                  onClick={geprueft ? neueRunde : pruefeAntworten}
+                  className="px-4 py-2 text-sm"
+                >
+                  {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
+                </LexButton>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
