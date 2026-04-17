@@ -298,6 +298,17 @@ const neueRunde = async () => {
     // Jetzt erst den Fade + Swap machen
     setIsFading(true);
 
+  const skipRunde = () => {
+  const gesehen = ladeGeseheneBilder();
+  const aktuelle = rundeBilder.map((b) => b.datei);
+
+  const neuGefiltert = gesehen.filter((name) => !aktuelle.includes(name));
+
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(neuGefiltert));
+
+  neueRunde();
+};
+
     setTimeout(() => {
       if (fullyPreloaded) {
         // Bilder sind schon im Cache -> wir können sie direkt als "geladen" markieren
@@ -786,14 +797,23 @@ const neueRunde = async () => {
                 </div>
               )}
 
-              <div className="mt-3 text-center">
-                <LexButton
-                  onClick={geprueft ? neueRunde : pruefeAntworten}
-                  className="px-4 py-2 text-sm"
-                >
-                  {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
-                </LexButton>
-              </div>
+             <div className="mt-3 flex gap-2 justify-center">
+  <LexButton
+    onClick={geprueft ? neueRunde : pruefeAntworten}
+    className="px-4 py-2 text-sm"
+  >
+    {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
+  </LexButton>
+
+  {!geprueft && (
+    <LexButton
+      onClick={skipRunde}
+      className="px-4 py-2 text-sm"
+    >
+      Überspringen
+    </LexButton>
+  )}
+</div>
             </div>
           );
         })}
