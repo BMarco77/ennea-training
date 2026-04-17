@@ -5,6 +5,7 @@ import {
   pruefeBildAntwort,
   pruefeRunde,
   berechneNeueStats,
+  pickNaechsteBilder,
 } from "./utils/quizLogic";
 
 import { useEffect, useState } from "react";
@@ -128,93 +129,42 @@ export default function QuizModul() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function pickNaechsteBilder(
-    pool = alleBilder,
-    weiblichArg = weiblichPool,
-    maennlichArg = maennlichPool,
-    neutralArg = neutralPool
-  ) {
-    if (!pool || pool.length === 0) return [];
-
-    const gesehen = ladeGeseheneBilder();
-
-    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
-    if (nochNichtGesehen.length < 2) {
-      resetGezeigteBilder();
-      nochNichtGesehen = [...pool];
-    }
-
-    const bild1 = zieheAusgewogenesBild(
-  weiblichArg,
-  maennlichArg,
-  neutralArg,
-  gesehen
-);
-
-const bild2 = zieheAusgewogenesBild(
-  weiblichArg,
-  maennlichArg,
-  neutralArg,
-  [...gesehen, bild1.datei],
-  [bild1.typ]
-);
-
-if (mode === "single") {
-  return [bild1];
-}
-
-return [bild1, bild2];
+  const starteNeueRunde = (
+  pool = alleBilder,
+  weiblichArg = weiblichPool,
+  maennlichArg = maennlichPool,
+  neutralArg = neutralPool
+) => {
+  if (!pool || pool.length === 0) {
+    setRundeBilder([]);
+    return;
   }
 
-  const starteNeueRunde = (
-    pool = alleBilder,
-    weiblichArg = weiblichPool,
-    maennlichArg = maennlichPool,
-    neutralArg = neutralPool
-  ) => {
-    if (!pool || pool.length === 0) {
-      setRundeBilder([]);
-      return;
-    }
+  const gesehen = ladeGeseheneBilder();
 
-    const gesehen = ladeGeseheneBilder();
+  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+  if (nochNichtGesehen.length < 2) {
+    resetGezeigteBilder();
+  }
 
-    let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
-    if (nochNichtGesehen.length < 2) {
-      resetGezeigteBilder();
-      nochNichtGesehen = [...pool];
-    }
+  const neue = pickNaechsteBilder(
+    pool,
+    weiblichArg,
+    maennlichArg,
+    neutralArg,
+    ladeGeseheneBilder(),
+    mode
+  );
 
-    const bild1 = zieheAusgewogenesBild(
-      weiblichArg,
-      maennlichArg,
-      neutralArg,
-      gesehen
-    );
+  setImgLoaded({});
+  setRundeBilder(neue);
+  setAntworten({});
+  setFeedback({});
+  setGeprueft(false);
 
-    const bild2 = zieheAusgewogenesBild(
-      weiblichArg,
-      maennlichArg,
-      neutralArg,
-      [...gesehen, bild1.datei],
-      [bild1.typ] // diesen Typ wenn möglich vermeiden
-    );
+  speichereGezeigteBilder(neue.map((b) => b.datei));
+};
 
-    const neue = pickNaechsteBilder(
-      pool,
-      weiblichArg,
-      maennlichArg,
-      neutralArg
-    );
-
-    setImgLoaded({}); // reset, neue Bilder müssen erst laden
-    setRundeBilder(neue);
-    setAntworten({});
-    setFeedback({});
-    setGeprueft(false);
-
-    speichereGezeigteBilder(neue.map((b) => b.datei));
-  };
 
   useEffect(() => {
     async function load() {
