@@ -767,7 +767,7 @@ const neueRunde = async () => {
       "✔️ Alles korrekt"
     ) : (
       <>
-               <div>
+        <div>
           {[
             fb.typRichtig ? "Typ ✅" : "Typ ❌",
             fb.subtypRichtig ? "Subtyp ✅" : "Subtyp ❌",
@@ -786,10 +786,19 @@ const neueRunde = async () => {
   </div>
 )}
 
-            </div>
-          );
-        })}
-      </div>
+{/* 👇 HIER REIN */}
+{!geprueft && (
+  <div className="mt-3 text-center">
+    <LexButton
+      onClick={pruefeAntworten}
+      className="px-4 py-2 text-sm"
+    >
+      Antwort überprüfen
+    </LexButton>
+  </div>
+)}
+
+</div>
 
       <div className="text-center mt-8">
         {!geprueft ? (
