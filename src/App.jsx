@@ -788,14 +788,14 @@ const neueRunde = async () => {
 
 {/* 👇 HIER REIN */}
 {!geprueft && (
-  <div className="mt-3 text-center">
-    <LexButton
-      onClick={pruefeAntworten}
-      className="px-4 py-2 text-sm"
-    >
-      Antwort überprüfen
-    </LexButton>
-  </div>
+<div className="mt-3 text-center">
+  <LexButton
+    onClick={geprueft ? neueRunde : pruefeAntworten}
+    className="px-4 py-2 text-sm"
+  >
+    {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
+  </LexButton>
+</div>
 )}
 
 </div>
