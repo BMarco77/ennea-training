@@ -787,7 +787,6 @@ const neueRunde = async () => {
 )}
 
 {/* 👇 HIER REIN */}
-{!geprueft && (
 <div className="mt-3 text-center">
   <LexButton
     onClick={geprueft ? neueRunde : pruefeAntworten}
@@ -799,18 +798,6 @@ const neueRunde = async () => {
 )}
 
 </div>
-
-      <div className="text-center mt-8">
-        {!geprueft ? (
-          <LexButton onClick={pruefeAntworten} className="px-6 py-3 text-base">
-            Antwort überprüfen
-          </LexButton>
-        ) : (
-          <LexButton onClick={neueRunde} className="px-6 py-3 text-base">
-            Nächste Runde
-          </LexButton>
-        )}
-      </div>
 
       {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
