@@ -68,3 +68,49 @@ export function pruefeBildAntwort(bild, antwort, level) {
 
   return { typRichtig, subtypRichtig, wingRichtig, istRichtig };
 }
+
+export function pruefeRunde(rundeBilder, antworten, level) {
+  const result = {};
+
+  let overallInc = 0;
+  let typInc = 0;
+  let subtypInc = 0;
+  let wingInc = 0;
+
+  let subtypTotalInc = 0;
+  let wingTotalInc = 0;
+
+  rundeBilder.forEach((bild, index) => {
+    const antwort = antworten[index] || {};
+
+    const { typRichtig, subtypRichtig, wingRichtig, istRichtig } =
+      pruefeBildAntwort(bild, antwort, level);
+
+    result[index] = { typRichtig, subtypRichtig, wingRichtig, istRichtig };
+
+    if (istRichtig) overallInc++;
+    if (typRichtig) typInc++;
+
+    if (level !== "anfaenger") {
+      subtypTotalInc++;
+      if (subtypRichtig) subtypInc++;
+    }
+
+    if (level === "expert" && bild.wing != null) {
+      wingTotalInc++;
+      if (wingRichtig) wingInc++;
+    }
+  });
+
+  return {
+    result,
+    counters: {
+      overallInc,
+      typInc,
+      subtypInc,
+      wingInc,
+      subtypTotalInc,
+      wingTotalInc,
+    },
+  };
+}
