@@ -3,6 +3,7 @@ import {
   getWingsForType,
   zieheAusgewogenesBild,
   pruefeBildAntwort,
+  pruefeRunde,
 } from "./utils/quizLogic";
 
 import { useEffect, useState } from "react";
@@ -266,39 +267,17 @@ return [bild1, bild2];
   };
 
 const pruefeAntworten = () => {
-  const result = {};
-  rundeBilder.forEach((bild, index) => {
-    const a = antworten[index] || {};
-
-    const { typRichtig, subtypRichtig, wingRichtig, istRichtig } =
-      pruefeBildAntwort(bild, a, level);
-
-    result[index] = { typRichtig, subtypRichtig, wingRichtig, istRichtig };
-  });
-
-    let overallInc = 0;
-    let typInc = 0;
-    let subtypInc = 0;
-    let wingInc = 0;
-
-    let subtypTotalInc = 0;
-    let wingTotalInc = 0;
-
-    rundeBilder.forEach((bild, index) => {
-      const r = result[index];
-      if (r.istRichtig) overallInc++;
-      if (r.typRichtig) typInc++;
-
-      if (level !== "anfaenger") {
-        subtypTotalInc++;
-        if (r.subtypRichtig) subtypInc++;
-      }
-
-      if (level === "expert" && bild.wing != null) {
-        wingTotalInc++;
-        if (r.wingRichtig) wingInc++;
-      }
-    });
+ const {
+  result,
+  counters: {
+    overallInc,
+    typInc,
+    subtypInc,
+    wingInc,
+    subtypTotalInc,
+    wingTotalInc,
+  },
+} = pruefeRunde(rundeBilder, antworten, level);
 
     const levelKey = level; // "anfaenger" | "fortgeschritten" | "expert"
 
