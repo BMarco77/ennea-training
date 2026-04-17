@@ -260,14 +260,30 @@ const pruefeAntworten = () => {
     });
   }
 
-  const neueRunde = async () => {
-    const neue = pickNaechsteBilder();
+const neueRunde = async () => {
+  const gesehen = ladeGeseheneBilder();
 
-    const srcs = neue.map((bild) => {
-      return `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
-        bild.datei
-      )}`;
-    });
+  let nochNichtGesehen = alleBilder.filter(
+    (bild) => !gesehen.includes(bild.datei)
+  );
+  if (nochNichtGesehen.length < 2) {
+    resetGezeigteBilder();
+  }
+
+  const neue = pickNaechsteBilder(
+    alleBilder,
+    weiblichPool,
+    maennlichPool,
+    neutralPool,
+    ladeGeseheneBilder(),
+    mode
+  );
+
+  const srcs = neue.map((bild) => {
+    return `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
+      bild.datei
+    )}`;
+  });
 
     const preloadPromise = Promise.all(srcs.map(preloadImage));
 
