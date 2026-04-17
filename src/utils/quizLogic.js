@@ -155,3 +155,41 @@ export function berechneNeueStats(stats, level, rundeBilder, counters, emptyStat
     [levelKey]: nextLevel,
   };
 }
+
+export function pickNaechsteBilder(
+  pool,
+  weiblichArg,
+  maennlichArg,
+  neutralArg,
+  gesehen,
+  mode
+) {
+  if (!pool || pool.length === 0) return [];
+
+  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
+
+  if (nochNichtGesehen.length < 2) {
+    nochNichtGesehen = [...pool];
+  }
+
+  const bild1 = zieheAusgewogenesBild(
+    weiblichArg,
+    maennlichArg,
+    neutralArg,
+    gesehen
+  );
+
+  const bild2 = zieheAusgewogenesBild(
+    weiblichArg,
+    maennlichArg,
+    neutralArg,
+    [...gesehen, bild1.datei],
+    [bild1.typ]
+  );
+
+  if (mode === "single") {
+    return [bild1];
+  }
+
+  return [bild1, bild2];
+}
