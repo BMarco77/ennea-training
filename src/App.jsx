@@ -285,20 +285,41 @@ const neueRunde = async () => {
     )}`;
   });
 
-    const preloadPromise = Promise.all(srcs.map(preloadImage));
+  const preloadPromise = Promise.all(srcs.map(preloadImage));
 
-    // wie lange wir maximal "sauber" preloaden wollen (ms)
-    const MAX_WAIT = 300;
+  // wie lange wir maximal "sauber" preloaden wollen (ms)
+  const MAX_WAIT = 300;
 
-    const fullyPreloaded = await Promise.race([
-      preloadPromise.then(() => true).catch(() => true),
-      new Promise((resolve) => setTimeout(() => resolve(false), MAX_WAIT)),
-    ]);
+  const fullyPreloaded = await Promise.race([
+    preloadPromise.then(() => true).catch(() => true),
+    new Promise((resolve) => setTimeout(() => resolve(false), MAX_WAIT)),
+  ]);
 
-    // Jetzt erst den Fade + Swap machen
-    setIsFading(true);
+  // Jetzt erst den Fade + Swap machen
+  setIsFading(true);
 
-  const skipRunde = () => {
+  setTimeout(() => {
+    if (fullyPreloaded) {
+      // Bilder sind schon im Cache -> wir können sie direkt als "geladen" markieren
+      setImgLoaded({ 0: true, 1: true });
+    } else {
+      // nicht fertig preload -> normaler Weg mit Placeholder
+      setImgLoaded({});
+      // Preload läuft im Hintergrund weiter
+      preloadPromise.catch(() => {});
+    }
+
+    setRundeBilder(neue);
+    setAntworten({});
+    setFeedback({});
+    setGeprueft(false);
+    speichereGezeigteBilder(neue.map((b) => b.datei));
+
+    setIsFading(false);
+  }, 150); // passt zu deiner duration-150
+};
+
+const skipRunde = () => {
   const gesehen = ladeGeseheneBilder();
   const aktuelle = rundeBilder.map((b) => b.datei);
 
@@ -308,27 +329,6 @@ const neueRunde = async () => {
 
   neueRunde();
 };
-
-    setTimeout(() => {
-      if (fullyPreloaded) {
-        // Bilder sind schon im Cache -> wir können sie direkt als "geladen" markieren
-        setImgLoaded({ 0: true, 1: true });
-      } else {
-        // nicht fertig preload -> normaler Weg mit Placeholder
-        setImgLoaded({});
-        // Preload läuft im Hintergrund weiter
-        preloadPromise.catch(() => {});
-      }
-
-      setRundeBilder(neue);
-      setAntworten({});
-      setFeedback({});
-      setGeprueft(false);
-      speichereGezeigteBilder(neue.map((b) => b.datei));
-
-      setIsFading(false);
-    }, 150); // passt zu deiner duration-150
-  };
 
   // ⬇️ GENAU HIER REIN
   function StatBar({ label, value }) {
