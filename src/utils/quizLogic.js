@@ -114,3 +114,44 @@ export function pruefeRunde(rundeBilder, antworten, level) {
     },
   };
 }
+
+export function berechneNeueStats(stats, level, rundeBilder, counters, emptyStats) {
+  const {
+    overallInc,
+    typInc,
+    subtypInc,
+    wingInc,
+    subtypTotalInc,
+    wingTotalInc,
+  } = counters;
+
+  const levelKey = level;
+
+  const nextOverall = {
+    imagesTotal: stats.overall.imagesTotal + rundeBilder.length,
+    overallCorrect: stats.overall.overallCorrect + overallInc,
+    typCorrect: stats.overall.typCorrect + typInc,
+    subtypTotal: stats.overall.subtypTotal + subtypTotalInc,
+    subtypCorrect: stats.overall.subtypCorrect + subtypInc,
+    wingTotal: stats.overall.wingTotal + wingTotalInc,
+    wingCorrect: stats.overall.wingCorrect + wingInc,
+  };
+
+  const prevLevelStats = stats[levelKey] || { ...emptyStats };
+
+  const nextLevel = {
+    imagesTotal: prevLevelStats.imagesTotal + rundeBilder.length,
+    overallCorrect: prevLevelStats.overallCorrect + overallInc,
+    typCorrect: prevLevelStats.typCorrect + typInc,
+    subtypTotal: prevLevelStats.subtypTotal + subtypTotalInc,
+    subtypCorrect: prevLevelStats.subtypCorrect + subtypInc,
+    wingTotal: prevLevelStats.wingTotal + wingTotalInc,
+    wingCorrect: prevLevelStats.wingCorrect + wingInc,
+  };
+
+  return {
+    ...stats,
+    overall: nextOverall,
+    [levelKey]: nextLevel,
+  };
+}
