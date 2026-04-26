@@ -733,9 +733,7 @@ export default function QuizModul() {
         setIsTimeUp(false);
         setIsTimerActive(true);
       }
-    }}
-    onClick={() => setVergroessertesBild({ pfad, title: bild.title })}
-    onError={(e) => {
+    }
       const altPfad = e.target.src.endsWith(".jpeg")
         ? e.target.src.replace(".jpeg", ".jpg")
         : e.target.src.replace(".jpg", ".jpeg");
