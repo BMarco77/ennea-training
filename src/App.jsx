@@ -808,7 +808,7 @@ if (level === "fortgeschritten") {
     </div>
   );
 }
-               )()}
+              
 
                             {/* Feedback */}
               {geprueft && fb && (
