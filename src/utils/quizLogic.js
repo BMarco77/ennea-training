@@ -187,9 +187,9 @@ export function pickNaechsteBilder(
     [bild1.typ]
   );
 
-  if (mode === "single") {
-    return [bild1];
-  }
+ if (mode === "single" || mode === "quickguess") {
+  return [bild1];
+}
 
-  return [bild1, bild2];
+return [bild1, bild2];
 }
