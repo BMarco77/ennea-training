@@ -330,6 +330,58 @@ const skipRunde = () => {
   neueRunde();
 };
 
+  const skipEinzelBild = (indexToSkip) => {
+  if (!rundeBilder[indexToSkip]) return;
+
+  const aktuellesBild = rundeBilder[indexToSkip];
+
+  const andereBilder = rundeBilder.filter((_, i) => i !== indexToSkip);
+  const verboteneTypen = andereBilder
+    .map((bild) => bild.typ)
+    .filter((typ) => typ != null);
+
+  let gesehen = ladeGeseheneBilder();
+
+  gesehen = gesehen.filter((name) => name !== aktuellesBild.datei);
+
+  const verboteneDateien = andereBilder.map((bild) => bild.datei);
+  gesehen = [...new Set([...gesehen, ...verboteneDateien])];
+
+  const neuesBild = zieheAusgewogenesBild(
+    weiblichPool,
+    maennlichPool,
+    neutralPool,
+    gesehen,
+    verboteneTypen
+  );
+
+  if (!neuesBild) return;
+
+  setRundeBilder((prev) => {
+    const updated = [...prev];
+    updated[indexToSkip] = neuesBild;
+    return updated;
+  });
+
+  setAntworten((prev) => {
+    const updated = { ...prev };
+    delete updated[indexToSkip];
+    return updated;
+  });
+
+  setFeedback((prev) => {
+    const updated = { ...prev };
+    delete updated[indexToSkip];
+    return updated;
+  });
+
+  setImgLoaded((prev) => ({
+    ...prev,
+    [indexToSkip]: false,
+  }));
+
+  speichereGezeigteBilder([neuesBild.datei]);
+};
   // ⬇️ GENAU HIER REIN
   function StatBar({ label, value }) {
     const percent = Math.round(value);
@@ -807,7 +859,7 @@ const skipRunde = () => {
 
   {!geprueft && (
     <LexButton
-      onClick={skipRunde}
+     onClick={() => skipEinzelBild(index)}
       className="px-4 py-2 text-sm"
     >
       Überspringen
