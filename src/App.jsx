@@ -76,6 +76,7 @@ export default function QuizModul() {
   const [antworten, setAntworten] = useState({});
   const [feedback, setFeedback] = useState({});
   const [geprueft, setGeprueft] = useState(false);
+  const [zeigeMerkmale, setZeigeMerkmale] = useState({});  
   const [vergroessertesBild, setVergroessertesBild] = useState(null);
   const [mode, setMode] = useState("single");
   
@@ -161,7 +162,8 @@ export default function QuizModul() {
   setAntworten({});
   setFeedback({});
   setGeprueft(false);
-
+  setZeigeMerkmale({});
+  
   speichereGezeigteBilder(neue.map((b) => b.datei));
 };
 
@@ -313,6 +315,7 @@ const neueRunde = async () => {
     setAntworten({});
     setFeedback({});
     setGeprueft(false);
+    setZeigeMerkmale({});    
     speichereGezeigteBilder(neue.map((b) => b.datei));
 
     setIsFading(false);
@@ -760,43 +763,52 @@ const skipRunde = () => {
                 const key = `${bild.subtyp}${bild.typ}`;
                 const merkm = merkmale[key];
 
-                if (level === "expert") return null;
                 if (!merkm) return null;
 
-                return (
-                  <details className="mb-1">
-                    <summary
-                      className="
-    cursor-pointer font-semibold text-[0.95rem]
-    flex items-center h-[42px] md:h-[36px] px-3
-    rounded-[0.7rem] border-[1.5px] border-black
-    bg-[#f5e6d2] text-[#111]
-    shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]
-    select-none list-none
-    [&::-webkit-details-marker]:hidden
-  "
-                    >
-                      ▶ Typ-Merkmale einblenden
-                    </summary>
+// 👇 EXPERT bleibt wie bisher komplett aus
+if (level === "expert") return null;
 
-                    <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
-                      <div>
-                        <strong>Seite des Enneagramms:</strong> {merkm.seite}
-                      </div>
-                      <div>
-                        <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-                      </div>
-                      <div>
-                        <strong>Körperliche Auffälligkeiten:</strong>{" "}
-                        {merkm.koerperlich}
-                      </div>
-                      <div>
-                        <strong>Wirkung:</strong> {merkm.wirkung}
-                      </div>
-                    </div>
-                  </details>
-                );
-              })()}
+// 👇 PROFI: nur nach Auflösung + optional einblendbar
+if (level === "fortgeschritten") {
+  if (!geprueft) return null;
+
+  const sichtbar = zeigeMerkmale[index];
+
+  return (
+    <div className="mb-1">
+      {!sichtbar ? (
+        <button
+          onClick={() =>
+            setZeigeMerkmale((prev) => ({
+              ...prev,
+              [index]: true,
+            }))
+          }
+          className="w-full text-left text-sm font-semibold px-3 py-2 rounded-[0.7rem] border border-black/60 bg-[#f5e6d2]"
+        >
+          ▶ Typ-Merkmale anzeigen
+        </button>
+      ) : (
+        <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+          <div>
+            <strong>Seite des Enneagramms:</strong> {merkm.seite}
+          </div>
+          <div>
+            <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+          </div>
+          <div>
+            <strong>Körperliche Auffälligkeiten:</strong>{" "}
+            {merkm.koerperlich}
+          </div>
+          <div>
+            <strong>Wirkung:</strong> {merkm.wirkung}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+               )()}
 
                             {/* Feedback */}
               {geprueft && fb && (
