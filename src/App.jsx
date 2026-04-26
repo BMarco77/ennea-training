@@ -80,6 +80,9 @@ export default function QuizModul() {
   const [isFading, setIsFading] = useState(false);
   const [imgLoaded, setImgLoaded] = useState({});
 
+  const [timer, setTimer] = useState(10);
+  const [isTimeUp, setIsTimeUp] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(false);
   const [showStats, setShowStats] = useState(false);
 
   const emptyStats = {
@@ -209,6 +212,21 @@ export default function QuizModul() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
+  useEffect(() => {
+  if (!isTimerActive) return;
+
+  if (timer <= 0) {
+    setIsTimeUp(true);
+    setIsTimerActive(false);
+    return;
+  }
+
+  const interval = setInterval(() => {
+    setTimer((prev) => prev - 1);
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [isTimerActive, timer]);
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
       ...prev,
@@ -309,6 +327,9 @@ export default function QuizModul() {
       setFeedback({});
       setGeprueft(false);
       setZeigeMerkmale({});
+      setTimer(10);
+      setIsTimeUp(false);
+      setIsTimerActive(false);      
       speichereGezeigteBilder(neue.map((b) => b.datei));
 
       setIsFading(false);
@@ -474,7 +495,8 @@ export default function QuizModul() {
             { key: "anfaenger", label: "Novize" },
             { key: "fortgeschritten", label: "Profi" },
             { key: "expert", label: "Experte" },
-          ].map((lvl) => {
+            { key: "quickguess", label: "Quickguess" },          
+            ].map((lvl) => {
             const isActive = level === lvl.key;
 
             return (
@@ -487,6 +509,9 @@ export default function QuizModul() {
                   setFeedback({});
                   setGeprueft(false);
                   setZeigeMerkmale({});
+                  setTimer(10);
+                  setIsTimeUp(false);
+                  setIsTimerActive(false);                  
                   starteNeueRunde();
                 }}
                 className={[
@@ -690,18 +715,42 @@ export default function QuizModul() {
               key={bild.pfad + "-" + bild.datei}
               className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
-              <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
-                {!imgLoaded[index] && (
-                  <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
-                    Bild lädt…
-                  </div>
-                )}
+            <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
+  
+  {/* Lade-Placeholder */}
+  {!imgLoaded[index] && (
+    <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
+      Bild lädt…
+    </div>
+  )}
 
-                <img
-                  src={pfad}
-                  alt={bild.title}
-                  onLoad={() =>
-                    setImgLoaded((prev) => ({ ...prev, [index]: true }))
+  {/* Bild */}
+  <img
+    src={pfad}
+    alt={bild.title}
+    onLoad={() => {
+      setImgLoaded((prev) => ({ ...prev, [index]: true }));
+
+      if (mode === "quickguess") {
+        setTimer(10);
+        setIsTimeUp(false);
+        setIsTimerActive(true);
+      }
+    }}
+    className={[
+      "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
+      imgLoaded[index] ? "opacity-100" : "opacity-0",
+    ].join(" ")}
+  />
+
+  {/* 👇 HIER DAS NEUE OVERLAY */}
+  {mode === "quickguess" && isTimeUp && (
+    <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
+      Zeit abgelaufen
+    </div>
+  )}
+
+</div>
                   }
                   onClick={() =>
                     setVergroessertesBild({ pfad, title: bild.title })
