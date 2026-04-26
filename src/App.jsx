@@ -1,8 +1,8 @@
+
 import {
   parseBildInfo,
   getWingsForType,
   zieheAusgewogenesBild,
-  pruefeBildAntwort,
   pruefeRunde,
   berechneNeueStats,
   pickNaechsteBilder,
@@ -16,10 +16,8 @@ import LexButton from "./components/LexButton.jsx";
 const LOCALSTORAGE_KEY = "geseheneBilder";
 const STATS_KEY = "ennea_quiz_stats";
 
-// >>> HIER anpassen, falls Pfad/Name anders ist:
 const LEXIKON_BASE_URL = "https://ennea-lexikon.netlify.app";
 const QUIZ_BILDER_URL = `${LEXIKON_BASE_URL}/bilder.json`;
-// <<<
 
 function speichereGezeigteBilder(bildNamen) {
   const bisher = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)) || [];
@@ -40,9 +38,8 @@ const typen = Array.from({ length: 9 }, (_, i) => i + 1);
 
 const dropdownStyle = {
   width: "100%",
-  // schlankere Höhe, aber immer noch gut klickbar
   padding: "0.3rem 0.75rem",
-  minHeight: "2.3rem", // ~36–37px
+  minHeight: "2.3rem",
   borderRadius: "0.7rem",
   border: "1.5px solid black",
   backgroundColor: "#f5e6d2",
@@ -52,13 +49,9 @@ const dropdownStyle = {
   boxSizing: "border-box",
   cursor: "pointer",
   lineHeight: "1.2",
-
-  // native Pfeile ausblenden
   appearance: "none",
   WebkitAppearance: "none",
   MozAppearance: "none",
-
-  // eigener Pfeil etwas kleiner & näher am Rand
   backgroundImage:
     "url(\"data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")",
   backgroundRepeat: "no-repeat",
@@ -76,10 +69,10 @@ export default function QuizModul() {
   const [antworten, setAntworten] = useState({});
   const [feedback, setFeedback] = useState({});
   const [geprueft, setGeprueft] = useState(false);
-  const [zeigeMerkmale, setZeigeMerkmale] = useState({});  
+  const [zeigeMerkmale, setZeigeMerkmale] = useState({});
   const [vergroessertesBild, setVergroessertesBild] = useState(null);
   const [mode, setMode] = useState("single");
-  
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -87,8 +80,8 @@ export default function QuizModul() {
   const [isFading, setIsFading] = useState(false);
   const [imgLoaded, setImgLoaded] = useState({});
 
-  // --- Trefferquote / Stats ---
   const [showStats, setShowStats] = useState(false);
+
   const emptyStats = {
     imagesTotal: 0,
     overallCorrect: 0,
@@ -110,7 +103,6 @@ export default function QuizModul() {
     const saved = JSON.parse(localStorage.getItem(STATS_KEY));
 
     if (saved) {
-      // Falls alte Struktur gefunden wird (ohne overall/anfaenger/...)
       const isOld =
         saved.imagesTotal !== undefined && saved.overall === undefined;
 
@@ -121,6 +113,7 @@ export default function QuizModul() {
           fortgeschritten: { ...emptyStats },
           expert: { ...emptyStats },
         };
+
         setStats(migrated);
         localStorage.setItem(STATS_KEY, JSON.stringify(migrated));
       } else {
@@ -131,42 +124,44 @@ export default function QuizModul() {
   }, []);
 
   const starteNeueRunde = (
-  pool = alleBilder,
-  weiblichArg = weiblichPool,
-  maennlichArg = maennlichPool,
-  neutralArg = neutralPool
-) => {
-  if (!pool || pool.length === 0) {
-    setRundeBilder([]);
-    return;
-  }
+    pool = alleBilder,
+    weiblichArg = weiblichPool,
+    maennlichArg = maennlichPool,
+    neutralArg = neutralPool
+  ) => {
+    if (!pool || pool.length === 0) {
+      setRundeBilder([]);
+      return;
+    }
 
-  const gesehen = ladeGeseheneBilder();
+    const gesehen = ladeGeseheneBilder();
 
-  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
-  if (nochNichtGesehen.length < 2) {
-    resetGezeigteBilder();
-  }
+    const nochNichtGesehen = pool.filter(
+      (bild) => !gesehen.includes(bild.datei)
+    );
 
-  const neue = pickNaechsteBilder(
-    pool,
-    weiblichArg,
-    maennlichArg,
-    neutralArg,
-    ladeGeseheneBilder(),
-    mode
-  );
+    if (nochNichtGesehen.length < 2) {
+      resetGezeigteBilder();
+    }
 
-  setImgLoaded({});
-  setRundeBilder(neue);
-  setAntworten({});
-  setFeedback({});
-  setGeprueft(false);
-  setZeigeMerkmale({});
-  
-  speichereGezeigteBilder(neue.map((b) => b.datei));
-};
+    const neue = pickNaechsteBilder(
+      pool,
+      weiblichArg,
+      maennlichArg,
+      neutralArg,
+      ladeGeseheneBilder(),
+      mode
+    );
 
+    setImgLoaded({});
+    setRundeBilder(neue);
+    setAntworten({});
+    setFeedback({});
+    setGeprueft(false);
+    setZeigeMerkmale({});
+
+    speichereGezeigteBilder(neue.map((b) => b.datei));
+  };
 
   useEffect(() => {
     async function load() {
@@ -192,8 +187,8 @@ export default function QuizModul() {
         setWeiblichPool(weiblich);
         setMaennlichPool(maennlich);
         setNeutralPool(neutral);
-
         setAlleBilder(enriched);
+
         starteNeueRunde(enriched, weiblich, maennlich, neutral);
       } catch (e) {
         console.error("Fehler beim Laden der Quizdaten:", e);
@@ -206,12 +201,14 @@ export default function QuizModul() {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     if (alleBilder.length > 0) {
       starteNeueRunde();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
+
   const handleAntwort = (index, field, value) => {
     setAntworten((prev) => ({
       ...prev,
@@ -219,33 +216,33 @@ export default function QuizModul() {
     }));
   };
 
-const pruefeAntworten = () => {
- const {
-  result,
-  counters: {
-    overallInc,
-    typInc,
-    subtypInc,
-    wingInc,
-    subtypTotalInc,
-    wingTotalInc,
-  },
-} = pruefeRunde(rundeBilder, antworten, level);
+  const pruefeAntworten = () => {
+    const {
+      result,
+      counters: {
+        overallInc,
+        typInc,
+        subtypInc,
+        wingInc,
+        subtypTotalInc,
+        wingTotalInc,
+      },
+    } = pruefeRunde(rundeBilder, antworten, level);
 
     const newStats = berechneNeueStats(
-  stats,
-  level,
-  rundeBilder,
-  {
-    overallInc,
-    typInc,
-    subtypInc,
-    wingInc,
-    subtypTotalInc,
-    wingTotalInc,
-  },
-  emptyStats
-);
+      stats,
+      level,
+      rundeBilder,
+      {
+        overallInc,
+        typInc,
+        subtypInc,
+        wingInc,
+        subtypTotalInc,
+        wingTotalInc,
+      },
+      emptyStats
+    );
 
     setStats(newStats);
     localStorage.setItem(STATS_KEY, JSON.stringify(newStats));
@@ -253,164 +250,169 @@ const pruefeAntworten = () => {
     setFeedback(result);
     setGeprueft(true);
   };
+
   function preloadImage(src) {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = resolve;
-      img.onerror = resolve; // auch bei Fehler nicht hängen bleiben
+      img.onerror = resolve;
       img.src = src;
     });
   }
 
-const neueRunde = async () => {
-  const gesehen = ladeGeseheneBilder();
+  const neueRunde = async () => {
+    const gesehen = ladeGeseheneBilder();
 
-  let nochNichtGesehen = alleBilder.filter(
-    (bild) => !gesehen.includes(bild.datei)
-  );
-  if (nochNichtGesehen.length < 2) {
-    resetGezeigteBilder();
-  }
+    const nochNichtGesehen = alleBilder.filter(
+      (bild) => !gesehen.includes(bild.datei)
+    );
 
-  const neue = pickNaechsteBilder(
-    alleBilder,
-    weiblichPool,
-    maennlichPool,
-    neutralPool,
-    ladeGeseheneBilder(),
-    mode
-  );
-
-  const srcs = neue.map((bild) => {
-    return `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
-      bild.datei
-    )}`;
-  });
-
-  const preloadPromise = Promise.all(srcs.map(preloadImage));
-
-  // wie lange wir maximal "sauber" preloaden wollen (ms)
-  const MAX_WAIT = 300;
-
-  const fullyPreloaded = await Promise.race([
-    preloadPromise.then(() => true).catch(() => true),
-    new Promise((resolve) => setTimeout(() => resolve(false), MAX_WAIT)),
-  ]);
-
-  // Jetzt erst den Fade + Swap machen
-  setIsFading(true);
-
-  setTimeout(() => {
-    if (fullyPreloaded) {
-      // Bilder sind schon im Cache -> wir können sie direkt als "geladen" markieren
-      setImgLoaded({ 0: true, 1: true });
-    } else {
-      // nicht fertig preload -> normaler Weg mit Placeholder
-      setImgLoaded({});
-      // Preload läuft im Hintergrund weiter
-      preloadPromise.catch(() => {});
+    if (nochNichtGesehen.length < 2) {
+      resetGezeigteBilder();
     }
 
-    setRundeBilder(neue);
-    setAntworten({});
-    setFeedback({});
-    setGeprueft(false);
-    setZeigeMerkmale({});    
-    speichereGezeigteBilder(neue.map((b) => b.datei));
+    const neue = pickNaechsteBilder(
+      alleBilder,
+      weiblichPool,
+      maennlichPool,
+      neutralPool,
+      ladeGeseheneBilder(),
+      mode
+    );
 
-    setIsFading(false);
-  }, 150); // passt zu deiner duration-150
-};
+    const srcs = neue.map((bild) => {
+      return `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
+        bild.datei
+      )}`;
+    });
 
-const skipRunde = () => {
-  const gesehen = ladeGeseheneBilder();
-  const aktuelle = rundeBilder.map((b) => b.datei);
+    const preloadPromise = Promise.all(srcs.map(preloadImage));
+    const MAX_WAIT = 300;
 
-  const neuGefiltert = gesehen.filter((name) => !aktuelle.includes(name));
+    const fullyPreloaded = await Promise.race([
+      preloadPromise.then(() => true).catch(() => true),
+      new Promise((resolve) => setTimeout(() => resolve(false), MAX_WAIT)),
+    ]);
 
-  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(neuGefiltert));
+    setIsFading(true);
 
-  neueRunde();
-};
+    setTimeout(() => {
+      if (fullyPreloaded) {
+        setImgLoaded({ 0: true, 1: true });
+      } else {
+        setImgLoaded({});
+        preloadPromise.catch(() => {});
+      }
+
+      setRundeBilder(neue);
+      setAntworten({});
+      setFeedback({});
+      setGeprueft(false);
+      setZeigeMerkmale({});
+      speichereGezeigteBilder(neue.map((b) => b.datei));
+
+      setIsFading(false);
+    }, 150);
+  };
+
+  const skipRunde = () => {
+    const gesehen = ladeGeseheneBilder();
+    const aktuelle = rundeBilder.map((b) => b.datei);
+    const neuGefiltert = gesehen.filter((name) => !aktuelle.includes(name));
+
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(neuGefiltert));
+
+    neueRunde();
+  };
 
   const skipEinzelBild = (indexToSkip) => {
-  if (!rundeBilder[indexToSkip]) return;
+    if (!rundeBilder[indexToSkip]) return;
 
-    const resetCurrentLevel = () => {
-  if (!window.confirm(`Statistiken für "${level}" wirklich zurücksetzen?`)) return;
+    const aktuellesBild = rundeBilder[indexToSkip];
 
-  const reset = {
-    ...stats,
-    [level]: { ...emptyStats },
+    const andereBilder = rundeBilder.filter((_, i) => i !== indexToSkip);
+
+    const verboteneTypen = andereBilder
+      .map((bild) => bild.typ)
+      .filter((typ) => typ != null);
+
+    let gesehen = ladeGeseheneBilder();
+
+    gesehen = gesehen.filter((name) => name !== aktuellesBild.datei);
+
+    const verboteneDateien = andereBilder.map((bild) => bild.datei);
+    gesehen = [...new Set([...gesehen, ...verboteneDateien])];
+
+    const neuesBild = zieheAusgewogenesBild(
+      weiblichPool,
+      maennlichPool,
+      neutralPool,
+      gesehen,
+      verboteneTypen
+    );
+
+    if (!neuesBild) return;
+
+    setRundeBilder((prev) => {
+      const updated = [...prev];
+      updated[indexToSkip] = neuesBild;
+      return updated;
+    });
+
+    setAntworten((prev) => {
+      const updated = { ...prev };
+      delete updated[indexToSkip];
+      return updated;
+    });
+
+    setFeedback((prev) => {
+      const updated = { ...prev };
+      delete updated[indexToSkip];
+      return updated;
+    });
+
+    setImgLoaded((prev) => ({
+      ...prev,
+      [indexToSkip]: false,
+    }));
+
+    speichereGezeigteBilder([neuesBild.datei]);
   };
 
-  setStats(reset);
-  localStorage.setItem(STATS_KEY, JSON.stringify(reset));
-};
+  const resetCurrentLevel = () => {
+    if (!window.confirm(`Statistiken für "${level}" wirklich zurücksetzen?`)) {
+      return;
+    }
 
-const resetAllStats = () => {
-  if (!window.confirm("Wirklich ALLE Statistiken löschen? Das kann nicht rückgängig gemacht werden.")) return;
+    const reset = {
+      ...stats,
+      [level]: { ...emptyStats },
+    };
 
-  const reset = {
-    overall: { ...emptyStats },
-    anfaenger: { ...emptyStats },
-    fortgeschritten: { ...emptyStats },
-    expert: { ...emptyStats },
+    setStats(reset);
+    localStorage.setItem(STATS_KEY, JSON.stringify(reset));
   };
 
-  setStats(reset);
-  localStorage.setItem(STATS_KEY, JSON.stringify(reset));
-};
-  const aktuellesBild = rundeBilder[indexToSkip];
+  const resetAllStats = () => {
+    if (
+      !window.confirm(
+        "Wirklich ALLE Statistiken löschen? Das kann nicht rückgängig gemacht werden."
+      )
+    ) {
+      return;
+    }
 
-  const andereBilder = rundeBilder.filter((_, i) => i !== indexToSkip);
-  const verboteneTypen = andereBilder
-    .map((bild) => bild.typ)
-    .filter((typ) => typ != null);
+    const reset = {
+      overall: { ...emptyStats },
+      anfaenger: { ...emptyStats },
+      fortgeschritten: { ...emptyStats },
+      expert: { ...emptyStats },
+    };
 
-  let gesehen = ladeGeseheneBilder();
+    setStats(reset);
+    localStorage.setItem(STATS_KEY, JSON.stringify(reset));
+  };
 
-  gesehen = gesehen.filter((name) => name !== aktuellesBild.datei);
-
-  const verboteneDateien = andereBilder.map((bild) => bild.datei);
-  gesehen = [...new Set([...gesehen, ...verboteneDateien])];
-
-  const neuesBild = zieheAusgewogenesBild(
-    weiblichPool,
-    maennlichPool,
-    neutralPool,
-    gesehen,
-    verboteneTypen
-  );
-
-  if (!neuesBild) return;
-
-  setRundeBilder((prev) => {
-    const updated = [...prev];
-    updated[indexToSkip] = neuesBild;
-    return updated;
-  });
-
-  setAntworten((prev) => {
-    const updated = { ...prev };
-    delete updated[indexToSkip];
-    return updated;
-  });
-
-  setFeedback((prev) => {
-    const updated = { ...prev };
-    delete updated[indexToSkip];
-    return updated;
-  });
-
-  setImgLoaded((prev) => ({
-    ...prev,
-    [indexToSkip]: false,
-  }));
-
-  speichereGezeigteBilder([neuesBild.datei]);
-};
-  // ⬇️ GENAU HIER REIN
   function StatBar({ label, value }) {
     const percent = Math.round(value);
 
@@ -427,11 +429,10 @@ const resetAllStats = () => {
       </div>
     );
   }
+
   const levelStats = stats[level] || emptyStats;
   const isNovize = level === "anfaenger";
   const isProfi = level === "fortgeschritten";
-
-  // ⬆️ BIS HIER
 
   if (loading) {
     return (
@@ -451,7 +452,6 @@ const resetAllStats = () => {
 
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
-      {/* Header / Wappen */}
       <div className="text-center -mt-1 mb-1 md:mb-2">
         <img
           src={wappen}
@@ -463,14 +463,12 @@ const resetAllStats = () => {
           Typisierungsübungen
         </h1>
 
-        {/* Trennlinie unter der Überschrift */}
         <div className="flex items-center justify-center gap-3 my-6">
           <span className="flex-1 max-w-[200px] h-px bg-black"></span>
           <span className="text-[1.4rem] text-black">❦</span>
           <span className="flex-1 max-w-[200px] h-px bg-black"></span>
         </div>
 
-        {/* Level-Schalter */}
         <div className="flex justify-center gap-3 md:gap-4 flex-wrap mt-2 mb-5">
           {[
             { key: "anfaenger", label: "Novize" },
@@ -478,18 +476,19 @@ const resetAllStats = () => {
             { key: "expert", label: "Experte" },
           ].map((lvl) => {
             const isActive = level === lvl.key;
+
             return (
               <LexButton
                 key={lvl.key}
                 active={isActive}
                 onClick={() => {
-                 setLevel(lvl.key);
-                 setAntworten({});
-                 setFeedback({});
-                 setGeprueft(false);
-                 setZeigeMerkmale({});
-                 starteNeueRunde();
-            }}
+                  setLevel(lvl.key);
+                  setAntworten({});
+                  setFeedback({});
+                  setGeprueft(false);
+                  setZeigeMerkmale({});
+                  starteNeueRunde();
+                }}
                 className={[
                   "px-4 py-2 text-sm w-[132px] md:w-[150px] transition-all duration-150",
                   isActive
@@ -502,35 +501,35 @@ const resetAllStats = () => {
             );
           })}
         </div>
-{/* Modus-Schalter */}
-<div className="flex justify-center gap-3 mb-5">
-  <LexButton
-    active={mode === "compare"}
-    onClick={() => setMode("compare")}
-    className={[
-      "px-4 py-2 text-sm w-[132px] md:w-[150px]",
-      mode === "compare"
-        ? "border-2 border-black bg-[#f5e6d2]"
-        : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
-    ].join(" ")}
-  >
-    Vergleich
-  </LexButton>
 
-  <LexButton
-    active={mode === "single"}
-    onClick={() => setMode("single")}
-    className={[
-      "px-4 py-2 text-sm w-[132px] md:w-[150px]",
-      mode === "single"
-        ? "border-2 border-black bg-[#f5e6d2]"
-        : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
-    ].join(" ")}
-  >
-    Einzelbild
-  </LexButton>
-</div>        
-        {/* Stats Toggle */}
+        <div className="flex justify-center gap-3 mb-5">
+          <LexButton
+            active={mode === "compare"}
+            onClick={() => setMode("compare")}
+            className={[
+              "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+              mode === "compare"
+                ? "border-2 border-black bg-[#f5e6d2]"
+                : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+            ].join(" ")}
+          >
+            Vergleich
+          </LexButton>
+
+          <LexButton
+            active={mode === "single"}
+            onClick={() => setMode("single")}
+            className={[
+              "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+              mode === "single"
+                ? "border-2 border-black bg-[#f5e6d2]"
+                : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+            ].join(" ")}
+          >
+            Einzelbild
+          </LexButton>
+        </div>
+
         <LexButton
           onClick={() => setShowStats((v) => !v)}
           className={[
@@ -543,39 +542,17 @@ const resetAllStats = () => {
           {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
         </LexButton>
 
-        {/* Stats Box */}
         {showStats && (
           <div className="mt-4 mx-auto max-w-[480px] bg-[#c8a979] rounded-2xl p-2 border-[1.5px] border-black shadow-[0_3px_8px_rgba(0,0,0,0.35)] text-base text-black">
             <div className="font-extrabold text-lg mb-2 tracking-wide">
               📈 Trefferquote
             </div>
 
-            {showStats && (
-  <div className="mt-4 flex flex-col items-center gap-2">
-
-    <LexButton
-      onClick={resetCurrentLevel}
-      className="px-4 py-2 text-sm border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]"
-    >
-      Aktuelles Level zurücksetzen
-    </LexButton>
-
-    <button
-      onClick={resetAllStats}
-      className="text-[0.8rem] text-black/60 hover:text-black underline"
-    >
-      Alle Statistiken löschen
-    </button>
-
-  </div>
-)}
             <div className="bg-[#f5e6d2] p-2.5 rounded-xl flex flex-col gap-2 border border-black/30">
-              {/* Bilder gesamt auf aktuellem Level */}
               <div className="text-sm font-semibold">
                 Bilder gesamt (Level): {levelStats.imagesTotal}
               </div>
 
-              {/* NOVIZE: nur Typ + Gesamt */}
               {isNovize && (
                 <>
                   <StatBar
@@ -599,7 +576,6 @@ const resetAllStats = () => {
                 </>
               )}
 
-              {/* PROFI: Typ + Subtyp + Gesamt */}
               {isProfi && (
                 <>
                   <StatBar
@@ -633,7 +609,6 @@ const resetAllStats = () => {
                 </>
               )}
 
-              {/* EXPERTE: Typ + Subtyp + Wing + Gesamt */}
               {!isNovize && !isProfi && (
                 <>
                   <StatBar
@@ -676,11 +651,26 @@ const resetAllStats = () => {
                 </>
               )}
             </div>
+
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <LexButton
+                onClick={resetCurrentLevel}
+                className="px-4 py-2 text-sm border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]"
+              >
+                Aktuelles Level zurücksetzen
+              </LexButton>
+
+              <button
+                onClick={resetAllStats}
+                className="text-[0.8rem] text-black/60 hover:text-black underline"
+              >
+                Alle Statistiken löschen
+              </button>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Karten */}
       <div
         className={[
           "flex gap-8 flex-wrap justify-center mt-6 transition-opacity duration-150 ease-in-out",
@@ -701,7 +691,6 @@ const resetAllStats = () => {
               className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
               <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
-                {/* Platzhalter solange Bild nicht geladen ist */}
                 {!imgLoaded[index] && (
                   <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
                     Bild lädt…
@@ -721,6 +710,7 @@ const resetAllStats = () => {
                     const altPfad = e.target.src.endsWith(".jpeg")
                       ? e.target.src.replace(".jpeg", ".jpg")
                       : e.target.src.replace(".jpg", ".jpeg");
+
                     if (!e.target.dataset.fallbackTried) {
                       e.target.dataset.fallbackTried = "true";
                       e.target.src = altPfad;
@@ -737,7 +727,6 @@ const resetAllStats = () => {
                 {bild.title}
               </div>
 
-              {/* Typ-Auswahl */}
               <div className="mb-1 md:mb-1.5">
                 <select
                   value={userAntwort.typ || ""}
@@ -755,7 +744,6 @@ const resetAllStats = () => {
                 </select>
               </div>
 
-              {/* Subtyp nur ab Fortgeschritten */}
               {level !== "anfaenger" && (
                 <div className="mb-1 md:mb-1.5">
                   <select
@@ -777,7 +765,6 @@ const resetAllStats = () => {
                 </div>
               )}
 
-              {/* Wing nur im Expert-Modus */}
               {(() => {
                 const userTyp = userAntwort.typ
                   ? parseInt(userAntwort.typ, 10)
@@ -809,83 +796,81 @@ const resetAllStats = () => {
                 );
               })()}
 
-             {/* Merkmale */}
-{(() => {
-  const key = `${bild.subtyp}${bild.typ}`;
-  const merkm = merkmale[key];
+              {(() => {
+                const key = `${bild.subtyp}${bild.typ}`;
+                const merkm = merkmale[key];
 
-  if (!merkm) return null;
+                if (!merkm) return null;
+                if (level === "expert") return null;
 
-  // Experte: bleibt komplett ohne Merkmale
-  if (level === "expert") return null;
+                if (level === "fortgeschritten") {
+                  if (!geprueft) return null;
 
-  // Profi: erst nach Auflösung optional anzeigen
-  if (level === "fortgeschritten") {
-    if (!geprueft) return null;
+                  const sichtbar = zeigeMerkmale[index];
 
-    const sichtbar = zeigeMerkmale[index];
+                  return (
+                    <div className="mb-1">
+                      {!sichtbar ? (
+                        <button
+                          onClick={() =>
+                            setZeigeMerkmale((prev) => ({
+                              ...prev,
+                              [index]: true,
+                            }))
+                          }
+                          className="w-full text-left text-sm font-semibold px-3 py-2 rounded-[0.7rem] border border-black/60 bg-[#f5e6d2]"
+                        >
+                          ▶ Typ-Merkmale anzeigen
+                        </button>
+                      ) : (
+                        <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+                          <div>
+                            <strong>Seite des Enneagramms:</strong>{" "}
+                            {merkm.seite}
+                          </div>
+                          <div>
+                            <strong>Augenausdruck:</strong>{" "}
+                            {merkm.augenausdruck}
+                          </div>
+                          <div>
+                            <strong>Körperliche Auffälligkeiten:</strong>{" "}
+                            {merkm.koerperlich}
+                          </div>
+                          <div>
+                            <strong>Wirkung:</strong> {merkm.wirkung}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
 
-    return (
-      <div className="mb-1">
-        {!sichtbar ? (
-          <button
-            onClick={() =>
-              setZeigeMerkmale((prev) => ({
-                ...prev,
-                [index]: true,
-              }))
-            }
-            className="w-full text-left text-sm font-semibold px-3 py-2 rounded-[0.7rem] border border-black/60 bg-[#f5e6d2]"
-          >
-            ▶ Typ-Merkmale anzeigen
-          </button>
-        ) : (
-          <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
-            <div>
-              <strong>Seite des Enneagramms:</strong> {merkm.seite}
-            </div>
-            <div>
-              <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-            </div>
-            <div>
-              <strong>Körperliche Auffälligkeiten:</strong>{" "}
-              {merkm.koerperlich}
-            </div>
-            <div>
-              <strong>Wirkung:</strong> {merkm.wirkung}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
+                return (
+                  <details className="mb-1">
+                    <summary className="cursor-pointer font-semibold text-[0.95rem] flex items-center h-[42px] md:h-[36px] px-3 rounded-[0.7rem] border-[1.5px] border-black bg-[#f5e6d2] text-[#111] shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)] select-none list-none [&::-webkit-details-marker]:hidden">
+                      ▶ Typ-Merkmale einblenden
+                    </summary>
 
-  // Novize: wie bisher vorab einblendbar
-  return (
-    <details className="mb-1">
-      <summary className="cursor-pointer font-semibold text-[0.95rem] flex items-center h-[42px] md:h-[36px] px-3 rounded-[0.7rem] border-[1.5px] border-black bg-[#f5e6d2] text-[#111] shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)] select-none list-none [&::-webkit-details-marker]:hidden">
-        ▶ Typ-Merkmale einblenden
-      </summary>
+                    <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+                      <div>
+                        <strong>Seite des Enneagramms:</strong> {merkm.seite}
+                      </div>
+                      <div>
+                        <strong>Augenausdruck:</strong>{" "}
+                        {merkm.augenausdruck}
+                      </div>
+                      <div>
+                        <strong>Körperliche Auffälligkeiten:</strong>{" "}
+                        {merkm.koerperlich}
+                      </div>
+                      <div>
+                        <strong>Wirkung:</strong> {merkm.wirkung}
+                      </div>
+                    </div>
+                  </details>
+                );
+              })()}
 
-      <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
-        <div>
-          <strong>Seite des Enneagramms:</strong> {merkm.seite}
-        </div>
-        <div>
-          <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-        </div>
-        <div>
-          <strong>Körperliche Auffälligkeiten:</strong> {merkm.koerperlich}
-        </div>
-        <div>
-          <strong>Wirkung:</strong> {merkm.wirkung}
-        </div>
-      </div>
-    </details>
-  );
-})()}              
-
-                            {/* Feedback */}
               {geprueft && fb && (
                 <div
                   className="mt-2 font-bold text-center"
@@ -893,7 +878,9 @@ const resetAllStats = () => {
                     color: (() => {
                       if (fb.istRichtig) return "green";
                       if (
-                        (fb.typRichtig || fb.subtypRichtig || fb.wingRichtig) &&
+                        (fb.typRichtig ||
+                          fb.subtypRichtig ||
+                          fb.wingRichtig) &&
                         level !== "anfaenger"
                       ) {
                         return "#a65e00";
@@ -929,39 +916,42 @@ const resetAllStats = () => {
 
                       <div className="text-black font-normal text-sm mt-1">
                         Richtige Antwort: Typ {bild.typ} · {bild.subtyp}
-                        {level === "expert" && bild.wing != null ? ` · w${bild.wing}` : ""}
+                        {level === "expert" && bild.wing != null
+                          ? ` · w${bild.wing}`
+                          : ""}
                       </div>
                     </>
                   )}
                 </div>
               )}
 
-             <div className="mt-3 flex gap-2 justify-center">
-  <LexButton
-    onClick={geprueft ? neueRunde : pruefeAntworten}
-    className="px-4 py-2 text-sm"
-  >
-    {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
-  </LexButton>
+              <div className="mt-3 flex gap-2 justify-center">
+                <LexButton
+                  onClick={geprueft ? neueRunde : pruefeAntworten}
+                  className="px-4 py-2 text-sm"
+                >
+                  {geprueft ? "Nächste Runde" : "Antwort überprüfen"}
+                </LexButton>
 
-  {!geprueft && (
-    <LexButton
-     onClick={() => skipEinzelBild(index)}
-      className="px-4 py-2 text-sm"
-    >
-      Überspringen
-    </LexButton>
-  )}
-</div>
+                {!geprueft && (
+                  <LexButton
+                    onClick={
+                      mode === "single" ? skipRunde : () => skipEinzelBild(index)
+                    }
+                    className="px-4 py-2 text-sm"
+                  >
+                    Überspringen
+                  </LexButton>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
         <div
-          onClick={mode === "single" ? skipRunde : () => skipEinzelBild(index)}
+          onClick={() => setVergroessertesBild(null)}
           className="fixed inset-0 bg-black/85 flex items-center justify-center z-[100] cursor-zoom-out p-4"
         >
           <div
