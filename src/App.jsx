@@ -734,20 +734,7 @@ export default function QuizModul() {
         setIsTimerActive(true);
       }
     }
-      const altPfad = e.target.src.endsWith(".jpeg")
-        ? e.target.src.replace(".jpeg", ".jpg")
-        : e.target.src.replace(".jpg", ".jpeg");
-
-      if (!e.target.dataset.fallbackTried) {
-        e.target.dataset.fallbackTried = "true";
-        e.target.src = altPfad;
-      }
-    }}
-    className={[
-      "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
-      imgLoaded[index] ? "opacity-100" : "opacity-0",
-    ].join(" ")}
-  />
+      
 
   {mode === "quickguess" && isTimeUp && (
     <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
