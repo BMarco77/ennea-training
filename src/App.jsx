@@ -733,34 +733,30 @@ export default function QuizModul() {
         setIsTimeUp(false);
         setIsTimerActive(true);
       }
-    }
-      
+    }}
+    onClick={() => setVergroessertesBild({ pfad, title: bild.title })}
+    onError={(e) => {
+      const altPfad = e.target.src.endsWith(".jpeg")
+        ? e.target.src.replace(".jpeg", ".jpg")
+        : e.target.src.replace(".jpg", ".jpeg");
+
+      if (!e.target.dataset.fallbackTried) {
+        e.target.dataset.fallbackTried = "true";
+        e.target.src = altPfad;
+      }
+    }}
+    className={[
+      "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
+      imgLoaded[index] ? "opacity-100" : "opacity-0",
+    ].join(" ")}
+  />
 
   {mode === "quickguess" && isTimeUp && (
     <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
       Zeit abgelaufen
     </div>
   )}
-</div>                  }
-                  onClick={() =>
-                    setVergroessertesBild({ pfad, title: bild.title })
-                  }
-                  onError={(e) => {
-                    const altPfad = e.target.src.endsWith(".jpeg")
-                      ? e.target.src.replace(".jpeg", ".jpg")
-                      : e.target.src.replace(".jpg", ".jpeg");
-
-                    if (!e.target.dataset.fallbackTried) {
-                      e.target.dataset.fallbackTried = "true";
-                      e.target.src = altPfad;
-                    }
-                  }}
-                  className={[
-                    "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
-                    imgLoaded[index] ? "opacity-100" : "opacity-0",
-                  ].join(" ")}
-                />
-              </div>
+</div>
 
               <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
                 {bild.title}
