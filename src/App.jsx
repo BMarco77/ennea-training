@@ -457,7 +457,14 @@ const skipRunde = () => {
               <LexButton
                 key={lvl.key}
                 active={isActive}
-                onClick={() => setLevel(lvl.key)}
+                onClick={() => {
+                 setLevel(lvl.key);
+                 setAntworten({});
+                 setFeedback({});
+                 setGeprueft(false);
+                 setZeigeMerkmale({});
+                 starteNeueRunde();
+            }}
                 className={[
                   "px-4 py-2 text-sm w-[132px] md:w-[150px] transition-all duration-150",
                   isActive
