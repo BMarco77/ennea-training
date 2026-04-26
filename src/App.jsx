@@ -336,7 +336,7 @@ export default function QuizModul() {
     }, 150);
   };
 
-  const skipRunde = () => {
+    const skipRunde = () => {
     const gesehen = ladeGeseheneBilder();
     const aktuelle = rundeBilder.map((b) => b.datei);
     const neuGefiltert = gesehen.filter((name) => !aktuelle.includes(name));
@@ -346,7 +346,7 @@ export default function QuizModul() {
     neueRunde();
   };
 
-  const skipEinzelBild = (indexToSkip) => {
+    const skipEinzelBild = (indexToSkip) => {
     if (!rundeBilder[indexToSkip]) return;
 
     const aktuellesBild = rundeBilder[indexToSkip];
@@ -400,7 +400,7 @@ export default function QuizModul() {
     speichereGezeigteBilder([neuesBild.datei]);
   };
 
-  const resetCurrentLevel = () => {
+    const resetCurrentLevel = () => {
     if (!window.confirm(`Statistiken für "${level}" wirklich zurücksetzen?`)) {
       return;
     }
@@ -414,7 +414,7 @@ export default function QuizModul() {
     localStorage.setItem(STATS_KEY, JSON.stringify(reset));
   };
 
-  const resetAllStats = () => {
+    const resetAllStats = () => {
     if (
       !window.confirm(
         "Wirklich ALLE Statistiken löschen? Das kann nicht rückgängig gemacht werden."
@@ -451,11 +451,11 @@ export default function QuizModul() {
     );
   }
 
-  const levelStats = stats[level] || emptyStats;
-  const isNovize = level === "anfaenger";
-  const isProfi = level === "fortgeschritten";
+    const levelStats = stats[level] || emptyStats;
+    const isNovize = level === "anfaenger";
+    const isProfi = level === "fortgeschritten";
 
-  if (loading) {
+    if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#ead0aa] font-lexSerif">
         Daten werden geladen…
@@ -495,7 +495,7 @@ export default function QuizModul() {
             { key: "anfaenger", label: "Novize" },
             { key: "fortgeschritten", label: "Profi" },
             { key: "expert", label: "Experte" },
-            { key: "quickguess", label: "Quickguess" },          
+                     
             ].map((lvl) => {
             const isActive = level === lvl.key;
 
@@ -527,34 +527,57 @@ export default function QuizModul() {
           })}
         </div>
 
-        <div className="flex justify-center gap-3 mb-5">
-          <LexButton
-            active={mode === "compare"}
-            onClick={() => setMode("compare")}
-            className={[
-              "px-4 py-2 text-sm w-[132px] md:w-[150px]",
-              mode === "compare"
-                ? "border-2 border-black bg-[#f5e6d2]"
-                : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
-            ].join(" ")}
-          >
-            Vergleich
-          </LexButton>
+        {/* Modus-Schalter */}
+{mode !== "quickguess" ? (
+  <div className="flex justify-center gap-3 mb-5 flex-wrap">
+    <LexButton
+      active={mode === "compare"}
+      onClick={() => setMode("compare")}
+      className={[
+        "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+        mode === "compare"
+          ? "border-2 border-black bg-[#f5e6d2]"
+          : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+      ].join(" ")}
+    >
+      Vergleich
+    </LexButton>
 
-          <LexButton
-            active={mode === "single"}
-            onClick={() => setMode("single")}
-            className={[
-              "px-4 py-2 text-sm w-[132px] md:w-[150px]",
-              mode === "single"
-                ? "border-2 border-black bg-[#f5e6d2]"
-                : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
-            ].join(" ")}
-          >
-            Einzelbild
-          </LexButton>
-        </div>
+    <LexButton
+      active={mode === "single"}
+      onClick={() => setMode("single")}
+      className={[
+        "px-4 py-2 text-sm w-[132px] md:w-[150px]",
+        mode === "single"
+          ? "border-2 border-black bg-[#f5e6d2]"
+          : "border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]",
+      ].join(" ")}
+    >
+      Einzelbild
+    </LexButton>
 
+    <LexButton
+      active={mode === "quickguess"}
+      onClick={() => setMode("quickguess")}
+      className="px-5 py-2 text-sm w-[160px] border-2 border-black bg-[#c8a979] hover:bg-[#d2b089]"
+    >
+      Quickguess
+    </LexButton>
+  </div>
+) : (
+  <div className="flex flex-col items-center gap-3 mb-5">
+    <div className="px-6 py-2 rounded-xl border-2 border-black bg-[#f5e6d2] font-bold shadow-[0_3px_8px_rgba(0,0,0,0.25)]">
+      ⚡ Quickguess aktiv
+    </div>
+
+    <button
+      onClick={() => setMode("single")}
+      className="text-sm text-black/60 hover:text-black underline"
+    >
+      Zurück zum normalen Modus
+    </button>
+  </div>
+)}
         <LexButton
           onClick={() => setShowStats((v) => !v)}
           className={[
