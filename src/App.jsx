@@ -758,56 +758,81 @@ const skipRunde = () => {
                 );
               })()}
 
-              {/* Merkmale (außer Expert) */}
-              {(() => {
-                const key = `${bild.subtyp}${bild.typ}`;
-                const merkm = merkmale[key];
+             {/* Merkmale */}
+{(() => {
+  const key = `${bild.subtyp}${bild.typ}`;
+  const merkm = merkmale[key];
 
-                if (!merkm) return null;
+  if (!merkm) return null;
 
-// 👇 EXPERT bleibt wie bisher komplett aus
-if (level === "expert") return null;
+  // Experte: bleibt komplett ohne Merkmale
+  if (level === "expert") return null;
 
-// 👇 PROFI: nur nach Auflösung + optional einblendbar
-if (level === "fortgeschritten") {
-  if (!geprueft) return null;
+  // Profi: erst nach Auflösung optional anzeigen
+  if (level === "fortgeschritten") {
+    if (!geprueft) return null;
 
-  const sichtbar = zeigeMerkmale[index];
+    const sichtbar = zeigeMerkmale[index];
 
+    return (
+      <div className="mb-1">
+        {!sichtbar ? (
+          <button
+            onClick={() =>
+              setZeigeMerkmale((prev) => ({
+                ...prev,
+                [index]: true,
+              }))
+            }
+            className="w-full text-left text-sm font-semibold px-3 py-2 rounded-[0.7rem] border border-black/60 bg-[#f5e6d2]"
+          >
+            ▶ Typ-Merkmale anzeigen
+          </button>
+        ) : (
+          <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+            <div>
+              <strong>Seite des Enneagramms:</strong> {merkm.seite}
+            </div>
+            <div>
+              <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+            </div>
+            <div>
+              <strong>Körperliche Auffälligkeiten:</strong>{" "}
+              {merkm.koerperlich}
+            </div>
+            <div>
+              <strong>Wirkung:</strong> {merkm.wirkung}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Novize: wie bisher vorab einblendbar
   return (
-    <div className="mb-1">
-      {!sichtbar ? (
-        <button
-          onClick={() =>
-            setZeigeMerkmale((prev) => ({
-              ...prev,
-              [index]: true,
-            }))
-          }
-          className="w-full text-left text-sm font-semibold px-3 py-2 rounded-[0.7rem] border border-black/60 bg-[#f5e6d2]"
-        >
-          ▶ Typ-Merkmale anzeigen
-        </button>
-      ) : (
-        <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
-          <div>
-            <strong>Seite des Enneagramms:</strong> {merkm.seite}
-          </div>
-          <div>
-            <strong>Augenausdruck:</strong> {merkm.augenausdruck}
-          </div>
-          <div>
-            <strong>Körperliche Auffälligkeiten:</strong>{" "}
-            {merkm.koerperlich}
-          </div>
-          <div>
-            <strong>Wirkung:</strong> {merkm.wirkung}
-          </div>
+    <details className="mb-1">
+      <summary className="cursor-pointer font-semibold text-[0.95rem] flex items-center h-[42px] md:h-[36px] px-3 rounded-[0.7rem] border-[1.5px] border-black bg-[#f5e6d2] text-[#111] shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)] select-none list-none [&::-webkit-details-marker]:hidden">
+        ▶ Typ-Merkmale einblenden
+      </summary>
+
+      <div className="mt-2 bg-[#f5e6d2] p-3 rounded-xl text-sm border border-[#a68b65] shadow-sm space-y-1">
+        <div>
+          <strong>Seite des Enneagramms:</strong> {merkm.seite}
         </div>
-      )}
-    </div>
+        <div>
+          <strong>Augenausdruck:</strong> {merkm.augenausdruck}
+        </div>
+        <div>
+          <strong>Körperliche Auffälligkeiten:</strong> {merkm.koerperlich}
+        </div>
+        <div>
+          <strong>Wirkung:</strong> {merkm.wirkung}
+        </div>
+      </div>
+    </details>
   );
-})())              
+})()}              
 
                             {/* Feedback */}
               {geprueft && fb && (
@@ -885,7 +910,7 @@ if (level === "fortgeschritten") {
       {/* Overlay für Vergrößerung */}
       {vergroessertesBild && (
         <div
-          onClick={() => setVergroessertesBild(null)}
+          onClick={mode === "single" ? skipRunde : () => skipEinzelBild(index)}
           className="fixed inset-0 bg-black/85 flex items-center justify-center z-[100] cursor-zoom-out p-4"
         >
           <div
