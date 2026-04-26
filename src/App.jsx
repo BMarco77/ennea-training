@@ -336,6 +336,31 @@ const skipRunde = () => {
   const skipEinzelBild = (indexToSkip) => {
   if (!rundeBilder[indexToSkip]) return;
 
+    const resetCurrentLevel = () => {
+  if (!window.confirm(`Statistiken für "${level}" wirklich zurücksetzen?`)) return;
+
+  const reset = {
+    ...stats,
+    [level]: { ...emptyStats },
+  };
+
+  setStats(reset);
+  localStorage.setItem(STATS_KEY, JSON.stringify(reset));
+};
+
+const resetAllStats = () => {
+  if (!window.confirm("Wirklich ALLE Statistiken löschen? Das kann nicht rückgängig gemacht werden.")) return;
+
+  const reset = {
+    overall: { ...emptyStats },
+    anfaenger: { ...emptyStats },
+    fortgeschritten: { ...emptyStats },
+    expert: { ...emptyStats },
+  };
+
+  setStats(reset);
+  localStorage.setItem(STATS_KEY, JSON.stringify(reset));
+};
   const aktuellesBild = rundeBilder[indexToSkip];
 
   const andereBilder = rundeBilder.filter((_, i) => i !== indexToSkip);
@@ -525,6 +550,25 @@ const skipRunde = () => {
               📈 Trefferquote
             </div>
 
+            {showStats && (
+  <div className="mt-4 flex flex-col items-center gap-2">
+
+    <LexButton
+      onClick={resetCurrentLevel}
+      className="px-4 py-2 text-sm border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]"
+    >
+      Aktuelles Level zurücksetzen
+    </LexButton>
+
+    <button
+      onClick={resetAllStats}
+      className="text-[0.8rem] text-black/60 hover:text-black underline"
+    >
+      Alle Statistiken löschen
+    </button>
+
+  </div>
+)}
             <div className="bg-[#f5e6d2] p-2.5 rounded-xl flex flex-col gap-2 border border-black/30">
               {/* Bilder gesamt auf aktuellem Level */}
               <div className="text-sm font-semibold">
