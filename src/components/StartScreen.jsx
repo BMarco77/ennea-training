@@ -1,6 +1,6 @@
 import LexButton from "./LexButton";
 
-export default function StartScreen({ setMode, setLevel, setScreen }) {
+export default function StartScreen({ setMode, setLevel, setScreen, setQuickguessStarted,}) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#ead0aa] font-lexSerif text-black px-6">
 
@@ -96,15 +96,16 @@ export default function StartScreen({ setMode, setLevel, setScreen }) {
         <div className="h-px bg-black/30 my-2" />
 
         {/* QUICKGUESS */}
-        <LexButton
-          onClick={() => {
-            setMode("quickguess");
-            setScreen("quiz");
-          }}
-          className="mt-2"
-        >
-          Quickguess ⚡
-        </LexButton>
+       <LexButton
+  onClick={() => {
+    setMode("quickguess");
+    setQuickguessStarted(false);
+    setScreen("quiz");
+  }}
+  className="mt-2"
+>
+  Quickguess ⚡
+</LexButton>
 
       </div>
     </div>
