@@ -55,12 +55,7 @@ export default function QuizHeader({
       </div>
 
      
-          <button
-            onClick={() => setMode("single")}
-            className="text-sm text-black/60 hover:text-black underline"
-          >
-            Zurück zum normalen Modus
-          </button>
+          
         </div>
      
 
