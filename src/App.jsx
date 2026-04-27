@@ -549,7 +549,8 @@ if (screen === "start") {
       skipRunde={skipRunde}
       skipEinzelBild={skipEinzelBild}
       isTimeUp={isTimeUp}
-    />
+      timer={timer}   
+      />
   );
 })}
       </div>
