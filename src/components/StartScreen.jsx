@@ -12,14 +12,15 @@ export default function StartScreen({ setMode, setLevel, setScreen, setQuickgues
   />
 </div>
 
-<h1 className="text-3xl md:text-5xl font-bold mb-10 text-center">
-  Typisierungsübungen
-</h1>
       <div className="flex items-center justify-center gap-3 my-6">
   <span className="flex-1 max-w-[150px] h-px bg-black"></span>
   <span className="text-[1.2rem]">❦</span>
   <span className="flex-1 max-w-[150px] h-px bg-black"></span>
 </div>
+<h1 className="text-3xl md:text-5xl font-bold mb-10 text-center">
+  Typisierungsübungen
+</h1>
+     
       {/* LEVEL + MODUS MATRIX */}
       <div className="flex flex-col gap-6 w-full max-w-[420px]">
 
