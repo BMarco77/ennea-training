@@ -37,7 +37,7 @@ export default function QuizHeader({
           ← Zurück
         </LexButton>
       </div>
-
+<div>
       <img
         src={wappen}
         alt="Wappen"
