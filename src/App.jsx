@@ -1043,3 +1043,6 @@ export default function QuizModul() {
     </div>
   </div>
 )}
+         </div>
+  );
+} 
