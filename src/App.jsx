@@ -85,6 +85,7 @@ export default function QuizModul() {
   const [isFading, setIsFading] = useState(false);
   const [imgLoaded, setImgLoaded] = useState({});
 
+  const [quickguessStarted, setQuickguessStarted] = useState(false);  
   const [timer, setTimer] = useState(10);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
