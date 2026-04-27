@@ -518,6 +518,10 @@ if (screen === "start") {
   
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
+<LexButton onClick={() => setScreen("start")}>
+  ← Zurück
+</LexButton>
+      
       <div className="text-center -mt-1 mb-1 md:mb-2">
         <img
           src={wappen}
