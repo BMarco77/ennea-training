@@ -38,27 +38,8 @@ export default function QuizHeader({
         </LexButton>
       </div>
 <div>
-      <img
-        src={wappen}
-        alt="Wappen"
-        className="mx-auto block mb-4 max-w-[120px] h-auto"
-      />
-
-      <h1 className="font-lexSerif text-3xl md:text-5xl font-bold text-black text-center">
-        Typisierungsübungen
-      </h1>
-
-      <div className="flex items-center justify-center gap-3 my-6">
-        <span className="flex-1 max-w-[200px] h-px bg-black"></span>
-        <span className="text-[1.4rem] text-black">❦</span>
-        <span className="flex-1 max-w-[200px] h-px bg-black"></span>
-      </div>
-
-     
-          
         </div>
      
-
       <LexButton
         onClick={() => setShowStats((v) => !v)}
         className={[
