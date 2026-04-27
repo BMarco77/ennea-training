@@ -31,7 +31,7 @@ export default function QuizHeader({
             setFeedback({});
             setGeprueft(false);
             setZeigeMerkmale({});
-          }}
+          
           className="px-3 py-1 text-sm border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]"
         >
           ← Zurück
