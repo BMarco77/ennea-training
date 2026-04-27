@@ -62,7 +62,7 @@ export default function QuizHeader({
             Zurück zum normalen Modus
           </button>
         </div>
-      )}
+     
 
       <LexButton
         onClick={() => setShowStats((v) => !v)}
