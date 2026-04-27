@@ -1,4 +1,3 @@
-
 import {
   parseBildInfo,
   getWingsForType,
