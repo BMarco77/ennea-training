@@ -28,6 +28,7 @@ export default function QuizCard({
   skipRunde,
   skipEinzelBild,
   isTimeUp,
+  timer,
 }) {
   return (
     <div
@@ -78,8 +79,10 @@ export default function QuizCard({
       </div>
 
       {mode === "quickguess" && !isTimeUp && (
-        <div className="text-center text-sm mb-1">⏱ 10s</div>
-      )}
+  <div className="text-center text-sm mb-1 font-semibold">
+    ⏱ {timer}s
+  </div>
+)}
 
       <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
         {bild.title}
