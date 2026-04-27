@@ -1,3 +1,5 @@
+import LexButton from "./LexButton";
+
 export default function StartScreen({ setMode, setLevel, setScreen }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#ead0aa] font-lexSerif text-black px-6">
@@ -8,36 +10,44 @@ export default function StartScreen({ setMode, setLevel, setScreen }) {
 
       <div className="flex flex-col gap-4 w-full max-w-[300px]">
 
-        <button onClick={() => {
-          setMode("single");
-          setLevel("anfaenger");
-          setScreen("quiz");
-        }}>
+        <LexButton
+          onClick={() => {
+            setMode("single");
+            setLevel("anfaenger");
+            setScreen("quiz");
+          }}
+        >
           Novize
-        </button>
+        </LexButton>
 
-        <button onClick={() => {
-          setMode("single");
-          setLevel("fortgeschritten");
-          setScreen("quiz");
-        }}>
+        <LexButton
+          onClick={() => {
+            setMode("single");
+            setLevel("fortgeschritten");
+            setScreen("quiz");
+          }}
+        >
           Profi
-        </button>
+        </LexButton>
 
-        <button onClick={() => {
-          setMode("single");
-          setLevel("expert");
-          setScreen("quiz");
-        }}>
+        <LexButton
+          onClick={() => {
+            setMode("single");
+            setLevel("expert");
+            setScreen("quiz");
+          }}
+        >
           Experte
-        </button>
+        </LexButton>
 
-        <button onClick={() => {
-          setMode("quickguess");
-          setScreen("quiz");
-        }}>
+        <LexButton
+          onClick={() => {
+            setMode("quickguess");
+            setScreen("quiz");
+          }}
+        >
           Quickguess ⚡
-        </button>
+        </LexButton>
 
       </div>
     </div>
