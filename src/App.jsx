@@ -484,9 +484,7 @@ if (screen === "start") {
   
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
-<LexButton onClick={() => setScreen("start")}>
-  ← Zurück
-</LexButton>
+
       
       <QuizHeader
   level={level}
