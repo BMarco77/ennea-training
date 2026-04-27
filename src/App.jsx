@@ -484,7 +484,37 @@ if (screen === "start") {
       />
   );
 }
-  
+if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
+  return (
+    <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 flex flex-col items-center justify-center">
+      <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center">
+        Quickguess ⚡
+      </h1>
+
+      <p className="text-center text-black/70 max-w-[340px] mb-8">
+        Du hast 10 Sekunden Zeit, dir einen ersten Eindruck vom Bild zu machen.
+        Danach wird das Bild verdeckt.
+      </p>
+
+      <LexButton
+        onClick={() => {
+          setQuickguessStarted(true);
+          starteNeueRunde();
+        }}
+        className="px-6 py-3 text-base"
+      >
+        Quickguess starten
+      </LexButton>
+
+      <button
+        onClick={() => setScreen("start")}
+        className="mt-5 text-sm text-black/60 hover:text-black underline"
+      >
+        Zurück zur Auswahl
+      </button>
+    </div>
+  );
+}  
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
 
