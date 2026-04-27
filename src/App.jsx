@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import wappen from "./assets/wappen.png";
 import merkmale from "./data/merkmale.json";
 import LexButton from "./components/LexButton.jsx";
+import StartScreen from "./components/StartScreen";
 
 const LOCALSTORAGE_KEY = "geseheneBilder";
 const STATS_KEY = "ennea_quiz_stats";
@@ -471,48 +472,11 @@ export default function QuizModul() {
   }
 if (screen === "start") {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#ead0aa] font-lexSerif text-black px-6">
-
-      <h1 className="text-3xl md:text-5xl font-bold mb-8 text-center">
-        Typisierungsübungen
-      </h1>
-
-      <div className="flex flex-col gap-4 w-full max-w-[300px]">
-
-        <LexButton onClick={() => {
-          setMode("single");
-          setLevel("anfaenger");
-          setScreen("quiz");
-        }}>
-          Novize
-        </LexButton>
-
-        <LexButton onClick={() => {
-          setMode("single");
-          setLevel("fortgeschritten");
-          setScreen("quiz");
-        }}>
-          Profi
-        </LexButton>
-
-        <LexButton onClick={() => {
-          setMode("single");
-          setLevel("expert");
-          setScreen("quiz");
-        }}>
-          Experte
-        </LexButton>
-
-        <LexButton onClick={() => {
-          setMode("quickguess");
-          setScreen("quiz");
-        }}>
-          Quickguess ⚡
-        </LexButton>
-
-      </div>
-
-    </div>
+    <StartScreen
+      setMode={setMode}
+      setLevel={setLevel}
+      setScreen={setScreen}
+    />
   );
 }
   
