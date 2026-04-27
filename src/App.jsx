@@ -613,6 +613,7 @@ if (screen === "start") {
   resetCurrentLevel={resetCurrentLevel}
   resetAllStats={resetAllStats}
 />
+        </div>
 
       <div
         className={[
