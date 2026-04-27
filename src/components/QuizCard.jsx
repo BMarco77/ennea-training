@@ -1,3 +1,7 @@
+import { getWingsForType } from "../utils/quizLogic";
+import merkmale from "../data/merkmale.json";
+import LexButton from "./LexButton";
+
 export default function QuizCard({
   bild,
   index,
