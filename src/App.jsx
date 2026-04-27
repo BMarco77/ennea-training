@@ -1027,14 +1027,18 @@ export default function QuizModul() {
               ×
             </button>
 
-            <img
-              src={vergroessertesBild.pfad}
-              alt={vergroessertesBild.title}
-              className="w-full h-full object-contain object-center block"
-            />
-          </div>
-        </div>
-      )}
+           <div className="relative w-full h-full">
+  <img
+    src={vergroessertesBild.pfad}
+    alt={vergroessertesBild.title}
+    className="w-full h-full object-contain object-center block"
+  />
+
+  {mode === "quickguess" && isTimeUp && (
+    <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide rounded-xl">
+      Zeit abgelaufen
     </div>
+  )}
+</div>
   );
 }
