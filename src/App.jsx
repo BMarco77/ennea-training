@@ -75,6 +75,7 @@ export default function QuizModul() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [screen, setScreen] = useState("start");
 
   const [level, setLevel] = useState("fortgeschritten");
   const [isFading, setIsFading] = useState(false);
@@ -205,13 +206,11 @@ export default function QuizModul() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (alleBilder.length > 0) {
-      starteNeueRunde();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
-
+ useEffect(() => {
+  if (screen === "quiz" && alleBilder.length > 0) {
+    starteNeueRunde();
+  }
+}, [screen, mode]);
   useEffect(() => {
   if (!isTimerActive) return;
 
@@ -470,7 +469,53 @@ export default function QuizModul() {
       </div>
     );
   }
+if (screen === "start") {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#ead0aa] font-lexSerif text-black px-6">
 
+      <h1 className="text-3xl md:text-5xl font-bold mb-8 text-center">
+        Typisierungsübungen
+      </h1>
+
+      <div className="flex flex-col gap-4 w-full max-w-[300px]">
+
+        <LexButton onClick={() => {
+          setMode("single");
+          setLevel("anfaenger");
+          setScreen("quiz");
+        }}>
+          Novize
+        </LexButton>
+
+        <LexButton onClick={() => {
+          setMode("single");
+          setLevel("fortgeschritten");
+          setScreen("quiz");
+        }}>
+          Profi
+        </LexButton>
+
+        <LexButton onClick={() => {
+          setMode("single");
+          setLevel("expert");
+          setScreen("quiz");
+        }}>
+          Experte
+        </LexButton>
+
+        <LexButton onClick={() => {
+          setMode("quickguess");
+          setScreen("quiz");
+        }}>
+          Quickguess ⚡
+        </LexButton>
+
+      </div>
+
+    </div>
+  );
+}
+  
   return (
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
       <div className="text-center -mt-1 mb-1 md:mb-2">
