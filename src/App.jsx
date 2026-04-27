@@ -480,7 +480,8 @@ if (screen === "start") {
       setMode={setMode}
       setLevel={setLevel}
       setScreen={setScreen}
-    />
+      setQuickguessStarted={setQuickguessStarted}
+      />
   );
 }
   
