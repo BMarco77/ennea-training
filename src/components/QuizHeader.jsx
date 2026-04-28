@@ -76,13 +76,13 @@ export default function QuizHeader({
     </div>
 
     <StatsBox
-      showStats={showStats}
-      levelStats={levelStats}
-      isNovize={isNovize}
-      isProfi={isProfi}
-      resetCurrentLevel={resetCurrentLevel}
-      resetAllStats={resetAllStats}
-    </>
+  showStats={showStats}
+  levelStats={levelStats}
+  isNovize={isNovize}
+  isProfi={isProfi}
+  resetCurrentLevel={resetCurrentLevel}
+  resetAllStats={resetAllStats}
+/>
     )}
   </div>
 );
