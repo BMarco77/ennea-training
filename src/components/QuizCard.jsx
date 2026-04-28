@@ -33,9 +33,9 @@ export default function QuizCard({
   return (
     <div
       key={bild.pfad + "-" + bild.datei}
-      className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[320px] shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+     className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[340px] md:max-w-[400px] shadow-[0_4px_10px_rgba(0,0,0,0.35)]"
     >
-      <div className="bg-black rounded-lg mb-1.5 overflow-hidden w-full h-[240px] flex items-center justify-center relative">
+      className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[260px] md:h-[310px] flex items-center justify-center relative"
         {!imgLoaded[index] && (
           <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
             Bild lädt…
