@@ -98,7 +98,7 @@ export default function StartScreen({
     Quickguess ⚡
   </div>
 
-  <div className="text-[11px] text-black/55 mb-3">
+  <div className="text-[11px] text-black/55 mb-4">
     10 Sekunden · Intuition · Erstblick
   </div>
 
