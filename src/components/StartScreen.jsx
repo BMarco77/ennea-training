@@ -41,7 +41,7 @@ export default function StartScreen({
 
           {/* NOVIZE */}
          <div className="mb-4">
-  <div className="text-sm font-semibold mb-1">Novize</div>
+  <div className="text-sm font-semibold mb-1 tracking-wide">Novize</div>
 
   <div className="flex gap-2">
     <LexButton
