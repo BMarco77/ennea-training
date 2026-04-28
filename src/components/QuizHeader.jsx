@@ -84,6 +84,4 @@ export default function QuizHeader({
   resetAllStats={resetAllStats}
 />
     )}
-  </div>
-);
-}
+
