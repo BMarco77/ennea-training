@@ -181,7 +181,5 @@ export default function StartScreen({ setMode, setLevel, setScreen, setQuickgues
     Experte
   </LexButton>
 </div>
-  </div>
-    </div>
   );
 }
