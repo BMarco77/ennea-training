@@ -40,31 +40,33 @@ export default function StartScreen({
           </div>
 
           {/* NOVIZE */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-[80px] text-sm font-semibold">Novize</div>
+         <div className="mb-4">
+  <div className="text-sm font-semibold mb-1">Novize</div>
 
-            <LexButton
-              onClick={() => {
-                setLevel("anfaenger");
-                setMode("single");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Einzel
-            </LexButton>
+  <div className="flex gap-2">
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("single");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Einzel
+    </LexButton>
 
-            <LexButton
-              onClick={() => {
-                setLevel("anfaenger");
-                setMode("compare");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Vergleich
-            </LexButton>
-          </div>
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("compare");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Vergleich
+    </LexButton>
+  </div>
+</div>
 
           {/* PROFI */}
           <div className="flex items-center gap-2 mb-2">
