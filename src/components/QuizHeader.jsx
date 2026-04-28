@@ -62,7 +62,7 @@ export default function QuizHeader({
         </div>
       </div>
 
-     {mode !== "quickguess" && (
+    {mode !== "quickguess" && (
   <>
     <div className="flex justify-center mb-4">
       <LexButton
