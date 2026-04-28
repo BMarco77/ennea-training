@@ -41,6 +41,9 @@ export default function StartScreen({
           {/* NOVIZE */}
           <div className="mb-4 text-center">
             <div className="text-sm font-semibold mb-1 tracking-wide">Novize</div>
+             <div className="text-xs text-black/60 mb-3">
+    Bestimme den Haupttyp
+  </div>
             <div className="flex gap-2">
               <LexButton
                 onClick={() => {
@@ -69,6 +72,9 @@ export default function StartScreen({
           {/* PROFI */}
           <div className="mb-4 text-center">
             <div className="text-sm font-semibold mb-1 tracking-wide">Profi</div>
+            <div className="text-xs text-black/60 mb-3">
+  Bestimme Haupttyp und Subtyp
+</div>
             <div className="flex gap-2">
               <LexButton
                 onClick={() => {
@@ -97,6 +103,9 @@ export default function StartScreen({
           {/* EXPERTE */}
           <div className="text-center">
             <div className="text-sm font-semibold mb-1 tracking-wide">Experte</div>
+            <div className="text-xs text-black/60 mb-3">
+  Bestimme Haupttyp, Subtyp und Wing
+</div>
             <div className="flex gap-2">
               <LexButton
                 onClick={() => {
