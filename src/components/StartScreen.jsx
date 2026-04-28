@@ -57,7 +57,7 @@ export default function StartScreen({
   ].map((item) => (
     <div
       key={item.level}
-      className="mb-3 rounded-xl border border-black/25 bg-[#d3b889]/35 p-3 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]"
+      className="mb-3 rounded-xl border border-black/25 bg-[#d3b889]/25 p-3 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]"
     >
       <div className="flex items-baseline justify-between mb-2">
         <div className="text-sm font-bold">{item.label}</div>
