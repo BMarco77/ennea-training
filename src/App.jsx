@@ -89,7 +89,8 @@ export default function QuizModul() {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showStats, setShowStats] = useState(false);
-
+  const [streak, setStreak] = useState(0);
+  const [score, setScore] = useState(0);
   const emptyStats = {
     imagesTotal: 0,
     overallCorrect: 0,
@@ -250,6 +251,16 @@ export default function QuizModul() {
       },
     } = pruefeRunde(rundeBilder, antworten, level);
 
+    if (mode === "quickguess") {
+  const richtig = result.every((r) => r.istRichtig);
+
+  if (richtig) {
+    setStreak((s) => s + 1);
+    setScore((s) => s + 10);
+  } else {
+    setStreak(0);
+  }
+}
     const newStats = berechneNeueStats(
       stats,
       level,
