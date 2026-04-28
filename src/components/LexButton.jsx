@@ -22,6 +22,7 @@ const base =
   "hover:bg-[#d2b089] hover:scale-[1.02] " +
   "active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.25)] " +
   "focus:outline-none";
+  "shadow-[0_2px_4px_rgba(0,0,0,0.25)] "
 
   const colors = active ? "bg-[#e3c8aa] text-black" : "bg-[#c2a178] text-black";
 
