@@ -4,6 +4,9 @@ import StatsBox from "./StatsBox";
 export default function QuizHeader({
   level,
   mode,
+  streak,
+  score,
+  timer,  
   setScreen,
   setAntworten,
   setFeedback,
@@ -54,6 +57,23 @@ export default function QuizHeader({
           ← Zurück
         </LexButton>
 
+        {mode === "quickguess" && (
+  <div className="flex justify-center gap-4 mb-3 text-sm font-semibold">
+
+    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
+      🔥 {streak}
+    </div>
+
+    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
+      ⭐ {score}
+    </div>
+
+    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
+      ⏱ {timer}s
+    </div>
+
+  </div>
+)}
         <div className="text-right">
           <div className="text-sm font-bold">
             {levelLabel} · {modeLabel}
