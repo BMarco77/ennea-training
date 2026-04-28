@@ -533,6 +533,9 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   level={level}
   setLevel={setLevel}
   mode={mode}
+  streak={streak}
+  score={score}
+  timer={timer}
   setMode={setMode}
   setScreen={setScreen}
   setAntworten={setAntworten}
