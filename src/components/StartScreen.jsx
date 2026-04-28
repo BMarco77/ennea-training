@@ -124,6 +124,7 @@ export default function StartScreen({
       Vergleich
     </LexButton>
   </div>
+         </div>
 </div>
         {/* TRENNER */}
         <div className="h-px bg-black/30 my-4" />
