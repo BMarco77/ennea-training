@@ -70,7 +70,7 @@ export default function StartScreen({
 
           {/* PROFI */}
          <div className="mb-4">
-  <div className="text-sm font-semibold mb-1">Novize</div>
+  <div className="text-sm font-semibold mb-1">Profi</div>
 
   <div className="flex gap-2">
     <LexButton
@@ -99,7 +99,7 @@ export default function StartScreen({
 
           {/* EXPERTE */}
          <div className="mb-4">
-  <div className="text-sm font-semibold mb-1">Novize</div>
+  <div className="text-sm font-semibold mb-1">Experte</div>
 
   <div className="flex gap-2">
     <LexButton
