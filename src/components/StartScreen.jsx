@@ -8,7 +8,7 @@ export default function StartScreen({ setMode, setLevel, setScreen, setQuickgues
   <img
     src={wappen}
     alt="Wappen"
-    className="mx-auto mb-2 max-w-[90px] h-auto"
+    className="mx-auto mb-2 max-w-[70px] h-auto"
   />
 </div>
 
@@ -18,7 +18,7 @@ export default function StartScreen({ setMode, setLevel, setScreen, setQuickgues
   <span className="flex-1 max-w-[150px] h-px bg-black"></span>
 </div>
 
-<h1 className="text-3xl md:text-5xl font-bold mb-10 text-center">
+<h1 className="text-2xl md:text-4xl font-bold mb-6 text-center">
   Typisierungsübungen
 </h1>
      
