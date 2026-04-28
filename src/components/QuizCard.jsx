@@ -71,19 +71,18 @@ export default function QuizCard({
           ].join(" ")}
         />
 
-        {mode === "quickguess" && isTimeUp && (
-          <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
-            Zeit abgelaufen
-          </div>
-        )}
-      </div>
+       {mode === "quickguess" && isTimeUp && (
+  <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
+    Zeit abgelaufen
+  </div>
+)}
+</div>
 
-      {mode === "quickguess" && !isTimeUp && (
+{mode === "quickguess" && !isTimeUp && (
   <div className="text-center text-sm mb-1 font-semibold">
     ⏱ {timer}s
   </div>
 )}
-
       <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
         {bild.title}
       </div>
