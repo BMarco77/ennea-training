@@ -93,7 +93,7 @@ export default function StartScreen({
 
 <div className="h-px bg-black/30 my-4" />
 
-       <div className="mb-2 rounded-xl border border-black/25 bg-[#d3b889]/25 p-3 text-center">
+       <div className="mb-2 rounded-xl border border-black/25 bg-[#e0c28f]/35 border-black/40 p-3 text-center">
   <div className="text-sm font-bold mb-1">
     Quickguess ⚡
   </div>
