@@ -69,60 +69,62 @@ export default function StartScreen({
 </div>
 
           {/* PROFI */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-[80px] text-sm font-semibold">Profi</div>
+         <div className="mb-4">
+  <div className="text-sm font-semibold mb-1">Novize</div>
 
-            <LexButton
-              onClick={() => {
-                setLevel("fortgeschritten");
-                setMode("single");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Einzel
-            </LexButton>
+  <div className="flex gap-2">
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("single");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Einzel
+    </LexButton>
 
-            <LexButton
-              onClick={() => {
-                setLevel("fortgeschritten");
-                setMode("compare");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Vergleich
-            </LexButton>
-          </div>
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("compare");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Vergleich
+    </LexButton>
+  </div>
+</div>
 
           {/* EXPERTE */}
-          <div className="flex items-center gap-2">
-            <div className="w-[80px] text-sm font-semibold">Experte</div>
+         <div className="mb-4">
+  <div className="text-sm font-semibold mb-1">Novize</div>
 
-            <LexButton
-              onClick={() => {
-                setLevel("expert");
-                setMode("single");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Einzel
-            </LexButton>
+  <div className="flex gap-2">
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("single");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Einzel
+    </LexButton>
 
-            <LexButton
-              onClick={() => {
-                setLevel("expert");
-                setMode("compare");
-                setScreen("quiz");
-              }}
-              className="flex-1 py-2"
-            >
-              Vergleich
-            </LexButton>
-          </div>
-        </div>
-
+    <LexButton
+      onClick={() => {
+        setLevel("anfaenger");
+        setMode("compare");
+        setScreen("quiz");
+      }}
+      className="flex-1 py-2"
+    >
+      Vergleich
+    </LexButton>
+  </div>
+</div>
         {/* TRENNER */}
         <div className="h-px bg-black/30 my-4" />
 
