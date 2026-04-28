@@ -251,8 +251,8 @@ export default function QuizModul() {
       },
     } = pruefeRunde(rundeBilder, antworten, level);
 
-    if (mode === "quickguess") {
-  const richtig = result.every((r) => r.istRichtig);
+   if (mode === "quickguess") {
+  const richtig = Object.values(result).every((r) => r.istRichtig);
 
   if (richtig) {
     setStreak((s) => s + 1);
