@@ -82,6 +82,8 @@ export default function QuizHeader({
       isProfi={isProfi}
       resetCurrentLevel={resetCurrentLevel}
       resetAllStats={resetAllStats}
-    />
-  </>
-)}
+    </>
+    )}
+  </div>
+);
+}
