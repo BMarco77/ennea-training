@@ -1,18 +1,14 @@
-import wappen from "../assets/wappen.png";
 import LexButton from "./LexButton";
 import StatsBox from "./StatsBox";
 
 export default function QuizHeader({
   level,
-  setLevel,
   mode,
-  setMode,
   setScreen,
   setAntworten,
   setFeedback,
   setGeprueft,
   setZeigeMerkmale,
-  starteNeueRunde,
   showStats,
   setShowStats,
   levelStats,
@@ -21,9 +17,30 @@ export default function QuizHeader({
   resetCurrentLevel,
   resetAllStats,
 }) {
+  const levelLabel =
+    level === "anfaenger"
+      ? "Novize"
+      : level === "fortgeschritten"
+      ? "Profi"
+      : "Experte";
+
+  const modeLabel =
+    mode === "compare"
+      ? "Vergleich"
+      : mode === "quickguess"
+      ? "Quickguess"
+      : "Einzelbild";
+
+  const description =
+    level === "anfaenger"
+      ? "Bestimme den Haupttyp"
+      : level === "fortgeschritten"
+      ? "Bestimme Haupttyp und Subtyp"
+      : "Bestimme Haupttyp, Subtyp und Wing";
+
   return (
-    <div className="text-center -mt-1 mb-1 md:mb-2">
-      <div className="flex justify-start mb-4">
+    <div className="w-full max-w-[760px] mx-auto mb-6">
+      <div className="flex items-center justify-between gap-3 mb-5">
         <LexButton
           onClick={() => {
             setScreen("start");
@@ -31,26 +48,28 @@ export default function QuizHeader({
             setFeedback({});
             setGeprueft(false);
             setZeigeMerkmale({});
-           }}
-          className="px-3 py-1 text-sm border border-black/60 bg-[#c8a979] hover:bg-[#d2b089]"
+          }}
+          className="px-3 py-1 text-sm"
         >
           ← Zurück
         </LexButton>
-      </div>
-<div>
+
+        <div className="text-right">
+          <div className="text-sm font-bold">
+            {levelLabel} · {modeLabel}
+          </div>
+          <div className="text-xs text-black/60">{description}</div>
         </div>
-     
-      <LexButton
-        onClick={() => setShowStats((v) => !v)}
-        className={[
-          "mt-2 px-4 py-2 text-sm min-w-0",
-          showStats
-            ? "bg-[#f5e6d2] border-2 border-black shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]"
-            : "border border-black/60 bg-[#c8a979] text-black/90 hover:bg-[#d2b089]",
-        ].join(" ")}
-      >
-        {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
-      </LexButton>
+      </div>
+
+      <div className="flex justify-center mb-4">
+        <LexButton
+          onClick={() => setShowStats((v) => !v)}
+          className="px-4 py-2 text-sm"
+        >
+          {showStats ? "Trefferquote ausblenden" : "Trefferquote anzeigen"}
+        </LexButton>
+      </div>
 
       <StatsBox
         showStats={showStats}
