@@ -22,7 +22,7 @@ export default function StartScreen({
           />
 
           <h1 className="text-2xl md:text-3xl font-bold">
-            Typisierungsübungen
+            Profiling
           </h1>
 
           <p className="text-sm text-black/70 mt-1">
