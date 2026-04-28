@@ -50,7 +50,7 @@ export default function StartScreen({
         setMode("single");
         setScreen("quiz");
       }}
-      className="flex-1 py-2"
+      className="flex-1 py-2 text-sm"
     >
       Einzel
     </LexButton>
