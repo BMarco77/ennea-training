@@ -109,19 +109,78 @@ export default function StartScreen({ setMode, setLevel, setScreen, setQuickgues
         {/* TRENNLINIE */}
         <div className="h-px bg-black/30 my-2" />
 
-        {/* QUICKGUESS */}
-       <LexButton
-  onClick={() => {
-    setMode("quickguess");
-    setQuickguessStarted(false);
-    setScreen("quiz");
-  }}
-  className="mt-2"
->
-  Quickguess ⚡
-</LexButton>
+      {/* QUICKGUESS */}
+<div className="h-px bg-black/30 my-2" />
 
-      </div>
+<div className="flex items-center justify-between gap-3">
+  <div className="w-[90px] font-semibold">Quickguess</div>
+
+  <LexButton
+    onClick={() => {
+      setLevel("anfaenger");
+      setMode("quickguess");
+      setQuickguessStarted(false);
+      setScreen("quiz");
+    }}
+    className="flex-1"
+  >
+    Novize
+  </LexButton>
+
+  <LexButton
+    onClick={() => {
+      setLevel("fortgeschritten");
+      setMode("quickguess");
+      setQuickguessStarted(false);
+      setScreen("quiz");
+    }}
+    className="flex-1"
+  >
+    Profi
+  </LexButton>
+
+{/* QUICKGUESS */}
+<div className="h-px bg-black/30 my-2" />
+
+<div className="flex items-center justify-between gap-3">
+  <div className="w-[90px] font-semibold">Quickguess</div>
+
+  <LexButton
+    onClick={() => {
+      setLevel("anfaenger");
+      setMode("quickguess");
+      setQuickguessStarted(false);
+      setScreen("quiz");
+    }}
+    className="flex-1"
+  >
+    Novize
+  </LexButton>
+
+  <LexButton
+    onClick={() => {
+      setLevel("fortgeschritten");
+      setMode("quickguess");
+      setQuickguessStarted(false);
+      setScreen("quiz");
+    }}
+    className="flex-1"
+  >
+    Profi
+  </LexButton>
+
+  <LexButton
+    onClick={() => {
+      setLevel("expert");
+      setMode("quickguess");
+      setQuickguessStarted(false);
+      setScreen("quiz");
+    }}
+    className="flex-1"
+  >
+    Experte
+  </LexButton>
+</div>
     </div>
   );
 }
