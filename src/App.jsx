@@ -573,11 +573,13 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   />
 
   <div
-    className={[
-      "flex gap-8 flex-wrap justify-center transition-opacity duration-150 ease-in-out",
-      isFading ? "opacity-0 pointer-events-none" : "opacity-100",
-    ].join(" ")}
-  >
+  className={[
+    mode === "compare"
+      ? "flex gap-4 flex-wrap justify-center transition-opacity duration-150 ease-in-out"
+      : "flex gap-8 flex-wrap justify-center transition-opacity duration-150 ease-in-out",
+    isFading ? "opacity-0 pointer-events-none" : "opacity-100",
+  ].join(" ")}
+>
     {rundeBilder.map((bild, index) => {
       const userAntwort = antworten[index] || {};
       const fb = feedback[index];
