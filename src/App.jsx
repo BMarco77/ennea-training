@@ -254,33 +254,32 @@ export default function QuizModul() {
       },
     } = pruefeRunde(rundeBilder, antworten, level);
 
-   if (mode === "quickguess") {
+  if (mode === "quickguess") {
   const richtig = Object.values(result).every((r) => r.istRichtig);
 
   if (richtig) {
     setQuickStats((prev) => {
-  const current = prev[level];
+      const current = prev[level];
 
-  const newStreak = current.streak + 1;
+      const newStreak = current.streak + 1;
 
-  return {
-    ...prev,
-    [level]: {
-      score: current.score + 10,
-      streak: newStreak,
-      bestStreak: Math.max(current.bestStreak, newStreak),
-    },
-  };
-});
-    setQuickStats((prev) => ({
-  ...prev,
-  [level]: {
-    ...prev[level],
-    streak: 0,
-  },
-}));
+      return {
+        ...prev,
+        [level]: {
+          score: current.score + 10,
+          streak: newStreak,
+          bestStreak: Math.max(current.bestStreak, newStreak),
+        },
+      };
+    });
   } else {
-    setStreak(0);
+    setQuickStats((prev) => ({
+      ...prev,
+      [level]: {
+        ...prev[level],
+        streak: 0,
+      },
+    }));
   }
 }
     const newStats = berechneNeueStats(
