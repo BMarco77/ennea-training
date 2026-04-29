@@ -90,10 +90,10 @@ export default function QuizModul() {
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [quickStats, setQuickStats] = useState({
-  anfaenger: { score: 0, streak: 0, bestStreak: 0 },
-  fortgeschritten: { score: 0, streak: 0, bestStreak: 0 },
-  expert: { score: 0, streak: 0, bestStreak: 0 },
-  });;
+  anfaenger: { streak: 0, bestStreak: 0, score: 0 },
+  fortgeschritten: { streak: 0, bestStreak: 0, score: 0 },
+  expert: { streak: 0, bestStreak: 0, score: 0 },
+});
   const emptyStats = {
     imagesTotal: 0,
     overallCorrect: 0,
@@ -259,27 +259,26 @@ export default function QuizModul() {
 
   if (richtig) {
     setQuickStats((prev) => {
-      const current = prev[level];
+  const newStreak = prev[level].streak + 1;
 
-      const newStreak = current.streak + 1;
-
-      return {
-        ...prev,
-        [level]: {
-          score: current.score + 10,
-          streak: newStreak,
-          bestStreak: Math.max(current.bestStreak, newStreak),
-        },
-      };
-    });
+  return {
+    ...prev,
+    [level]: {
+      ...prev[level],
+      streak: newStreak,
+      bestStreak: Math.max(prev[level].bestStreak, newStreak),
+      score: prev[level].score + 10,
+    },
+  };
+});
   } else {
     setQuickStats((prev) => ({
-      ...prev,
-      [level]: {
-        ...prev[level],
-        streak: 0,
-      },
-    }));
+  ...prev,
+  [level]: {
+    ...prev[level],
+    streak: 0,
+  },
+}));
   }
 }
     const newStats = berechneNeueStats(
@@ -618,6 +617,7 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
           isTimeUp={isTimeUp}
           timer={timer}
           streak={quickStats[level]?.streak ?? 0}
+          bestStreak={quickStats[level]?.bestStreak ?? 0}
           score={quickStats[level]?.score ?? 0}
         />
       );
