@@ -102,8 +102,11 @@ export default function QuizCard({
           ].join(" ")}
         />
 </div>
-
-
+{mode === "quickguess" && isTimeUp && (
+  <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
+    Zeit abgelaufen
+  </div>
+)}
       <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
         {bild.title}
       </div>
