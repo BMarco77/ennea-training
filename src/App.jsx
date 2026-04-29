@@ -89,8 +89,11 @@ export default function QuizModul() {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isTimerActive, setIsTimerActive] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  const [streak, setStreak] = useState(0);
-  const [score, setScore] = useState(0);
+  const [quickStats, setQuickStats] = useState({
+  anfaenger: { score: 0, streak: 0, bestStreak: 0 },
+  fortgeschritten: { score: 0, streak: 0, bestStreak: 0 },
+  expert: { score: 0, streak: 0, bestStreak: 0 },
+  });;
   const emptyStats = {
     imagesTotal: 0,
     overallCorrect: 0,
@@ -255,8 +258,27 @@ export default function QuizModul() {
   const richtig = Object.values(result).every((r) => r.istRichtig);
 
   if (richtig) {
-    setStreak((s) => s + 1);
-    setScore((s) => s + 10);
+    setQuickStats((prev) => {
+  const current = prev[level];
+
+  const newStreak = current.streak + 1;
+
+  return {
+    ...prev,
+    [level]: {
+      score: current.score + 10,
+      streak: newStreak,
+      bestStreak: Math.max(current.bestStreak, newStreak),
+    },
+  };
+});
+    setQuickStats((prev) => ({
+  ...prev,
+  [level]: {
+    ...prev[level],
+    streak: 0,
+  },
+}));
   } else {
     setStreak(0);
   }
