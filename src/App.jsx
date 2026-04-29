@@ -547,7 +547,8 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   );
 }  
   return (
-    <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
+    
+      <div className="w-full max-w-[430px] mx-auto mt-4">
 
       
      <QuizHeader
@@ -573,7 +574,7 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
 
       <div
         className={[
-          "flex gap-8 flex-wrap justify-center mt-6 transition-opacity duration-150 ease-in-out",
+          "flex gap-8 flex-wrap justify-center transition-opacity duration-150 ease-in-out",
           isFading ? "opacity-0 pointer-events-none" : "opacity-100",
         ].join(" ")}
       >
