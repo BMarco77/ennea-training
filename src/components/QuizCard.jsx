@@ -39,29 +39,31 @@ export default function QuizCard({
   className="w-full max-w-[340px] md:max-w-[400px]"
 >
       {mode === "quickguess" && (
-     <div className="flex justify-between items-center mb-3">
+  <div className="flex justify-between items-center mb-3">
+    <div className="flex gap-2">
+      <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold">
+        🔥 {streak}
+      </div>
 
-  <div className="flex gap-2">
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold">
-      🔥 {streak}
+      <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold">
+        ⭐ {score}
+      </div>
+
+      <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold opacity-70">
+        🏆 {bestStreak}
+      </div>
     </div>
 
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold">
-      ⭐ {score}
-    </div>
-
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40 text-sm font-semibold opacity-70">
-      🏆 {bestStreak}
+    <div
+      className={[
+        "px-3 py-1 rounded-lg text-sm font-bold",
+        timer <= 3 ? "bg-red-600 text-white" : "bg-black text-white",
+      ].join(" ")}
+    >
+      {timer}s
     </div>
   </div>
-
-  <div className={[
-  "px-3 py-1 rounded-lg text-sm font-bold",
-  timer <= 3 ? "bg-red-600 text-white" : "bg-black text-white",
-].join(" ")}
-
-</div>
-    )}
+)}
 
       
      <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[260px] md:h-[310px] flex items-center justify-center relative">
