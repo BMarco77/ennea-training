@@ -551,20 +551,18 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
 
       
-      <QuizHeader
+     <QuizHeader
   level={level}
-  setLevel={setLevel}
   mode={mode}
-  streak={streak}
-  score={score}
+  streak={quickStats[level]?.streak ?? 0}
+  score={quickStats[level]?.score ?? 0}
+  bestStreak={quickStats[level]?.bestStreak ?? 0}
   timer={timer}
-  setMode={setMode}
   setScreen={setScreen}
   setAntworten={setAntworten}
   setFeedback={setFeedback}
   setGeprueft={setGeprueft}
   setZeigeMerkmale={setZeigeMerkmale}
-  starteNeueRunde={starteNeueRunde}
   showStats={showStats}
   setShowStats={setShowStats}
   levelStats={levelStats}
