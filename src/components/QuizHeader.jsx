@@ -43,8 +43,8 @@ export default function QuizHeader({
       : "Bestimme Haupttyp, Subtyp und Wing";
 
   return (
-    <div className="w-full max-w-[760px] mx-auto mb-6">
-     <div className="flex items-center justify-between mb-4">
+    <div className="w-full mb-3">
+     <div className="flex items-center justify-between mb-2">
 
   <LexButton
     onClick={() => {
@@ -56,10 +56,10 @@ export default function QuizHeader({
     }}
     className="px-3 py-1 text-sm"
   >
-    ←
+    ← Hauptmenü
   </LexButton>
 
-  <div className="text-right">
+ <div className="text-right pr-1">
     <div className="text-sm font-bold">
       {levelLabel} · {modeLabel}
     </div>
