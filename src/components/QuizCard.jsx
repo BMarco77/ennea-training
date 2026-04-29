@@ -12,6 +12,7 @@ export default function QuizCard({
   mode,
   score,
   streak,
+  bestStreak,
   geprueft,
   imgLoaded,
   setImgLoaded,
@@ -49,8 +50,9 @@ export default function QuizCard({
             ⭐ {score}
           </div>
         </div>
-
-        <div className="bg-black text-[#f5e6d2] px-3 py-1 rounded-md text-base font-bold">
+<div className="text-xs opacity-70">
+  🏆 {bestStreak}
+</div>        <div className="bg-black text-[#f5e6d2] px-3 py-1 rounded-md text-base font-bold">
           {timer}s
         </div>
 
