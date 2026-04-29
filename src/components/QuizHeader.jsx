@@ -40,28 +40,31 @@ export default function QuizHeader({
 
   return (
     <div className="w-full mb-3">
-      <div className="flex items-center justify-between gap-3 mb-2">
-        <LexButton
-          onClick={() => {
-            setScreen("start");
-            setAntworten({});
-            setFeedback({});
-            setGeprueft(false);
-            setZeigeMerkmale({});
-          }}
-          className="px-2 py-1 text-xs opacity-85 hover:opacity-100"
-        >
-          ← Hauptmenü
-        </LexButton>
+     <div className="flex items-start justify-between gap-3 mb-4">
+  <div>
+    <LexButton
+      onClick={() => {
+        setScreen("start");
+        setAntworten({});
+        setFeedback({});
+        setGeprueft(false);
+        setZeigeMerkmale({});
+      }}
+      className="px-3 py-1 text-xs opacity-85 hover:opacity-100 mb-2"
+    >
+      ← Hauptmenü
+    </LexButton>
 
-        <div className="text-right pr-1">
-          <div className="text-sm font-bold">
-            {levelLabel} · {modeLabel}
-          </div>
-          <div className="text-xs text-black/60">{description}</div>
-        </div>
+    <div className="text-left">
+      <div className="text-sm font-bold">
+        {levelLabel} · {modeLabel}
       </div>
-
+      <div className="text-xs text-black/60">
+        {description}
+      </div>
+    </div>
+  </div>
+</div>
       {mode !== "quickguess" && (
         <>
           <div className="flex justify-center mb-4">
