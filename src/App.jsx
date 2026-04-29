@@ -547,7 +547,7 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   );
 }  
   return (
-    
+     <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
       <div className="w-full max-w-[430px] mx-auto mt-4">
 
       
