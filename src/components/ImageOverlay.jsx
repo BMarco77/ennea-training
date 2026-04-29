@@ -20,12 +20,12 @@ export default function ImageOverlay({
             e.stopPropagation();
             setVergroessertesBild(null);
           }}
-          className="absolute top-2 right-2 bg-black/60 text-[#f5e6d2] w-8 h-8 rounded-full font-bold text-xl flex items-center justify-center"
+         className="absolute top-2 right-2 z-20 bg-black/70 text-[#f5e6d2] w-8 h-8 rounded-full font-bold text-xl flex items-center justify-center cursor-pointer border border-[#f5e6d2]/40"
         >
           ×
         </button>
 
-        <div className="relative w-full h-full">
+        <div className="relative z-10 w-full h-full">
           <img
             src={vergroessertesBild.pfad}
             alt={vergroessertesBild.title}
