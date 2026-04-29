@@ -549,79 +549,74 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   return (
      <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
   
-
+<div className="w-full max-w-[430px] mx-auto mt-4">
   <QuizHeader
-  level={level}
-  mode={mode}
-  streak={quickStats[level]?.streak ?? 0}
-  score={quickStats[level]?.score ?? 0}
-  bestStreak={quickStats[level]?.bestStreak ?? 0}
-  timer={timer}
-  setScreen={setScreen}
-  setAntworten={setAntworten}
-  setFeedback={setFeedback}
-  setGeprueft={setGeprueft}
-  setZeigeMerkmale={setZeigeMerkmale}
-  showStats={showStats}
-  setShowStats={setShowStats}
-  levelStats={levelStats}
-  isNovize={isNovize}
-  isProfi={isProfi}
-  resetCurrentLevel={resetCurrentLevel}
-  resetAllStats={resetAllStats}
-/>
+    level={level}
+    mode={mode}
+    setScreen={setScreen}
+    setAntworten={setAntworten}
+    setFeedback={setFeedback}
+    setGeprueft={setGeprueft}
+    setZeigeMerkmale={setZeigeMerkmale}
+    showStats={showStats}
+    setShowStats={setShowStats}
+    levelStats={levelStats}
+    isNovize={isNovize}
+    isProfi={isProfi}
+    resetCurrentLevel={resetCurrentLevel}
+    resetAllStats={resetAllStats}
+  />
 
-      <div
-        className={[
-          "flex gap-8 flex-wrap justify-center transition-opacity duration-150 ease-in-out",
-          isFading ? "opacity-0 pointer-events-none" : "opacity-100",
-        ].join(" ")}
-      >
-        {rundeBilder.map((bild, index) => {
-  const userAntwort = antworten[index] || {};
-  const fb = feedback[index];
+  <div
+    className={[
+      "flex gap-8 flex-wrap justify-center transition-opacity duration-150 ease-in-out",
+      isFading ? "opacity-0 pointer-events-none" : "opacity-100",
+    ].join(" ")}
+  >
+    {rundeBilder.map((bild, index) => {
+      const userAntwort = antworten[index] || {};
+      const fb = feedback[index];
 
-  const pfad = `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
-    bild.datei
-  )}`;
+      const pfad = `${LEXIKON_BASE_URL}/bilder/${bild.pfad}/${encodeURIComponent(
+        bild.datei
+      )}`;
 
-  return (
-    <QuizCard
-      key={bild.pfad + "-" + bild.datei}
-      bild={bild}
-      index={index}
-      pfad={pfad}
-      userAntwort={userAntwort}
-      fb={fb}
-      level={level}
-      mode={mode}
-      geprueft={geprueft}
-      imgLoaded={imgLoaded}
-      setImgLoaded={setImgLoaded}
-      setTimer={setTimer}
-      setIsTimeUp={setIsTimeUp}
-      setIsTimerActive={setIsTimerActive}
-      setVergroessertesBild={setVergroessertesBild}
-      handleAntwort={handleAntwort}
-      dropdownStyle={dropdownStyle}
-      typen={typen}
-      subtypen={subtypen}
-      zeigeMerkmale={zeigeMerkmale}
-      setZeigeMerkmale={setZeigeMerkmale}
-      neueRunde={neueRunde}
-      pruefeAntworten={pruefeAntworten}
-      skipRunde={skipRunde}
-      skipEinzelBild={skipEinzelBild}
-      isTimeUp={isTimeUp}
-      timer={timer}  
-      streak={quickStats[level]?.streak ?? 0}
-      score={quickStats[level]?.score ?? 0}
-      bestStreak={quickStats[level]?.bestStreak ?? 0}
-      mode={mode}
-      />
-  );
-})}
-      </div>
+      return (
+        <QuizCard
+          key={bild.pfad + "-" + bild.datei}
+          bild={bild}
+          index={index}
+          pfad={pfad}
+          userAntwort={userAntwort}
+          fb={fb}
+          level={level}
+          mode={mode}
+          geprueft={geprueft}
+          imgLoaded={imgLoaded}
+          setImgLoaded={setImgLoaded}
+          setTimer={setTimer}
+          setIsTimeUp={setIsTimeUp}
+          setIsTimerActive={setIsTimerActive}
+          setVergroessertesBild={setVergroessertesBild}
+          handleAntwort={handleAntwort}
+          dropdownStyle={dropdownStyle}
+          typen={typen}
+          subtypen={subtypen}
+          zeigeMerkmale={zeigeMerkmale}
+          setZeigeMerkmale={setZeigeMerkmale}
+          neueRunde={neueRunde}
+          pruefeAntworten={pruefeAntworten}
+          skipRunde={skipRunde}
+          skipEinzelBild={skipEinzelBild}
+          isTimeUp={isTimeUp}
+          timer={timer}
+          streak={quickStats[level]?.streak ?? 0}
+          score={quickStats[level]?.score ?? 0}
+        />
+      );
+    })}
+  </div>
+</div>
 
 <ImageOverlay
   vergroessertesBild={vergroessertesBild}
