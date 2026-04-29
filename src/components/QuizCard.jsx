@@ -11,6 +11,7 @@ export default function QuizCard({
   level,
   mode,
   score,
+  streak,
   geprueft,
   imgLoaded,
   setImgLoaded,
