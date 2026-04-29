@@ -543,9 +543,7 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
       >
         Zurück zur Auswahl
       </button>
-    </div>
-  );
-}  
+
   return (
      <div className="min-h-screen bg-[#ead0aa] text-black font-lexSerif px-4 py-8 overflow-x-hidden">
   
