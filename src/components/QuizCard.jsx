@@ -59,7 +59,6 @@ export default function QuizCard({
   "px-3 py-1 rounded-lg text-sm font-bold",
   timer <= 3 ? "bg-red-600 text-white" : "bg-black text-white",
 ].join(" ")}
-  </div>
 
 </div>
     )}
