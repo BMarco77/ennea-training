@@ -155,6 +155,7 @@ export default function QuizCard({
         const merkm = merkmale[key];
 
         if (!merkm) return null;
+        if (mode === "quickguess") return null;
         if (level === "expert") return null;
 
         if (level === "fortgeschritten") {
