@@ -6,6 +6,7 @@ export default function QuizHeader({
   mode,
   streak,
   score,
+  bestStreak,
   timer,  
   setScreen,
   setAntworten,
