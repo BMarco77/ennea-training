@@ -4,10 +4,6 @@ import StatsBox from "./StatsBox";
 export default function QuizHeader({
   level,
   mode,
-  streak,
-  score,
-  bestStreak,
-  timer,  
   setScreen,
   setAntworten,
   setFeedback,
@@ -44,54 +40,51 @@ export default function QuizHeader({
 
   return (
     <div className="w-full mb-3">
-     <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between gap-3 mb-2">
+        <LexButton
+          onClick={() => {
+            setScreen("start");
+            setAntworten({});
+            setFeedback({});
+            setGeprueft(false);
+            setZeigeMerkmale({});
+          }}
+          className="px-2 py-1 text-xs opacity-85 hover:opacity-100"
+        >
+          ← Hauptmenü
+        </LexButton>
 
-  <LexButton
-    onClick={() => {
-      setScreen("start");
-      setAntworten({});
-      setFeedback({});
-      setGeprueft(false);
-      setZeigeMerkmale({});
-    }}
-    className="px-3 py-1 text-sm"
-  >
-    ← Hauptmenü
-  </LexButton>
+        <div className="text-right pr-1">
+          <div className="text-sm font-bold">
+            {levelLabel} · {modeLabel}
+          </div>
+          <div className="text-xs text-black/60">{description}</div>
+        </div>
+      </div>
 
- <div className="text-right pr-1">
-    <div className="text-sm font-bold">
-      {levelLabel} · {modeLabel}
+      {mode !== "quickguess" && (
+        <>
+          <div className="flex justify-center mb-4">
+            <LexButton
+              onClick={() => setShowStats((v) => !v)}
+              className="px-4 py-2 text-sm"
+            >
+              {showStats
+                ? "Trefferquote ausblenden"
+                : "Trefferquote anzeigen"}
+            </LexButton>
+          </div>
+
+          <StatsBox
+            showStats={showStats}
+            levelStats={levelStats}
+            isNovize={isNovize}
+            isProfi={isProfi}
+            resetCurrentLevel={resetCurrentLevel}
+            resetAllStats={resetAllStats}
+          />
+        </>
+      )}
     </div>
-    <div className="text-xs text-black/60">
-      {description}
-    </div>
-  </div>
-
-</div>
-    {mode !== "quickguess" && (
-  <>
-    <div className="flex justify-center mb-4">
-      <LexButton
-        onClick={() => setShowStats((v) => !v)}
-        className="px-4 py-2 text-sm"
-      >
-        {showStats
-          ? "Trefferquote ausblenden"
-          : "Trefferquote anzeigen"}
-      </LexButton>
-    </div>
-
-    <StatsBox
-  showStats={showStats}
-  levelStats={levelStats}
-  isNovize={isNovize}
-  isProfi={isProfi}
-  resetCurrentLevel={resetCurrentLevel}
-  resetAllStats={resetAllStats}
-/>
-  </>
-)}
-</div>
-);
+  );
 }
