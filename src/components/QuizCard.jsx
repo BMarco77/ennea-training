@@ -33,10 +33,10 @@ export default function QuizCard({
   timer,
 }) {
   return (
-    <div
-      key={bild.pfad + "-" + bild.datei}
-      className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[340px] md:max-w-[400px] shadow-[0_4px_10px_rgba(0,0,0,0.35)]"
-      >
+   <div
+  key={bild.pfad + "-" + bild.datei}
+  className="w-full max-w-[340px] md:max-w-[400px]"
+>
       {mode === "quickguess" && (
       <div className="flex justify-between items-center mb-2 text-sm font-semibold">
 
