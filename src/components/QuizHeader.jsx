@@ -44,45 +44,31 @@ export default function QuizHeader({
 
   return (
     <div className="w-full max-w-[760px] mx-auto mb-6">
-      <div className="flex items-center justify-between gap-3 mb-5">
-        <LexButton
-          onClick={() => {
-            setScreen("start");
-            setAntworten({});
-            setFeedback({});
-            setGeprueft(false);
-            setZeigeMerkmale({});
-          }}
-          className="px-3 py-1 text-sm"
-        >
-          ← Zurück
-        </LexButton>
+     <div className="flex items-center justify-between mb-4">
 
-        {mode === "quickguess" && (
-  <div className="flex justify-center gap-4 mb-3 text-sm font-semibold">
+  <LexButton
+    onClick={() => {
+      setScreen("start");
+      setAntworten({});
+      setFeedback({});
+      setGeprueft(false);
+      setZeigeMerkmale({});
+    }}
+    className="px-3 py-1 text-sm"
+  >
+    ←
+  </LexButton>
 
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
-      🔥 {streak}
+  <div className="text-right">
+    <div className="text-sm font-bold">
+      {levelLabel} · {modeLabel}
     </div>
-
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
-      ⭐ {score}
+    <div className="text-xs text-black/60">
+      {description}
     </div>
-
-    <div className="bg-[#f5e6d2] px-3 py-1 rounded-lg border border-black/40">
-      ⏱ {timer}s
-    </div>
-
   </div>
-)}
-        <div className="text-right">
-          <div className="text-sm font-bold">
-            {levelLabel} · {modeLabel}
-          </div>
-          <div className="text-xs text-black/60">{description}</div>
-        </div>
-      </div>
 
+</div>
     {mode !== "quickguess" && (
   <>
     <div className="flex justify-center mb-4">
