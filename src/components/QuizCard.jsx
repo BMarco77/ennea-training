@@ -67,46 +67,48 @@ export default function QuizCard({
 
       
      <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[260px] md:h-[310px] flex items-center justify-center relative">
-        {!imgLoaded[index] && (
-          <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
-            Bild lädt…
-          </div>
-        )}
+  {!imgLoaded[index] && (
+    <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
+      Bild lädt…
+    </div>
+  )}
 
-        <img
-          src={pfad}
-          alt={bild.title}
-          onLoad={() => {
-            setImgLoaded((prev) => ({ ...prev, [index]: true }));
+  <img
+    src={pfad}
+    alt={bild.title}
+    onLoad={() => {
+      setImgLoaded((prev) => ({ ...prev, [index]: true }));
 
-            if (mode === "quickguess") {
-              setTimer(10);
-              setIsTimeUp(false);
-              setIsTimerActive(true);
-            }
-          }}
-          onClick={() => setVergroessertesBild({ pfad, title: bild.title })}
-          onError={(e) => {
-            const altPfad = e.target.src.endsWith(".jpeg")
-              ? e.target.src.replace(".jpeg", ".jpg")
-              : e.target.src.replace(".jpg", ".jpeg");
+      if (mode === "quickguess") {
+        setTimer(10);
+        setIsTimeUp(false);
+        setIsTimerActive(true);
+      }
+    }}
+    onClick={() => setVergroessertesBild({ pfad, title: bild.title })}
+    onError={(e) => {
+      const altPfad = e.target.src.endsWith(".jpeg")
+        ? e.target.src.replace(".jpeg", ".jpg")
+        : e.target.src.replace(".jpg", ".jpeg");
 
-            if (!e.target.dataset.fallbackTried) {
-              e.target.dataset.fallbackTried = "true";
-              e.target.src = altPfad;
-            }
-          }}
-          className={[
-            "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
-            imgLoaded[index] ? "opacity-100" : "opacity-0",
-          ].join(" ")}
-        />
+      if (!e.target.dataset.fallbackTried) {
+        e.target.dataset.fallbackTried = "true";
+        e.target.src = altPfad;
+      }
+    }}
+    className={[
+      "max-w-full max-h-full object-contain block cursor-zoom-in transition-opacity duration-150",
+      imgLoaded[index] ? "opacity-100" : "opacity-0",
+    ].join(" ")}
+  />
+
+  {mode === "quickguess" && isTimeUp && (
+    <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
+      Zeit abgelaufen
+    </div>
+  )}
 </div>
-{mode === "quickguess" && isTimeUp && (
-  <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
-    Zeit abgelaufen
-  </div>
-)}
+
       <div className="text-center font-semibold text-base md:text-lg mb-1.5 leading-tight whitespace-normal break-words">
         {bild.title}
       </div>
