@@ -617,6 +617,7 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
       streak={quickStats[level]?.streak ?? 0}
       score={quickStats[level]?.score ?? 0}
       bestStreak={quickStats[level]?.bestStreak ?? 0}
+      mode={mode}
       />
   );
 })}
