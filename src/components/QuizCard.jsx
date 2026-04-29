@@ -93,12 +93,6 @@ export default function QuizCard({
             imgLoaded[index] ? "opacity-100" : "opacity-0",
           ].join(" ")}
         />
-
-       {mode === "quickguess" && isTimeUp && (
-  <div className="absolute inset-0 bg-black flex items-center justify-center text-white text-sm">
-    Zeit abgelaufen
-  </div>
-)}
 </div>
 
 {mode === "quickguess" && !isTimeUp && (
