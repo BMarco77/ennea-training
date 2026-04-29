@@ -10,6 +10,7 @@ export default function QuizCard({
   fb,
   level,
   mode,
+  score,
   geprueft,
   imgLoaded,
   setImgLoaded,
@@ -35,6 +36,27 @@ export default function QuizCard({
       key={bild.pfad + "-" + bild.datei}
       className="bg-[#c8a979] border border-black rounded-2xl p-3.5 md:p-4 w-full max-w-[340px] md:max-w-[400px] shadow-[0_4px_10px_rgba(0,0,0,0.35)]"
       >
+      {mode === "quickguess" && (
+      <div className="flex justify-between items-center mb-2 text-sm font-semibold">
+
+        <div className="flex gap-2">
+          <div className="bg-[#f5e6d2] px-2 py-1 rounded-md border border-black/30">
+            🔥 {streak}
+          </div>
+
+          <div className="bg-[#f5e6d2] px-2 py-1 rounded-md border border-black/30">
+            ⭐ {score}
+          </div>
+        </div>
+
+        <div className="bg-black text-[#f5e6d2] px-3 py-1 rounded-md text-base font-bold">
+          {timer}s
+        </div>
+
+      </div>
+    )}
+
+      
      <div className="bg-black rounded-lg mb-2 overflow-hidden w-full h-[260px] md:h-[310px] flex items-center justify-center relative">
         {!imgLoaded[index] && (
           <div className="absolute inset-0 flex items-center justify-center text-[#f5e6d2] text-sm tracking-wide">
