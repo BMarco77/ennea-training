@@ -108,7 +108,8 @@ export function pruefeBildAntwort(bild, antwort, level) {
   const typRichtig =
     antwort.typ != null && parseInt(antwort.typ, 10) === bild.typ;
 
-  const subtypRichtig = antwort.subtyp === bild.subtyp;
+  const subtypRichtig =
+  antwort.subtyp?.toLowerCase() === bild.subtyp?.toLowerCase();
 
   const wingRichtig =
     bild.wing == null
