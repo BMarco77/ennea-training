@@ -65,29 +65,7 @@ export default function QuizHeader({
     </div>
   </div>
 </div>
-      {mode !== "quickguess" && (
-        <>
-          <div className="flex justify-center mb-4">
-            <LexButton
-              onClick={() => setShowStats((v) => !v)}
-              className="px-4 py-2 text-sm"
-            >
-              {showStats
-                ? "Trefferquote ausblenden"
-                : "Trefferquote anzeigen"}
-            </LexButton>
-          </div>
-
-          <StatsBox
-            showStats={showStats}
-            levelStats={levelStats}
-            isNovize={isNovize}
-            isProfi={isProfi}
-            resetCurrentLevel={resetCurrentLevel}
-            resetAllStats={resetAllStats}
-          />
-        </>
-      )}
+      
     </div>
   );
 }
