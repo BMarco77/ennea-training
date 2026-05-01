@@ -291,8 +291,7 @@ export default function QuizCard({
               </div>
 
               <div className="text-black font-normal text-sm mt-1">
-               const subtypRichtig =
-  antwort.subtyp?.toLowerCase() === bild.subtyp?.toLowerCase();
+              Richtige Antwort: Typ {bild.typ} · {bild.subtyp}
                 {level === "expert" && bild.wing != null
                   ? ` · w${bild.wing}`
                   : ""}
