@@ -67,7 +67,8 @@ export default function QuizModul() {
   const [weiblichPool, setWeiblichPool] = useState([]);
   const [maennlichPool, setMaennlichPool] = useState([]);
   const [neutralPool, setNeutralPool] = useState([]);
-
+  const [letzteTypen, setLetzteTypen] = useState([]);
+  
   const [rundeBilder, setRundeBilder] = useState([]);
   const [antworten, setAntworten] = useState({});
   const [feedback, setFeedback] = useState({});
@@ -157,12 +158,13 @@ export default function QuizModul() {
     }
 
     const neue = pickNaechsteBilder(
-      pool,
-      weiblichArg,
-      maennlichArg,
-      neutralArg,
-      ladeGeseheneBilder(),
-      mode
+  alleBilder,
+  weiblichPool,
+  maennlichPool,
+  neutralPool,
+  ladeGeseheneBilder(),
+  mode,
+  letzteTypen
     );
 
     setImgLoaded({});
@@ -324,12 +326,13 @@ export default function QuizModul() {
     }
 
     const neue = pickNaechsteBilder(
-      alleBilder,
-      weiblichPool,
-      maennlichPool,
-      neutralPool,
-      ladeGeseheneBilder(),
-      mode
+  alleBilder,
+  weiblichPool,
+  maennlichPool,
+  neutralPool,
+  ladeGeseheneBilder(),
+  mode,
+  letzteTypen
     );
 
     const srcs = neue.map((bild) => {
@@ -357,7 +360,10 @@ export default function QuizModul() {
       }
 
       setRundeBilder(neue);
-      setAntworten({});
+      setLetzteTypen((prev) => {
+  const neueTypen = neue.map((b) => b.typ).filter(Boolean);
+  return [...neueTypen, ...prev].slice(0, 3);
+});      setAntworten({});
       setFeedback({});
       setGeprueft(false);
       setZeigeMerkmale({});
