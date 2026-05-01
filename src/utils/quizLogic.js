@@ -4,7 +4,7 @@ export function parseBildInfo(pfad) {
 
   return {
     typ: typMatch ? parseInt(typMatch[0], 10) : null,
-    subtyp: pfad.slice(0, 2),
+    subtyp: pfad.slice(0, 2).toLowerCase(),
     wing: wingMatch ? parseInt(wingMatch[1], 10) : null,
   };
 }
@@ -18,31 +18,14 @@ export function getWingsForType(typ) {
   return [left, right];
 }
 
-export function zieheAusgewogenesBild(
-  weiblich,
-  maennlich,
-  neutral,
-  gesehen,
-  verboteneTypen = []
+export function zieheGewichtetesBild(
+  pool,
+  gesehen = [],
+  verboteneTypen = [],
+  letzteTypen = []
 ) {
-  const w = 0.4;
-  const m = 0.4;
-  const n = 0.2;
+  if (!pool || pool.length === 0) return null;
 
-  const r = Math.random();
-  let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
-
-  let unge = pool.filter((b) => !gesehen.includes(b.datei));
-  if (unge.length === 0) unge = [...pool];
-
-  const gefiltert = unge.filter(
-    (b) => b.typ != null && !verboteneTypen.includes(b.typ)
-  );
-
-  if (gefiltert.length > 0) {
-    unge = gefiltert;
-  }
-  function zieheGewichtetesBild(pool, gesehen, verboteneTypen = [], letzteTypen = []) {
   let kandidaten = pool.filter((b) => !gesehen.includes(b.datei));
 
   if (kandidaten.length === 0) {
@@ -58,17 +41,15 @@ export function zieheAusgewogenesBild(
   const typeCounts = {};
 
   pool.forEach((bild) => {
-    if (!bild.typ) return;
+    if (bild.typ == null) return;
     typeCounts[bild.typ] = (typeCounts[bild.typ] || 0) + 1;
   });
 
   const gewichteteKandidaten = kandidaten.map((bild) => {
     const count = typeCounts[bild.typ] || 1;
 
-    // Weiche Gewichtung: seltene Typen etwas stärker, aber nicht extrem
     let weight = 1 / Math.sqrt(count);
 
-    // Letzte Typen nur dämpfen, nicht verbieten
     if (letzteTypen.includes(bild.typ)) {
       weight *= 0.45;
     }
@@ -90,7 +71,37 @@ export function zieheAusgewogenesBild(
 
   return gewichteteKandidaten[0]?.bild ?? null;
 }
-  return unge[Math.floor(Math.random() * unge.length)];
+
+export function zieheAusgewogenesBild(
+  weiblich,
+  maennlich,
+  neutral,
+  gesehen = [],
+  verboteneTypen = []
+) {
+  const w = 0.4;
+  const m = 0.4;
+
+  const r = Math.random();
+  let pool = r < w ? weiblich : r < w + m ? maennlich : neutral;
+
+  if (!pool || pool.length === 0) {
+    pool = [...weiblich, ...maennlich, ...neutral];
+  }
+
+  let kandidaten = pool.filter((b) => !gesehen.includes(b.datei));
+
+  if (kandidaten.length === 0) {
+    kandidaten = [...pool];
+  }
+
+  kandidaten = kandidaten.filter(
+    (b) => b.typ != null && !verboteneTypen.includes(b.typ)
+  );
+
+  if (kandidaten.length === 0) return null;
+
+  return kandidaten[Math.floor(Math.random() * kandidaten.length)];
 }
 
 export function pruefeBildAntwort(bild, antwort, level) {
@@ -107,11 +118,13 @@ export function pruefeBildAntwort(bild, antwort, level) {
 
   let istRichtig = false;
 
-  if (level === "anfaenger") istRichtig = typRichtig;
-  else if (level === "fortgeschritten")
+  if (level === "anfaenger") {
+    istRichtig = typRichtig;
+  } else if (level === "fortgeschritten") {
     istRichtig = typRichtig && subtypRichtig;
-  else if (level === "expert")
+  } else if (level === "expert") {
     istRichtig = typRichtig && subtypRichtig && wingRichtig;
+  }
 
   return { typRichtig, subtypRichtig, wingRichtig, istRichtig };
 }
@@ -162,7 +175,13 @@ export function pruefeRunde(rundeBilder, antworten, level) {
   };
 }
 
-export function berechneNeueStats(stats, level, rundeBilder, counters, emptyStats) {
+export function berechneNeueStats(
+  stats,
+  level,
+  rundeBilder,
+  counters,
+  emptyStats
+) {
   const {
     overallInc,
     typInc,
@@ -208,24 +227,13 @@ export function pickNaechsteBilder(
   weiblichArg,
   maennlichArg,
   neutralArg,
-  gesehen,
+  gesehen = [],
   mode,
   letzteTypen = []
 ) {
   if (!pool || pool.length === 0) return [];
 
-  let nochNichtGesehen = pool.filter((bild) => !gesehen.includes(bild.datei));
-
-  if (nochNichtGesehen.length < 2) {
-    nochNichtGesehen = [...pool];
-  }
-
-  const bild1 = zieheGewichtetesBild(
-    pool,
-    gesehen,
-    [],
-    letzteTypen
-  );
+  const bild1 = zieheGewichtetesBild(pool, gesehen, [], letzteTypen);
 
   if (!bild1) return [];
 
