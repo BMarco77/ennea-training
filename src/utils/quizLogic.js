@@ -209,7 +209,8 @@ export function pickNaechsteBilder(
   maennlichArg,
   neutralArg,
   gesehen,
-  mode
+  mode,
+  letzteTypen = []
 ) {
   if (!pool || pool.length === 0) return [];
 
@@ -219,24 +220,27 @@ export function pickNaechsteBilder(
     nochNichtGesehen = [...pool];
   }
 
-  const bild1 = zieheAusgewogenesBild(
-    weiblichArg,
-    maennlichArg,
-    neutralArg,
-    gesehen
+  const bild1 = zieheGewichtetesBild(
+    pool,
+    gesehen,
+    [],
+    letzteTypen
   );
 
-  const bild2 = zieheAusgewogenesBild(
-    weiblichArg,
-    maennlichArg,
-    neutralArg,
+  if (!bild1) return [];
+
+  if (mode === "single" || mode === "quickguess") {
+    return [bild1];
+  }
+
+  const bild2 = zieheGewichtetesBild(
+    pool,
     [...gesehen, bild1.datei],
-    [bild1.typ]
+    [bild1.typ],
+    letzteTypen
   );
 
- if (mode === "single" || mode === "quickguess") {
-  return [bild1];
-}
+  if (!bild2) return [bild1];
 
-return [bild1, bild2];
+  return [bild1, bild2];
 }
