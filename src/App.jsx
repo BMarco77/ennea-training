@@ -631,6 +631,31 @@ if (screen === "quiz" && mode === "quickguess" && !quickguessStarted) {
   </div>
 </div>
 
+       {mode !== "quickguess" && (
+  <div className="w-full max-w-[430px] mx-auto mt-4">
+
+    <div className="flex justify-center mb-3">
+      <LexButton
+        onClick={() => setShowStats((v) => !v)}
+        className="px-4 py-2 text-sm"
+      >
+        {showStats
+          ? "Trefferquote ausblenden"
+          : "Trefferquote anzeigen"}
+      </LexButton>
+    </div>
+
+    <StatsBox
+      showStats={showStats}
+      levelStats={levelStats}
+      isNovize={isNovize}
+      isProfi={isProfi}
+      resetCurrentLevel={resetCurrentLevel}
+      resetAllStats={resetAllStats}
+    />
+
+  </div>
+)}
 <ImageOverlay
   vergroessertesBild={vergroessertesBild}
   setVergroessertesBild={setVergroessertesBild}
