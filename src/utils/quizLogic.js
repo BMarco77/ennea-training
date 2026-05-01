@@ -42,7 +42,54 @@ export function zieheAusgewogenesBild(
   if (gefiltert.length > 0) {
     unge = gefiltert;
   }
+  function zieheGewichtetesBild(pool, gesehen, verboteneTypen = [], letzteTypen = []) {
+  let kandidaten = pool.filter((b) => !gesehen.includes(b.datei));
 
+  if (kandidaten.length === 0) {
+    kandidaten = [...pool];
+  }
+
+  kandidaten = kandidaten.filter(
+    (b) => b.typ != null && !verboteneTypen.includes(b.typ)
+  );
+
+  if (kandidaten.length === 0) return null;
+
+  const typeCounts = {};
+
+  pool.forEach((bild) => {
+    if (!bild.typ) return;
+    typeCounts[bild.typ] = (typeCounts[bild.typ] || 0) + 1;
+  });
+
+  const gewichteteKandidaten = kandidaten.map((bild) => {
+    const count = typeCounts[bild.typ] || 1;
+
+    // Weiche Gewichtung: seltene Typen etwas stärker, aber nicht extrem
+    let weight = 1 / Math.sqrt(count);
+
+    // Letzte Typen nur dämpfen, nicht verbieten
+    if (letzteTypen.includes(bild.typ)) {
+      weight *= 0.45;
+    }
+
+    return { bild, weight };
+  });
+
+  const totalWeight = gewichteteKandidaten.reduce(
+    (sum, item) => sum + item.weight,
+    0
+  );
+
+  let random = Math.random() * totalWeight;
+
+  for (const item of gewichteteKandidaten) {
+    random -= item.weight;
+    if (random <= 0) return item.bild;
+  }
+
+  return gewichteteKandidaten[0]?.bild ?? null;
+}
   return unge[Math.floor(Math.random() * unge.length)];
 }
 
